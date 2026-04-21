@@ -1,10 +1,6 @@
 /**
  * Project Name: Loom
  * Description: A social networking platform with automated content moderation and context-based authentication system.
- *
- * Author: Neaz Mahmud
- * Email: neaz6160@gmail.com
- * Date: 19th June 2023
  */
 
 import { lazy, Suspense } from "react";

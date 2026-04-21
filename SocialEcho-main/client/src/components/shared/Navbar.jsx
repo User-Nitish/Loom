@@ -8,7 +8,6 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { Transition } from "@headlessui/react";
 import { AiOutlineBars } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
-import Logo from "../../assets/Loom.png";
 
 const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   const dispatch = useDispatch();
@@ -44,7 +43,7 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   return (
     <nav className="sticky top-0 z-20 mb-5 flex justify-center gap-10 border bg-white p-2 md:items-center md:justify-between md:px-36">
       <Link to="/" className="hidden md:inline-block">
-        <img className="w-36" src={Logo} alt="" />
+        <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500 tracking-wider">Loom</span>
       </Link>
 
       <button className="inline-block md:hidden" onClick={toggleLeftbar}>
