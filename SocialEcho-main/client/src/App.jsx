@@ -15,7 +15,6 @@ import SignIn from "./pages/SignIn";
 
 import CinematicBackground from "./components/shared/CinematicBackground";
 import SmoothScroll from "./components/layout/SmoothScroll";
-import CustomCursor from "./components/layout/CustomCursor";
 import PageTransition from "./components/layout/PageTransition";
 
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -31,7 +30,6 @@ const App = () => {
 
   return (
     <SmoothScroll>
-      <CustomCursor />
       <CinematicBackground />
       <Suspense fallback={<FallbackLoading />}>
         <AnimatePresence mode="wait">

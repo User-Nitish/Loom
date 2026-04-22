@@ -61,13 +61,24 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden py-20">
-      {/* Cinematic Static Background - Refined Obsidian */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+      {/* Cinematic Static Background - Refined Obsidian with Blurred Texture */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Background Texture - Full Coverage with Subtle Blur */}
+        <div
+          className="absolute inset-0 w-full h-full opacity-60 blur-[4px]"
+          style={{
+            backgroundImage: "url('/bundle.jpeg')",
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}
+        />
+
         <div className="absolute top-0 left-0 w-[1000px] h-[1000px] bg-v-red/5 rounded-full blur-[150px] -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-[1000px] h-[1000px] bg-white/[0.02] rounded-full blur-[150px] translate-x-1/2 translate-y-1/2" />
       </div>
 
-      <motion.div 
+      <motion.div
         className="relative z-10 w-full max-w-2xl mx-auto px-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -85,7 +96,7 @@ const SignUp = () => {
         </div>
 
         {/* Sign Up Card */}
-        <div className="bg-[#0f111a]/40 backdrop-blur-[60px] rounded-[56px] border border-white/5 shadow-[0_60px_120px_rgba(0,0,0,0.9)] p-12 md:p-16 relative overflow-hidden">
+        <div className="bg-transparent backdrop-blur-none rounded-[56px] border border-white/10 shadow-2xl p-12 md:p-16 relative overflow-hidden">
           {/* Subtle Inner Glow - Deep Blue */}
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent pointer-events-none" />
 
@@ -94,87 +105,90 @@ const SignUp = () => {
               <h2 className="text-sm font-black text-white uppercase tracking-[0.3em]">Sign Up</h2>
               <div className="h-[1px] w-12 bg-white/10" />
             </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Username */}
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Username</label>
-                <div className="relative group">
-                  <HiOutlineUser className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter username"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-widest"
-                    required
-                  />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Username */}
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Username</label>
+                  <div className="relative group">
+                    <HiOutlineUser className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Node Handle"
+                      className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-widest"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Email Address</label>
+                  <div className="relative group">
+                    <HiOutlineMail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Nexus ID"
+                      className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-widest"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Email */}
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Email Address</label>
-                <div className="relative group">
-                  <HiOutlineMail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-widest"
-                    required
-                  />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Password */}
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Password</label>
+                  <div className="relative group">
+                    <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-[0.3em]"
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Password */}
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Password</label>
-                <div className="relative group">
-                  <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-[0.3em]"
-                    required
-                  />
+                {/* Photo */}
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Profile Photo</label>
+                  <label className="relative flex items-center group cursor-pointer">
+                    <div className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white/40 group-hover:bg-white/5 transition-all flex items-center gap-4">
+                      <HiOutlinePhotograph className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-hover:text-white transition-colors" size={16} />
+                      <span className="truncate tracking-widest uppercase text-[10px]">{avatar ? avatar.name : "Select Asset"}</span>
+                    </div>
+                    <input type="file" onChange={handleAvatarChange} className="hidden" accept="image/*" />
+                  </label>
+                  {avatarError && <p className="text-[9px] text-v-red font-black uppercase tracking-widest mt-2 ml-2">{avatarError}</p>}
                 </div>
-              </div>
-
-              {/* Photo */}
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Profile Photo</label>
-                <label className="relative flex items-center group cursor-pointer">
-                   <div className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white/40 group-hover:bg-white/[0.08] transition-all flex items-center gap-4">
-                      <HiOutlinePhotograph className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-hover:text-white transition-colors" size={16} />
-                      <span className="truncate tracking-widest uppercase">{avatar ? avatar.name : "Upload Photo"}</span>
-                   </div>
-                   <input type="file" onChange={handleAvatarChange} className="hidden" accept="image/*" />
-                </label>
-                {avatarError && <p className="text-[9px] text-v-red font-black uppercase tracking-widest mt-2 ml-2">{avatarError}</p>}
               </div>
 
               {/* Neural Context */}
               <div className="pt-2">
-                 <div className="flex flex-col gap-2">
-                    <button 
-                      type="button"
-                      onClick={() => setIsModalOpen(true)}
-                      className={`w-full py-5 rounded-full border-2 transition-all text-[10px] font-black uppercase tracking-[0.4em] ${
-                        isConsentGiven 
-                        ? 'bg-green-500/20 border-green-500/40 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)]' 
-                        : 'bg-transparent border-white/10 text-white/40 hover:text-white hover:border-white/20'
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className={`w-full py-5 rounded-full border-2 transition-all text-[10px] font-black uppercase tracking-[0.4em] ${isConsentGiven
+                      ? 'bg-green-500/20 border-green-500/40 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)]'
+                      : 'bg-transparent border-white/10 text-white/40 hover:text-white hover:border-white/20'
                       }`}
-                    >
-                      {isConsentGiven ? "Neural Context Active" : "Initialize Neural Context"}
-                    </button>
-                    <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.3em] text-center px-4 leading-relaxed">
-                      Loom's automated moderation and security system.
-                    </p>
-                 </div>
+                  >
+                    {isConsentGiven ? "Neural Context Active" : "Initialize Neural Context"}
+                  </button>
+                  <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.3em] text-center px-4 leading-relaxed">
+                    Loom's automated moderation and security system.
+                  </p>
+                </div>
               </div>
 
               {/* Action */}
@@ -193,7 +207,7 @@ const SignUp = () => {
             </form>
 
             <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
-               <Link to="/signin" className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] hover:text-white transition-all">Back to Login</Link>
+              <Link to="/signin" className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] hover:text-white transition-all">Back to Login</Link>
             </div>
           </div>
         </div>

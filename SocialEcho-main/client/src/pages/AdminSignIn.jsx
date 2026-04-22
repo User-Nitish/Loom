@@ -39,8 +39,19 @@ const AdminSignIn = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
-      {/* Cinematic Static Background - Red Tinted */}
+      {/* Cinematic Static Background - Red Tinted with Blurred Texture */}
       <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Background Texture - Full Coverage with Subtle Blur */}
+        <div
+          className="absolute inset-0 w-full h-full opacity-40 blur-[4px]"
+          style={{
+            backgroundImage: "url('/bundle.jpeg')",
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}
+        />
+
         <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-v-red/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-v-red/5 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2" />
       </div>
@@ -58,7 +69,7 @@ const AdminSignIn = () => {
           <p className="text-[10px] font-black text-v-red uppercase tracking-[0.6em]">Restricted Access Zone</p>
         </div>
 
-        <div className="bg-white/[0.03] backdrop-blur-[40px] rounded-[48px] border border-v-red/20 shadow-[0_40px_100px_rgba(250,38,38,0.1)] p-10 md:p-14">
+        <div className="bg-transparent backdrop-blur-none rounded-[48px] border border-v-red/20 shadow-2xl p-10 md:p-14">
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] ml-2">Operator ID</label>
@@ -97,7 +108,7 @@ const AdminSignIn = () => {
                 <IoIosArrowRoundBack className="text-2xl" />
                 Abandon Station
               </Link>
-              
+
               <button
                 disabled={signingIn}
                 type="submit"

@@ -3,16 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAction, clearMessage } from "../redux/actions/authActions";
-import { 
+import {
   AiFillGithub,
 } from "react-icons/ai";
-import { 
+import {
   HiOutlineMail,
   HiOutlineLockClosed,
   HiOutlineEye,
   HiOutlineEyeOff,
 } from "react-icons/hi";
-import { 
+import {
   MdOutlineAdminPanelSettings,
   MdArrowRight,
 } from "react-icons/md";
@@ -42,17 +42,17 @@ const SignIn = () => {
     event.preventDefault();
     setLoading(true);
     setLoadingText("Signing in...");
-    
+
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
-    
+
     const timeout = setTimeout(() => {
       setLoadingText(
         "This is taking longer than usual. Please wait while backend services are getting started."
       );
     }, 5000);
-    
+
     await dispatch(signInAction(formData, navigate));
     setLoading(false);
     clearTimeout(timeout);
@@ -87,8 +87,19 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden">
-      {/* Cinematic Static Background - Refined Obsidian */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+      {/* Cinematic Static Background - Refined Obsidian with Blurred Texture */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Background Texture - Full Coverage with Subtle Blur */}
+        <div
+          className="absolute inset-0 w-full h-full opacity-60 blur-[4px]"
+          style={{
+            backgroundImage: "url('/bundle.jpeg')",
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}
+        />
+
         <div className="absolute top-0 left-0 w-[1000px] h-[1000px] bg-v-red/5 rounded-full blur-[150px] -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-[1000px] h-[1000px] bg-white/[0.02] rounded-full blur-[150px] translate-x-1/2 translate-y-1/2" />
       </div>
@@ -111,8 +122,8 @@ const SignIn = () => {
         </motion.div>
 
         {/* Login Card */}
-        <motion.div 
-          className="bg-[#0f111a]/40 backdrop-blur-[60px] rounded-[56px] border border-white/5 shadow-[0_60px_120px_rgba(0,0,0,0.9)] p-12 md:p-16 relative overflow-hidden"
+        <motion.div
+          className="bg-transparent backdrop-blur-none rounded-[56px] border border-white/10 shadow-2xl p-12 md:p-16 relative overflow-hidden"
           variants={itemVariants}
         >
           {/* Subtle Inner Glow - Deep Blue */}
@@ -123,7 +134,7 @@ const SignIn = () => {
               <h2 className="text-sm font-black text-white uppercase tracking-[0.3em]">Sign In</h2>
               <div className="h-[1px] w-12 bg-white/10" />
             </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Email Input */}
               <div className="space-y-3">
@@ -170,9 +181,8 @@ const SignIn = () => {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className={`p-5 rounded-3xl text-[9px] font-black uppercase tracking-[0.3em] text-center border ${
-                      signInError ? 'bg-v-red/5 border-v-red/10 text-v-red' : 'bg-green-500/5 border-green-500/10 text-green-400'
-                    }`}
+                    className={`p-5 rounded-3xl text-[9px] font-black uppercase tracking-[0.3em] text-center border ${signInError ? 'bg-v-red/5 border-v-red/10 text-v-red' : 'bg-green-500/5 border-green-500/10 text-green-400'
+                      }`}
                   >
                     {signInError || successMessage}
                   </motion.div>
@@ -195,7 +205,7 @@ const SignIn = () => {
             </form>
 
             <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
-               <Link to="/signup" className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] hover:text-white transition-all">Create Account</Link>
+              <Link to="/signup" className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] hover:text-white transition-all">Create Account</Link>
             </div>
           </div>
         </motion.div>

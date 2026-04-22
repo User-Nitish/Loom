@@ -68,7 +68,7 @@ const CinematicBackground = () => {
       if (!isHome) return;
 
       const scrolled = window.scrollY;
-      const scrollableDistance = 3000; 
+      const scrollableDistance = 3000;
       let scrollFraction = scrolled / scrollableDistance;
 
       scrollFraction = Math.max(0, Math.min(1, scrollFraction));
@@ -87,7 +87,7 @@ const CinematicBackground = () => {
       if (canvas) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        
+
         // If on home, draw based on scroll. If not, draw frame 1 or keep current.
         const scrolled = window.scrollY;
         let fraction = isHome ? scrolled / 3000 : 0;
@@ -101,15 +101,19 @@ const CinematicBackground = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [images, isHome]);
 
+  const isAuthPage = location.pathname === "/signin" || location.pathname === "/signup" || location.pathname === "/admin";
+
+  if (isAuthPage) return null;
+
   return (
-    <div className="fixed inset-0 w-full h-screen overflow-hidden no-scrollbar z-0 pointer-events-none bg-v-ink">
+    <div className="fixed inset-0 w-full h-screen overflow-hidden no-scrollbar z-0 pointer-events-none bg-[#0a0a0a]">
       <canvas
         ref={canvasRef}
         className="w-full h-full object-cover opacity-100 transition-opacity duration-1000"
         style={{ mixBlendMode: "screen" }}
       />
       {/* Deep ambient gradients to blend with content */}
-      <div className="absolute inset-0 bg-gradient-to-t from-v-ink via-v-ink/5 to-v-ink/20 opacity-40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-40" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050505_100%)] opacity-30" />
     </div>
   );
