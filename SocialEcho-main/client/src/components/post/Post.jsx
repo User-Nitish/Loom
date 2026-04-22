@@ -268,7 +268,7 @@ const Post = ({ post, index = 0 }) => {
             <HiOutlineHeart className={`text-2xl ${isLiked ? 'fill-current shadow-v-red' : ''}`} />
           </motion.button>
         </div>
-      </div>>
+      </div>
 
       {/* Delete Modal */}
       <AnimatePresence>

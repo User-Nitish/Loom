@@ -13,14 +13,13 @@ const MemoizedPost = memo(Post);
 
 const SectionHeader = ({ title, subtitle, align = "left", titleColor = "text-white", isGradient = false }) => (
   <div className={`mb-12 ${align === "center" ? "text-center" : "text-left"}`}>
-    <h2 className={`text-4xl md:text-5xl font-black tracking-tighter uppercase mb-3 ${
-      isGradient 
-      ? "bg-gradient-to-r from-v-red via-v-red to-white/40 bg-clip-text text-transparent" 
+    <h2 className={`text-4xl md:text-5xl font-black tracking-tighter uppercase mb-3 ${isGradient
+      ? "bg-gradient-to-r from-v-red via-v-red to-white/40 bg-clip-text text-transparent"
       : titleColor
-    }`}>
+      }`}>
       {title}
     </h2>
-    <p className="text-white/40 text-sm md:text-base font-medium tracking-wide">{subtitle}</p>
+    <p className="text-white/70 text-sm md:text-base font-medium tracking-wide">{subtitle}</p>
     {align === "center" && <div className="w-24 h-1 bg-v-yellow mx-auto mt-6 rounded-full" />}
   </div>
 );
@@ -94,9 +93,9 @@ const MainSection = ({ userData }) => {
               <Link
                 key={i}
                 to="/communities"
-                className="bg-black/20 backdrop-blur-[40px] p-8 rounded-[48px] border border-white/10 text-center hover:bg-black/40 transition-all group duration-500 shadow-xl hover:scale-105"
+                className="bg-black/40 backdrop-blur-[40px] p-8 rounded-[48px] border border-white/10 text-center hover:bg-black/60 transition-all group duration-500 shadow-xl hover:scale-105"
               >
-                <p className="text-base font-bold text-white/40 group-hover:text-v-yellow transition-colors tracking-tight">{tag}</p>
+                <p className="text-base font-bold text-white group-hover:text-v-yellow transition-colors tracking-tight">{tag}</p>
               </Link>
             ))}
           </div>

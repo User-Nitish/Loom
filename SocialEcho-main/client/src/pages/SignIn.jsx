@@ -86,211 +86,118 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-950 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-600/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: "2s" }} />
-        <div className="absolute inset-0 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950" />
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden">
+      {/* Cinematic Static Background - Refined Obsidian */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+        <div className="absolute top-0 left-0 w-[1000px] h-[1000px] bg-v-red/5 rounded-full blur-[150px] -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-[1000px] h-[1000px] bg-white/[0.02] rounded-full blur-[150px] translate-x-1/2 translate-y-1/2" />
       </div>
 
-      {/* Main Content */}
       <motion.div
-        className="relative z-10 w-full max-w-md mx-auto px-4"
+        className="relative z-10 w-full max-w-lg mx-auto px-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Logo and Title */}
-        <motion.div 
-          className="text-center mb-8"
-          variants={itemVariants}
-        >
-          <motion.div
-            className="flex items-center justify-center mb-6 mx-auto"
-            whileHover={{ scale: 1.02 }}
-          >
-            <img src="/loom.png" alt="L" className="h-16 w-auto object-contain" />
-            <span className="text-[54px] font-bold text-white -ml-3 leading-none">oom</span>
-          </motion.div>
-          <h1 className="text-3xl font-bold text-neutral-100 mb-2 font-display">
-            Welcome back
-          </h1>
-          <p className="text-neutral-400">
-            Sign in to your account
-          </p>
+        {/* Minimalist Logo Header */}
+        <motion.div className="flex flex-col items-center mb-16" variants={itemVariants}>
+          <div className="flex items-center gap-1">
+            <img src="/loom.png" alt="L" className="h-14 w-auto object-contain" />
+            <h1 className="text-6xl font-black text-white tracking-tighter select-none -ml-2">
+              OOM<span className="text-v-red">.</span>
+            </h1>
+          </div>
+          <p className="text-[9px] font-black text-white/10 uppercase tracking-[0.8em] mt-2 ml-4">The Social Fabric</p>
         </motion.div>
 
-        {/* Sign In Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          className="glass-card rounded-2xl p-8 border border-neutral-800/50"
+        {/* Login Card */}
+        <motion.div 
+          className="bg-[#0f111a]/40 backdrop-blur-[60px] rounded-[56px] border border-white/5 shadow-[0_60px_120px_rgba(0,0,0,0.9)] p-12 md:p-16 relative overflow-hidden"
           variants={itemVariants}
         >
-          {/* Email Field */}
-          <motion.div className="mb-6" variants={itemVariants}>
-            <label className="block text-sm font-medium text-neutral-300 mb-2">
-              Email Address
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <HiOutlineMail className={`h-5 w-5 transition-colors ${
-                  focusedField === 'email' ? 'text-accent-400' : 'text-neutral-500'
-                }`} />
-              </div>
-              <motion.input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setFocusedField('email')}
-                onBlur={() => setFocusedField(null)}
-                placeholder="Enter your email"
-                className="input-field pl-10"
-                required
-                whileFocus={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              />
-            </div>
-          </motion.div>
+          {/* Subtle Inner Glow - Deep Blue */}
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent pointer-events-none" />
 
-          {/* Password Field */}
-          <motion.div className="mb-6" variants={itemVariants}>
-            <label className="block text-sm font-medium text-neutral-300 mb-2">
-              Password
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <HiOutlineLockClosed className={`h-5 w-5 transition-colors ${
-                  focusedField === 'password' ? 'text-accent-400' : 'text-neutral-500'
-                }`} />
-              </div>
-              <motion.input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setFocusedField('password')}
-                onBlur={() => setFocusedField(null)}
-                placeholder="Enter your password"
-                className="input-field pl-10 pr-10"
-                required
-                whileFocus={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              >
-                {showPassword ? (
-                  <HiOutlineEyeOff className="h-5 w-5 text-neutral-500 hover:text-neutral-300 transition-colors" />
-                ) : (
-                  <HiOutlineEye className="h-5 w-5 text-neutral-500 hover:text-neutral-300 transition-colors" />
-                )}
-              </button>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-sm font-black text-white uppercase tracking-[0.3em]">Sign In</h2>
+              <div className="h-[1px] w-12 bg-white/10" />
             </div>
-          </motion.div>
+            
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Email Input */}
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Email Address</label>
+                <div className="relative group">
+                  <HiOutlineMail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-widest"
+                    required
+                  />
+                </div>
+              </div>
 
-          {/* Error/Success Messages */}
-          <AnimatePresence>
-            {(signInError || successMessage) && (
-              <motion.div
-                className={`p-3 rounded-lg mb-6 text-sm ${
-                  signInError 
-                    ? 'bg-red-500/10 border border-red-500/30 text-red-400' 
-                    : 'bg-green-500/10 border border-green-500/30 text-green-400'
-                }`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="flex items-center justify-between">
-                  <span>{signInError || successMessage}</span>
+              {/* Password Input */}
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Password</label>
+                <div className="relative group">
+                  <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-16 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-[0.3em]"
+                    required
+                  />
                   <button
-                    onClick={handleClearMessage}
-                    className="ml-4 hover:opacity-70 transition-opacity"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-6 top-1/2 -translate-y-1/2 text-white/10 hover:text-white transition-colors"
                   >
-                    ×
+                    {showPassword ? <HiOutlineEyeOff size={16} /> : <HiOutlineEye size={16} />}
                   </button>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
 
-          {/* Submit Button */}
-          <motion.button
-            type="submit"
-            disabled={loading}
-            className="btn-accent w-full flex items-center justify-center gap-2 py-3"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            variants={itemVariants}
-          >
-            {loading ? (
-              <>
-                <ButtonLoadingSpinner />
-                <span>{loadingText}</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In</span>
-                <MdArrowRight className="text-lg" />
-              </>
-            )}
-          </motion.button>
+              {/* Status Messages */}
+              <AnimatePresence>
+                {(signInError || successMessage) && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className={`p-5 rounded-3xl text-[9px] font-black uppercase tracking-[0.3em] text-center border ${
+                      signInError ? 'bg-v-red/5 border-v-red/10 text-v-red' : 'bg-green-500/5 border-green-500/10 text-green-400'
+                    }`}
+                  >
+                    {signInError || successMessage}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-          {/* Divider */}
-          <motion.div 
-            className="relative my-6"
-            variants={itemVariants}
-          >
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-neutral-800" />
+              {/* Action */}
+              <motion.button
+                type="submit"
+                disabled={loading}
+                className="w-full py-5 bg-white text-black rounded-full font-black uppercase tracking-[0.4em] text-[10px] hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-4 shadow-2xl"
+              >
+                {loading ? <ButtonLoadingSpinner /> : (
+                  <>
+                    <span>Sign In</span>
+                    <MdArrowRight size={22} />
+                  </>
+                )}
+              </motion.button>
+            </form>
+
+            <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
+               <Link to="/signup" className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] hover:text-white transition-all">Create Account</Link>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-neutral-900 text-neutral-500">Or continue with</span>
-            </div>
-          </motion.div>
-
-          {/* GitHub Sign In */}
-          <motion.button
-            type="button"
-            className="btn-minimal w-full flex items-center justify-center gap-2 py-3"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            variants={itemVariants}
-          >
-            <AiFillGithub className="text-xl" />
-            <span>Continue with GitHub</span>
-          </motion.button>
-
-          {/* Sign Up Link */}
-          <motion.p 
-            className="text-center text-neutral-400 text-sm mt-6"
-            variants={itemVariants}
-          >
-            Don't have an account?{" "}
-            <Link 
-              to="/signup" 
-              className="text-accent-400 hover:text-accent-300 font-medium transition-colors"
-            >
-              Sign up
-            </Link>
-          </motion.p>
-        </motion.form>
-
-        {/* Admin Sign In Link */}
-        <motion.div 
-          className="text-center mt-6"
-          variants={itemVariants}
-        >
-          <Link
-            to="/admin/signin"
-            className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-300 text-sm transition-colors"
-          >
-            <MdOutlineAdminPanelSettings className="text-lg" />
-            <span>Admin Sign In</span>
-          </Link>
+          </div>
         </motion.div>
       </motion.div>
     </div>

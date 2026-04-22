@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { signUpAction, clearMessage } from "../redux/actions/authActions";
 import { Link } from "react-router-dom";
 import ContextAuthModal from "../components/modals/ContextAuthModal";
-import { RxCross1 } from "react-icons/rx";
+import { motion, AnimatePresence } from "framer-motion";
+import { HiOutlineUser, HiOutlineMail, HiOutlineLockClosed, HiOutlinePhotograph } from "react-icons/hi";
+import { MdArrowRight } from "react-icons/md";
 import ButtonLoadingSpinner from "../components/loader/ButtonLoadingSpinner";
 
-const SignUpNew = () => {
+const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
   const [name, setName] = useState("");
@@ -15,29 +17,12 @@ const SignUpNew = () => {
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [avatarError, setAvatarError] = useState(null);
+  const [isConsentGiven, setIsConsentGiven] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const signUpError = useSelector((state) => state.auth?.signUpError);
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-
-    if (e.target.value.includes("mod.loom.com")) {
-      setIsModerator(true);
-    } else {
-      setIsModerator(false);
-    }
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -46,30 +31,22 @@ const SignUpNew = () => {
       setAvatarError(null);
       return;
     }
-    if (
-      file.type !== "image/jpeg" &&
-      file.type !== "image/png" &&
-      file.type !== "image/jpg"
-    ) {
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      setAvatarError("Use JPEG/JPG/PNG only.");
       setAvatar(null);
-      setAvatarError("Please upload a valid image file (jpeg, jpg, png)");
     } else if (file.size > 10 * 1024 * 1024) {
+      setAvatarError("Max 10MB limit.");
       setAvatar(null);
-      setAvatarError("Please upload an image file less than 10MB");
     } else {
       setAvatar(file);
       setAvatarError(null);
     }
   };
 
-  const [isConsentGiven, setIsConsentGiven] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModerator, setIsModerator] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setLoadingText("Signing up...");
+    setLoadingText("Initializing Identity...");
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
@@ -78,229 +55,158 @@ const SignUpNew = () => {
     formData.append("role", "general");
     formData.append("isConsentGiven", isConsentGiven.toString());
 
-    const timeout = setTimeout(() => {
-      setLoadingText(
-        "This is taking longer than usual. Please wait while backend services are getting started."
-      );
-    }, 5000);
-
     await dispatch(signUpAction(formData, navigate, isConsentGiven, email));
     setLoading(false);
-    setIsConsentGiven(false);
-    clearTimeout(timeout);
-  };
-
-  const handleClearError = () => {
-    dispatch(clearMessage());
   };
 
   return (
-    <section className="bg-white">
-      <div className="container mx-auto flex min-h-screen items-center justify-center px-6">
-        <form className="w-full max-w-md" onSubmit={handleSubmit}>
-          <div className="mx-auto flex justify-center items-center mb-4">
-            <img src="/loom.png" alt="L" className="h-12 w-auto object-contain" />
-            <span className="text-[42px] font-bold text-gray-800 -ml-2 leading-none">oom</span>
-          </div>
-          {signUpError &&
-            Array.isArray(signUpError) &&
-            signUpError.map((err, i) => (
-              <div
-                className="mt-6 flex items-center rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
-                role="alert"
-                key={i}
-              >
-                <span className="ml-2 block sm:inline">{err}</span>
-                <button
-                  className="ml-auto font-bold text-red-700"
-                  onClick={handleClearError}
-                >
-                  <RxCross1 className="h-3 w-3" />
-                </button>
-              </div>
-            ))}
-
-          <div className="mt-6 flex items-center justify-center">
-            <Link
-              to={"/signin"}
-              className="w-1/3 border-b border-gray-400 pb-4 text-center font-medium text-gray-800"
-            >
-              Sign In
-            </Link>
-            <Link
-              to={"/signup"}
-              className="text-cente w-1/3 border-b-2 border-blue-500 pb-4 font-medium text-gray-800"
-            >
-              Sign Up
-            </Link>
-          </div>
-          <div className="relative mt-8 flex items-center">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mx-3 h-6 w-6 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </span>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={name}
-              onChange={handleNameChange}
-              className="block w-full rounded-lg border bg-white px-11 py-3 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-              placeholder="Username"
-              required
-              autoComplete="off"
-            />
-          </div>
-          <label
-            htmlFor="avatar"
-            className="mx-auto mt-6 flex cursor-pointer items-center rounded-lg border-2 border-dashed bg-white px-3 py-3 text-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-              />
-            </svg>
-            <h2 className="mx-3 text-gray-400">Profile Photo</h2>
-            <input
-              id="avatar"
-              type="file"
-              className="hidden"
-              name="avatar"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              autoComplete="off"
-            />
-          </label>
-          {avatar && (
-            <div className="mt-2 flex items-center justify-center">
-              <span className="font-medium text-blue-500">{avatar.name}</span>
-            </div>
-          )}
-          {avatarError && (
-            <div className="mt-2 flex items-center justify-center">
-              <span className="text-red-500">{avatarError}</span>
-            </div>
-          )}
-
-          <div className="relative mt-6 flex items-center">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mx-3 h-6 w-6 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-            </span>
-            <input
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleEmailChange}
-              type="email"
-              className="block w-full rounded-lg border bg-white px-11 py-3 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-              placeholder="Email address"
-              required
-              autoComplete="off"
-            />
-          </div>
-          <div className="relative mt-4 flex items-center">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mx-3 h-6 w-6 text-gray-300"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-            </span>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="block w-full rounded-lg border bg-white px-10 py-3 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-              placeholder="Password"
-              required
-              autoComplete="off"
-            />
-          </div>
-          <div className="mt-6">
-            <button
-              disabled={loading}
-              type="submit"
-              className={`w-full transform rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50 ${
-                loading ? "cursor-not-allowed opacity-50" : ""
-              }`}
-            >
-              {loading ? (
-                <ButtonLoadingSpinner loadingText={loadingText} />
-              ) : (
-                <span>Sign Up</span>
-              )}
-            </button>
-
-            <div onClick={() => setIsModalOpen(true)} className="mt-6">
-              {isConsentGiven && !isModerator ? (
-                <p className="mt-2 cursor-pointer rounded-lg border border-green-500 px-4 py-3 text-center text-sm font-semibold text-green-600">
-                  Context-Based Authentication is enabled
-                </p>
-              ) : (
-                <p className="mt-2 cursor-pointer rounded-lg border px-4 py-3 text-center text-sm font-semibold">
-                  Context-Based Authentication is disabled
-                </p>
-              )}
-            </div>
-
-            <div>
-              <ContextAuthModal
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                setIsConsentGiven={setIsConsentGiven}
-                isModerator={isModerator}
-              />
-            </div>
-          </div>
-        </form>
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden py-20">
+      {/* Cinematic Static Background - Refined Obsidian */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+        <div className="absolute top-0 left-0 w-[1000px] h-[1000px] bg-v-red/5 rounded-full blur-[150px] -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-[1000px] h-[1000px] bg-white/[0.02] rounded-full blur-[150px] translate-x-1/2 translate-y-1/2" />
       </div>
-    </section>
+
+      <motion.div 
+        className="relative z-10 w-full max-w-2xl mx-auto px-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        {/* Minimalist Logo Header */}
+        <div className="flex flex-col items-center mb-16">
+          <div className="flex items-center gap-1">
+            <img src="/loom.png" alt="L" className="h-14 w-auto object-contain" />
+            <h1 className="text-6xl font-black text-white tracking-tighter select-none -ml-2">
+              OOM<span className="text-v-red">.</span>
+            </h1>
+          </div>
+          <p className="text-[9px] font-black text-white/10 uppercase tracking-[0.8em] mt-2 ml-4">The Social Fabric</p>
+        </div>
+
+        {/* Sign Up Card */}
+        <div className="bg-[#0f111a]/40 backdrop-blur-[60px] rounded-[56px] border border-white/5 shadow-[0_60px_120px_rgba(0,0,0,0.9)] p-12 md:p-16 relative overflow-hidden">
+          {/* Subtle Inner Glow - Deep Blue */}
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent pointer-events-none" />
+
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-sm font-black text-white uppercase tracking-[0.3em]">Sign Up</h2>
+              <div className="h-[1px] w-12 bg-white/10" />
+            </div>
+            
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Username */}
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Username</label>
+                <div className="relative group">
+                  <HiOutlineUser className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter username"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-widest"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Email Address</label>
+                <div className="relative group">
+                  <HiOutlineMail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-widest"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Password</label>
+                <div className="relative group">
+                  <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-[0.3em]"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Photo */}
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Profile Photo</label>
+                <label className="relative flex items-center group cursor-pointer">
+                   <div className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white/40 group-hover:bg-white/[0.08] transition-all flex items-center gap-4">
+                      <HiOutlinePhotograph className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-hover:text-white transition-colors" size={16} />
+                      <span className="truncate tracking-widest uppercase">{avatar ? avatar.name : "Upload Photo"}</span>
+                   </div>
+                   <input type="file" onChange={handleAvatarChange} className="hidden" accept="image/*" />
+                </label>
+                {avatarError && <p className="text-[9px] text-v-red font-black uppercase tracking-widest mt-2 ml-2">{avatarError}</p>}
+              </div>
+
+              {/* Neural Context */}
+              <div className="pt-2">
+                 <div className="flex flex-col gap-2">
+                    <button 
+                      type="button"
+                      onClick={() => setIsModalOpen(true)}
+                      className={`w-full py-5 rounded-full border-2 transition-all text-[10px] font-black uppercase tracking-[0.4em] ${
+                        isConsentGiven 
+                        ? 'bg-green-500/20 border-green-500/40 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)]' 
+                        : 'bg-transparent border-white/10 text-white/40 hover:text-white hover:border-white/20'
+                      }`}
+                    >
+                      {isConsentGiven ? "Neural Context Active" : "Initialize Neural Context"}
+                    </button>
+                    <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.3em] text-center px-4 leading-relaxed">
+                      Loom's automated moderation and security system.
+                    </p>
+                 </div>
+              </div>
+
+              {/* Action */}
+              <motion.button
+                type="submit"
+                disabled={loading}
+                className="w-full py-5 bg-white text-black rounded-full font-black uppercase tracking-[0.4em] text-[10px] hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-4 shadow-2xl mt-4"
+              >
+                {loading ? <ButtonLoadingSpinner /> : (
+                  <>
+                    <span>Sign Up</span>
+                    <MdArrowRight size={22} />
+                  </>
+                )}
+              </motion.button>
+            </form>
+
+            <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
+               <Link to="/signin" className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] hover:text-white transition-all">Back to Login</Link>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <ContextAuthModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        setIsConsentGiven={setIsConsentGiven}
+        isModerator={false}
+      />
+    </div>
   );
 };
 
-export default SignUpNew;
+export default SignUp;

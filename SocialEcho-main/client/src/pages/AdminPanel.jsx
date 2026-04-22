@@ -25,12 +25,27 @@ const AdminPanel = () => {
   }, [adminPanelError, dispatch, navigate]);
 
   return (
-    <div className="pt-5 max-w-6xl mx-auto flex flex-col justify-center items-center ">
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-12">
+      <div className="flex items-center justify-between border-b border-white/5 pb-8">
+        <div>
+           <h1 className="text-4xl font-black text-white tracking-tighter uppercase mb-2">Central Operations</h1>
+           <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.5em]">System Node: 0x88 / Authorized Access Only</p>
+        </div>
+        <button 
+          onClick={() => dispatch(logoutAction()).then(() => navigate("/admin/signin"))}
+          className="px-6 py-3 bg-white/[0.03] border border-white/5 rounded-2xl text-[10px] font-black text-white/40 uppercase tracking-widest hover:text-v-red hover:bg-v-red/10 hover:border-v-red/20 transition-all"
+        >
+          Deauthorize Terminal
+        </button>
+      </div>
+
       <Tab activeTab={activeTab} handleTabClick={handleTabClick} />
 
-      {activeTab === "logs" && <Logs />}
-      {activeTab === "settings" && <Settings />}
-      {activeTab === "Community Management" && <CommunityManagement />}
+      <div className="bg-white/[0.01] backdrop-blur-3xl rounded-[40px] border border-white/5 p-8 min-h-[60vh]">
+        {activeTab === "logs" && <Logs />}
+        {activeTab === "settings" && <Settings />}
+        {activeTab === "Community Management" && <CommunityManagement />}
+      </div>
     </div>
   );
 };

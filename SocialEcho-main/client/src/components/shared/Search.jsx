@@ -16,7 +16,7 @@ import {
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-const Search = () => {
+const Search = ({ onClose }) => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
   const [posts, setPosts] = useState([]);
@@ -93,28 +93,28 @@ const Search = () => {
     <div className="relative">
       {/* Search Input */}
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <SearchIcon className="h-4 w-4 text-white/20 group-focus-within:text-v-cyan transition-colors" />
+        <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+          <SearchIcon className="h-5 w-5 text-white/20 group-focus-within:text-v-yellow transition-colors" />
         </div>
-        <motion.input
+        <input
           type="text"
           id="search"
+          autoFocus
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="SEARCH FREQUENCIES..."
-          className="w-full bg-black/40 border border-white/5 rounded-xl py-3 pl-10 pr-10 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-white placeholder:text-white/10 focus:border-v-cyan/30 focus:bg-black/60 focus:outline-none transition-all"
+          placeholder="Search the fabric..."
+          className="w-full bg-white/[0.03] border border-white/10 rounded-[28px] py-4 pl-14 pr-12 text-sm font-medium text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/[0.08] focus:outline-none transition-all shadow-inner"
           aria-label="Search"
           autoComplete="off"
         />
         <AnimatePresence>
           {inputValue !== "" && (
             <motion.button
-              className="absolute inset-y-0 right-0 pr-4 flex items-center"
+              className="absolute inset-y-0 right-0 pr-6 flex items-center"
               onClick={clearValues}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
             >
               <X className="h-4 w-4 text-white/20 hover:text-v-red transition-colors" />
             </motion.button>
@@ -122,62 +122,62 @@ const Search = () => {
         </AnimatePresence>
       </div>
 
-      {/* Search Results Dropdown */}
+      {/* Search Results */}
       <AnimatePresence>
         {inputValue !== "" && (
           <motion.div
-            className="absolute top-14 left-0 right-0 md:left-auto md:right-0 md:w-[450px] glass-card rounded-2xl border border-white/10 shadow-2xl max-h-[500px] overflow-y-auto z-50 custom-scrollbar"
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4 max-h-[500px] overflow-y-auto custom-scrollbar"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
           >
             {/* Loading State */}
             {loading && (
-              <div className="flex items-center justify-center py-10">
-                <Loader2 size={24} className="text-v-cyan animate-spin" />
-                <span className="ml-4 text-[10px] font-mono font-black uppercase tracking-[0.3em] text-v-cyan/60">Scanning Signals...</span>
+              <div className="flex flex-col items-center justify-center py-10 gap-4">
+                <Loader2 size={24} className="text-v-yellow animate-spin" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-white/20">Weaving results...</span>
               </div>
             )}
 
             {/* Results Mapping */}
-            <div className="divide-y divide-white/5">
+            <div className="space-y-2">
               {/* Posts Results */}
               {posts.length > 0 && (
                 <div className="p-4">
-                  <div className="px-2 mb-4 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">
-                    Transmissions
+                  <div className="px-2 mb-6 text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">
+                    Threads
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     {posts.map((post) => (
                       <div
                         key={post._id}
                         onClick={() => {
                           navigate(`/post/${post._id}`);
                           clearValues();
+                          onClose && onClose();
                         }}
-                        className="group flex flex-col p-4 rounded-xl hover:bg-white/5 cursor-pointer transition-all border border-transparent hover:border-white/5"
+                        className="group flex flex-col p-5 rounded-3xl hover:bg-white/[0.03] cursor-pointer transition-all border border-transparent hover:border-white/5"
                       >
-                        <div className="flex items-center gap-3 mb-2">
-                          <FileText size={14} className="text-v-cyan/40 group-hover:text-v-cyan transition-colors" />
-                          <span className="text-xs font-bold text-white/90 group-hover:text-v-cyan transition-colors truncate">
-                            {post.title || "UNTITLED_DATA"}
+                        <div className="flex items-center gap-3 mb-3">
+                          <FileText size={14} className="text-white/40 group-hover:text-white transition-colors" />
+                          <span className="text-sm font-bold text-white/90 group-hover:text-white transition-colors truncate">
+                            {post.title || "Shared Echo"}
                           </span>
                         </div>
-                        <p className="text-[10px] text-white/30 truncate uppercase tracking-widest mb-3">
+                        <p className="text-xs text-white/40 line-clamp-2 leading-relaxed mb-4">
                           {post.content}
                         </p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase">
-                              IDENT: {post.user.name}
+                        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-bold text-white/40 uppercase">
+                              {post.user.name}
                             </span>
-                            <span className="w-1 h-1 rounded-full bg-white/5" />
-                            <span className="text-[9px] font-mono font-bold text-v-cyan/40 uppercase">
-                              LOC: {post.community.name}
+                            <span className="w-1 h-1 rounded-full bg-white/10" />
+                            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+                              {post.community.name}
                             </span>
                           </div>
-                          <ExternalLink size={10} className="text-white/10 group-hover:text-v-cyan transition-all" />
+                          <ExternalLink size={12} className="text-white/10 group-hover:text-white transition-all" />
                         </div>
                       </div>
                     ))}
@@ -188,33 +188,34 @@ const Search = () => {
               {/* Users Results */}
               {users.length > 0 && (
                 <div className="p-4">
-                  <div className="px-2 mb-4 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">
-                    Identities
+                  <div className="px-2 mb-6 text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">
+                    Weavers
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-2">
                     {users.map((user) => (
                       <div
                         key={user._id}
                         onClick={() => {
                           navigate(`/user/${user._id}`);
                           clearValues();
+                          onClose && onClose();
                         }}
-                        className="group flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 cursor-pointer transition-all border border-transparent hover:border-white/5"
+                        className="group flex items-center justify-between p-4 rounded-2xl hover:bg-white/[0.03] cursor-pointer transition-all border border-transparent hover:border-white/5"
                       >
-                        <img
-                          src={user.avatar}
-                          alt={user.name}
-                          className="h-10 w-10 rounded-lg object-cover border border-white/10 grayscale-[0.5] group-hover:grayscale-0 transition-all"
-                        />
-                        <div className="flex flex-col min-w-0">
-                          <div className="flex items-center gap-2">
-                            <User size={12} className="text-v-cyan/40" />
-                            <span className="text-xs font-black text-white/80 group-hover:text-v-cyan truncate uppercase tracking-tighter">
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="h-10 w-10 rounded-full object-cover border border-white/10 grayscale hover:grayscale-0 transition-all"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-white/80 group-hover:text-white transition-colors">
                               {user.name}
                             </span>
+                            <span className="text-[10px] text-white/20 font-medium">{user.email}</span>
                           </div>
-                          <span className="text-[9px] font-mono text-white/20 truncate uppercase">{user.email}</span>
                         </div>
+                        <User size={14} className="text-white/10 group-hover:text-white transition-colors" />
                       </div>
                     ))}
                   </div>
@@ -224,34 +225,34 @@ const Search = () => {
               {/* Community Results */}
               {(community || joinedCommunity) && (
                 <div className="p-4">
-                  <div className="px-2 mb-4 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">
-                    Territories
+                  <div className="px-2 mb-6 text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">
+                    Nodes
                   </div>
                   
                   {community && (
-                    <div className="group p-4 rounded-xl bg-v-cyan/5 border border-v-cyan/20 mb-2">
+                    <div className="group p-5 rounded-3xl bg-white/5 border border-white/10 mb-4">
                       <div className="flex items-start gap-4">
                         <img
                           src={community.banner}
                           alt={community.name}
-                          className="h-12 w-12 rounded-xl object-cover border border-v-cyan/30"
+                          className="h-14 w-14 rounded-2xl object-cover border border-white/10"
                         />
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <Users size={14} className="text-v-cyan" />
-                              <span className="text-xs font-black text-v-cyan uppercase tracking-widest">{community.name}</span>
+                              <Users size={14} className="text-white/40" />
+                              <span className="text-sm font-bold text-white uppercase tracking-widest">{community.name}</span>
                             </div>
                             {!community.isMember && (
                               <button
-                                className="px-3 py-1 bg-v-cyan text-v-ink text-[9px] font-black uppercase rounded-lg hover:scale-105 active:scale-95 transition-transform"
+                                className="px-4 py-1.5 bg-white text-v-ink text-[10px] font-black uppercase rounded-full hover:scale-105 active:scale-95 transition-transform"
                                 onClick={() => toggleModal(true)}
                               >
                                 Join
                               </button>
                             )}
                           </div>
-                          <p className="text-[10px] text-white/40 line-clamp-2 uppercase tracking-tight">
+                          <p className="text-xs text-white/40 line-clamp-2 leading-relaxed">
                             {community.description}
                           </p>
                         </div>
@@ -272,23 +273,24 @@ const Search = () => {
                       onClick={() => {
                         navigate(`/community/${joinedCommunity.name}`);
                         clearValues();
+                        onClose && onClose();
                       }}
-                      className="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 cursor-pointer transition-all border border-transparent hover:border-white/5"
+                      className="group flex items-center gap-4 p-5 rounded-3xl hover:bg-white/[0.03] cursor-pointer transition-all border border-transparent hover:border-white/5"
                     >
                       <img
                         src={joinedCommunity.banner}
                         alt={joinedCommunity.name}
-                        className="h-12 w-12 rounded-xl object-cover border border-white/10 grayscale-[0.5] group-hover:grayscale-0 transition-all"
+                        className="h-14 w-14 rounded-2xl object-cover border border-white/10 grayscale hover:grayscale-0 transition-all"
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Users size={14} className="text-v-cyan/40 group-hover:text-v-cyan" />
-                          <span className="text-xs font-black text-white/80 group-hover:text-v-cyan uppercase tracking-widest">
+                        <div className="flex items-center gap-3 mb-1">
+                          <Users size={14} className="text-white/20 group-hover:text-white transition-colors" />
+                          <span className="text-sm font-bold text-white group-hover:text-white transition-colors uppercase tracking-widest">
                             {joinedCommunity.name}
                           </span>
-                          <span className="text-[8px] font-mono font-black bg-v-cyan/20 text-v-cyan px-1.5 py-0.5 rounded border border-v-cyan/30 uppercase">Member</span>
+                          <span className="text-[9px] font-black bg-white/10 text-white px-2 py-0.5 rounded-full uppercase tracking-tighter">Member</span>
                         </div>
-                        <p className="text-[10px] text-white/30 truncate uppercase tracking-tight">
+                        <p className="text-xs text-white/40 truncate">
                           {joinedCommunity.description}
                         </p>
                       </div>
@@ -300,9 +302,9 @@ const Search = () => {
 
             {/* No Results */}
             {!loading && posts.length === 0 && users.length === 0 && !community && !joinedCommunity && (
-              <div className="text-center py-16">
-                <SearchIcon className="h-12 w-12 text-white/5 mx-auto mb-4" />
-                <p className="text-[10px] font-mono font-black text-white/20 uppercase tracking-[0.3em]">No valid frequencies detected</p>
+              <div className="text-center py-20">
+                <SearchIcon className="h-12 w-12 text-white/5 mx-auto mb-6" />
+                <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">No resonances found</p>
               </div>
             )}
           </motion.div>
@@ -313,4 +315,3 @@ const Search = () => {
 };
 
 export default Search;
-;

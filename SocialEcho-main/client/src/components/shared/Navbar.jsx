@@ -83,10 +83,10 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
       >
         {/* Logo */}
         <Link to="/" className="flex items-center group">
-          <img 
-            src="/loom.png" 
-            alt="L" 
-            className="h-8 w-auto object-contain" 
+          <img
+            src="/loom.png"
+            alt="L"
+            className="h-8 w-auto object-contain"
           />
           <span className="text-[28px] font-bold tracking-tighter text-white hidden sm:block leading-none -ml-1.5">oom</span>
         </Link>
@@ -189,17 +189,21 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
         </div>
       </motion.header>
 
-      {/* Search Bar */}
+      {/* Integrated Search Dropdown */}
       <AnimatePresence>
         {showSearch && (
           <motion.div
-            className="absolute top-full left-0 w-full flex justify-center pt-4 px-6"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full right-0 w-full max-w-lg mt-4 px-6 md:px-0 pointer-events-auto"
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
-            <div className="w-full max-w-2xl bg-[#120806]/90 backdrop-blur-2xl rounded-2xl border border-white/10 p-4 shadow-2xl">
-              <Search />
+            <div className="bg-black/40 backdrop-blur-[60px] rounded-[40px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-3 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none opacity-20" />
+              <div className="relative z-10">
+                <Search onClose={() => setShowSearch(false)} />
+              </div>
             </div>
           </motion.div>
         )}
