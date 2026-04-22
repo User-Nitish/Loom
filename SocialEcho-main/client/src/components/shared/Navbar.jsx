@@ -1,22 +1,53 @@
 import { useRef, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import Search from "./Search";
 import { memo } from "react";
 import { logoutAction } from "../../redux/actions/authActions";
-import { IoLogOutOutline } from "react-icons/io5";
-import { Transition } from "@headlessui/react";
-import { AiOutlineBars } from "react-icons/ai";
-import { RxCross1 } from "react-icons/rx";
+import {
+  Home,
+  Compass,
+  Bookmark,
+  Users,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  User,
+  Search as SearchIcon,
+} from "lucide-react";
 
 const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const [loggingOut, setLoggingOut] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const dropdownRef = useRef(null);
 
-  const handleProfileClick = () => {
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, []);
+
+  const handleProfileClick = (e) => {
+    e.stopPropagation();
     setShowDropdown(!showDropdown);
   };
 
@@ -26,98 +57,154 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
     setLoggingOut(false);
   };
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener("click", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
+  const navItems = [
+    { path: "/", label: "Home" },
+    { path: "/communities", label: "Explore" },
+    { path: "/saved", label: "Saved" },
+    { path: "/following", label: "Network" },
+  ];
 
   return (
-    <nav className="sticky top-0 z-20 mb-5 flex justify-center gap-10 border bg-white p-2 md:items-center md:justify-between md:px-36">
-      <Link to="/" className="hidden md:inline-block">
-        <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500 tracking-wider">Loom</span>
-      </Link>
-
-      <button className="inline-block md:hidden" onClick={toggleLeftbar}>
-        {showLeftbar ? <RxCross1 /> : <AiOutlineBars />}
-      </button>
-
-      <Search />
-
-      <div className="relative flex justify-end md:w-36">
-        <button
-          type="button"
-          className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full"
-          onClick={handleProfileClick}
-        >
-          <img
-            src={userData.avatar}
-            alt="profile"
-            className="h-8 w-8 rounded-full object-cover"
+    <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-6 px-6 pointer-events-none">
+      <motion.header
+        className="pointer-events-auto flex items-center justify-between gap-8 px-6 h-14 rounded-2xl w-full max-w-5xl"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          background: isScrolled
+            ? "rgba(18, 8, 6, 0.35)"
+            : "rgba(18, 8, 6, 0.15)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          boxShadow: "0 4px 24px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        {/* Logo */}
+        <Link to="/" className="flex items-center group">
+          <img 
+            src="/loom.png" 
+            alt="L" 
+            className="h-8 w-auto object-contain" 
           />
-        </button>
-        <Transition
-          show={showDropdown}
-          enter="transition ease-out duration-100 transform"
-          enterFrom="opacity-0 scale-95"
-          enterTo="opacity-100 scale-100"
-          leave="transition ease-in duration-75 transform"
-          leaveFrom="opacity-100 scale-100"
-          leaveTo="opacity-0 scale-95"
-        >
-          {() => (
-            <div
-              ref={dropdownRef}
-              className="absolute right-0 top-10 mt-2 w-72 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="user-menu"
+          <span className="text-[28px] font-bold tracking-tighter text-white hidden sm:block leading-none -ml-1.5">oom</span>
+        </Link>
+
+        {/* Navigation */}
+        <nav className="hidden md:flex items-center gap-1">
+          {navItems.map(({ path, label }) => {
+            const isActive = location.pathname === path;
+            return (
+              <Link
+                key={path}
+                to={path}
+                className="px-4 py-1.5 rounded-full text-xs font-medium transition-all"
+                style={{
+                  color: isActive ? "#120806" : "rgba(255,255,255,0.7)",
+                  background: isActive ? "#FADB17" : "transparent",
+                }}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right Section */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className="p-2 rounded-full hover:bg-white/5 transition-colors text-white/50"
+          >
+            <SearchIcon size={18} />
+          </button>
+
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={handleProfileClick}
+              className="flex items-center gap-2 p-1 rounded-full border border-white/5 hover:bg-white/5 transition-colors"
             >
-              <div className="py-1" role="none">
-                <div className="flex flex-col items-center">
-                  <img
-                    src={userData.avatar}
-                    alt="profile"
-                    className="mb-2 h-16 w-16 rounded-full object-cover"
-                  />
-                  <div className="text-sm font-semibold text-gray-700 hover:underline">
-                    <Link to={`/profile`}>{userData.name}</Link>
+              <img
+                src={userData.avatar}
+                alt="profile"
+                className="w-7 h-7 rounded-full object-cover opacity-90"
+              />
+              <span className="text-xs font-medium text-white/80 hidden lg:block pr-2">
+                {userData.name.split(" ")[0]}
+              </span>
+            </button>
+
+            <AnimatePresence>
+              {showDropdown && (
+                <motion.div
+                  className="absolute right-0 top-full mt-3 w-48 rounded-xl overflow-hidden shadow-2xl"
+                  style={{
+                    background: "rgba(18, 8, 6, 0.4)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(16px)",
+                  }}
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                >
+                  <div className="p-2">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors text-xs"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      <User size={14} />
+                      <span>Profile</span>
+                    </Link>
+                    <Link
+                      to="/settings"
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors text-xs"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      <Settings size={14} />
+                      <span>Settings</span>
+                    </Link>
+                    <div className="my-1 border-t border-white/5" />
+                    <button
+                      onClick={logout}
+                      disabled={loggingOut}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors text-xs"
+                    >
+                      <LogOut size={14} />
+                      <span>{loggingOut ? "Signing out..." : "Sign out"}</span>
+                    </button>
                   </div>
-                  <div className="text-sm text-gray-500">{userData.email}</div>
-                </div>
-                <hr className="my-2" />
-                <div className="flex justify-center">
-                  <button
-                    type="button"
-                    className="block w-full px-4 py-2  text-left text-sm text-red-400 hover:cursor-pointer hover:text-red-600"
-                    role="menuitem"
-                    onClick={logout}
-                    disabled={loggingOut}
-                  >
-                    {loggingOut ? (
-                      <div className="text-center">Logging out...</div>
-                    ) : (
-                      <div className="flex items-center justify-center">
-                        <span>Logout</span>
-                        <IoLogOutOutline className="ml-2" />
-                      </div>
-                    )}
-                  </button>
-                </div>
-              </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <button
+            className="md:hidden p-2 rounded-full text-white/60"
+            onClick={toggleLeftbar}
+          >
+            {showLeftbar ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
+      </motion.header>
+
+      {/* Search Bar */}
+      <AnimatePresence>
+        {showSearch && (
+          <motion.div
+            className="absolute top-full left-0 w-full flex justify-center pt-4 px-6"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <div className="w-full max-w-2xl bg-[#120806]/90 backdrop-blur-2xl rounded-2xl border border-white/10 p-4 shadow-2xl">
+              <Search />
             </div>
-          )}
-        </Transition>
-      </div>
-    </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 

@@ -14,24 +14,37 @@ const Saved = () => {
   const savedPosts = useSelector((state) => state.posts?.savedPosts);
 
   return (
-    <div className="main-section bg-white border">
-      <div className="flex flex-col mb-3">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center border-b py-3">
-          Your saved posts
-        </h2>
+    <div className="space-y-8 pb-10">
+      {/* Header Section */}
+      <div className="text-left pt-6 pb-2 border-b border-white/5">
+        <h1 className="text-4xl font-bold text-white mb-2">
+          Saved
+        </h1>
+        <div className="flex items-center gap-3">
+          <p className="text-white/40 text-sm font-medium">
+            Your saved posts
+          </p>
+        </div>
+      </div>
 
+      <div className="flex flex-col mb-3">
         {savedPosts && savedPosts.length > 0 ? (
-          <div className="flex flex-col items-center px-5 py-5 ">
+          <div className="flex flex-col items-center gap-8">
             {savedPosts.reverse().map((post) => (
               <SavedPost key={post._id} post={post} />
             ))}
           </div>
         ) : (
-          <div className="text-center flex justify-center items-center flex-col">
-            <p className="text-gray-500 py-5">
-              You haven't saved any post yet.
+          <div className="p-12 text-center flex justify-center items-center flex-col">
+            <p className="text-white/40 text-xl font-medium mb-10">
+              You haven't saved any posts yet.
             </p>
-            <img loading="lazy" src={NoSavedPost} alt="no post" />
+            <img 
+              loading="lazy" 
+              src={NoSavedPost} 
+              alt="no post" 
+              className="max-w-md w-full opacity-40 rounded-3xl grayscale" 
+            />
           </div>
         )}
       </div>

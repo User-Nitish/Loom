@@ -91,110 +91,115 @@ const ProfileUpdateModal = ({ user, isOpen, onClose }) => {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block w-full transform overflow-hidden rounded-md bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:max-w-xl">
+            <div className="inline-block w-full transform overflow-hidden rounded-3xl glass-card border border-white/10 px-8 pb-8 pt-8 text-left align-bottom shadow-2xl transition-all sm:my-8 sm:align-middle md:max-w-xl">
               <div className="w-full">
-                <div className="mt-3 text-center sm:mt-0 sm:text-left">
+                <div className="text-left">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                    className="text-2xl font-bold leading-6 text-white mb-8 border-b border-white/10 pb-4"
                   >
-                    Update Profile
+                    Edit Profile
                   </Dialog.Title>
 
-                  <div className="mt-4">
-                    <div className="flex items-center space-x-2">
-                      <FiUser className="text-gray-600" />
-                      <label className="block text-sm font-medium text-gray-700">
-                        Bio
-                      </label>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="flex items-center space-x-2 mb-2">
+                        <FiUser className="text-v-cyan" />
+                        <label className="block text-sm font-semibold text-white/50 uppercase tracking-wider">
+                          Bio
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Tell us about yourself..."
+                        className="block w-full rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/20 outline-none focus:border-v-cyan/50 transition-all"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                      />
                     </div>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-b border-gray-300 p-2 outline-none"
-                      value={bio}
-                      onChange={(e) => setBio(e.target.value)}
-                    />
-                  </div>
 
-                  <div className="mt-4">
-                    <div className="flex items-center space-x-2">
-                      <FiMapPin className="text-gray-600" />
-                      <label className="block text-sm font-medium text-gray-700">
-                        Location
-                      </label>
+                    <div>
+                      <div className="flex items-center space-x-2 mb-2">
+                        <FiMapPin className="text-v-cyan" />
+                        <label className="block text-sm font-semibold text-white/50 uppercase tracking-wider">
+                          Location
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Where are you based?"
+                        className="block w-full rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/20 outline-none focus:border-v-cyan/50 transition-all"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                      />
                     </div>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-b border-gray-300 p-2 outline-none"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                    />
-                  </div>
 
-                  <div className="mt-4">
-                    <div className="flex items-center space-x-2">
-                      <FiEdit className="text-gray-600" />
-                      <label className="block text-sm font-medium text-gray-700">
-                        Interests (Separated by comma)
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full rounded-md border-b border-gray-300 p-2 outline-none"
-                      value={interests}
-                      onChange={(e) => {
-                        if (e.target.value.length <= 50) {
-                          setInterests(e.target.value);
-                        }
-                      }}
-                      maxLength={50}
-                    />
+                    <div>
+                      <div className="flex items-center space-x-2 mb-2">
+                        <FiEdit className="text-v-cyan" />
+                        <label className="block text-sm font-semibold text-white/50 uppercase tracking-wider">
+                          Interests <span className="text-xs normal-case opacity-40">(comma separated)</span>
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Gaming, Photography, etc."
+                        className="block w-full rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/20 outline-none focus:border-v-cyan/50 transition-all mb-4"
+                        value={interests}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 50) {
+                            setInterests(e.target.value);
+                          }
+                        }}
+                        maxLength={50}
+                      />
 
-                    <div className="mt-4 h-20 overflow-y-auto">
-                      <div className="flex flex-wrap gap-2">
-                        {suggestedInterests.map((interest, index) => (
-                          <button
-                            key={index}
-                            type="button"
-                            disabled={isUpdating || interests.length >= 50}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            onClick={() =>
-                              setInterests(
-                                interests === ""
-                                  ? interest
-                                  : interests + ", " + interest
-                              )
-                            }
-                          >
-                            {interest}
-                          </button>
-                        ))}
+                      <div className="mt-4 h-28 overflow-y-auto pr-2 no-scrollbar">
+                        <div className="flex flex-wrap gap-2">
+                          {suggestedInterests.map((interest, index) => (
+                            <button
+                              key={index}
+                              type="button"
+                              disabled={isUpdating || interests.length >= 50}
+                              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-all focus:outline-none"
+                              onClick={() =>
+                                setInterests(
+                                  interests === ""
+                                    ? interest
+                                    : interests + ", " + interest
+                                )
+                              }
+                            >
+                              {interest}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+              <div className="mt-8 flex flex-col md:flex-row-reverse gap-3">
                 <button
                   disabled={isUpdating}
                   type="button"
-                  className={`inline-flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-white shadow-sm focus:outline-none sm:ml-3 sm:w-auto sm:text-sm ${
+                  className={`flex-1 inline-flex justify-center items-center rounded-xl px-6 py-3 text-sm font-bold shadow-[0_0_20px_rgba(27,206,220,0.2)] transition-all ${
                     isUpdating
-                      ? "cursor-not-allowed bg-gray-400"
-                      : "bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  }`}
+                      ? "bg-white/5 border border-white/10 text-white/20 cursor-not-allowed"
+                      : "bg-v-cyan text-v-ink hover:bg-v-yellow hover:scale-[1.02]"
+                  } focus:outline-none`}
                   onClick={handleUpdateProfile}
                 >
                   {isUpdating ? (
                     <ButtonLoadingSpinner loadingText={"Updating..."} />
                   ) : (
-                    <span>Update</span>
+                    <span>Save Changes</span>
                   )}
                 </button>
                 <button
                   type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="flex-1 inline-flex justify-center px-6 py-3 text-sm font-semibold text-white/50 bg-white/5 border border-white/10 rounded-xl hover:text-white hover:bg-white/10 transition-all focus:outline-none"
                   onClick={onClose}
                 >
                   Cancel

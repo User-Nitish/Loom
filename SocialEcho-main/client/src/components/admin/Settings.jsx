@@ -4,6 +4,7 @@ import {
   getServicePreferencesAction,
   updateServicePreferencesAction,
 } from "../../redux/actions/adminActions";
+import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -59,77 +60,107 @@ const Settings = () => {
   };
 
   if (isLoading || !servicePreferences) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center py-20 text-v-cyan font-black uppercase tracking-[0.4em] animate-pulse">
+        Polling_Config...
+      </div>
+    );
   }
 
   return (
-    <div className="p-5 w-full border rounded-md bg-white mt-3">
-      <h2 className="font-semibold mb-4 border-b pb-2 text-center text-gray-700">
-        Service Preferences
-      </h2>
-
-      {isSuccess && (
-        <div className="bg-green-100 text-green-800 p-2 mb-4 rounded">
-          Service Preferences updated successfully!
+    <div className="w-full max-w-4xl mx-auto mt-8">
+      <div className="glass-card !bg-black/60 border border-white/5 shadow-2xl p-10 relative overflow-hidden group text-white">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-v-cyan via-v-teal to-v-red opacity-50" />
+        
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-black tracking-tighter uppercase font-display mb-2">
+            Service Config_Registry
+          </h2>
+          <p className="text-v-cyan text-[10px] font-black uppercase tracking-[0.4em]">
+            Parameter Group: CONTENT_MODERATION
+          </p>
         </div>
-      )}
 
-      <div className="flex items-center mb-4">
-        <div>Use Perspective API for content moderation</div>
-        <div className="ml-auto">
-          <input
-            className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            type="checkbox"
-            checked={usePerspectiveAPI}
-            onChange={(e) => setUsePerspectiveAPI(e.target.checked)}
-          />
+        {isSuccess && (
+          <div className="bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-black uppercase tracking-widest p-4 mb-8 rounded-xl text-center">
+            Preferences synchronized successfully
+          </div>
+        )}
+
+        <div className="space-y-8">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5">
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">AI Moderation Bridge</p>
+              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Toggle Perspective_API Logic</p>
+            </div>
+            <div className="ml-auto">
+              <input
+                className="w-5 h-5 bg-black/40 border-white/10 rounded accent-v-cyan cursor-pointer"
+                type="checkbox"
+                checked={usePerspectiveAPI}
+                onChange={(e) => setUsePerspectiveAPI(e.target.checked)}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 gap-4">
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">Filtering Provider</p>
+              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Select Signal Processor</p>
+            </div>
+            <div className="md:ml-auto w-full md:w-64">
+              <select
+                className="w-full bg-black/60 border border-white/10 text-white text-xs font-mono rounded-xl p-3 outline-none appearance-none cursor-pointer"
+                value={categoryFilteringServiceProvider}
+                onChange={(e) =>
+                  setCategoryFilteringServiceProvider(e.target.value)
+                }
+              >
+                <option value="" className="bg-v-ink">NULL_PROVIDER</option>
+                <option value="TextRazor" className="bg-v-ink">TEXT_RAZOR</option>
+                <option value="InterfaceAPI" className="bg-v-ink">INTERFACE_CORE</option>
+                <option value="ClassifierAPI" className="bg-v-ink">GENESIS_CLASSIFIER</option>
+                <option value="disabled" className="bg-v-ink">SYSTEM_DISABLE</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 gap-4">
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">API Latency Cap</p>
+              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Timeout Millis (MAX_WAIT)</p>
+            </div>
+            <div className="md:ml-auto w-full md:w-64">
+              <input
+                className="w-full bg-black/60 border border-white/10 text-v-cyan text-xs font-mono rounded-xl p-3 outline-none"
+                type="number"
+                value={categoryFilteringRequestTimeout}
+                min={0}
+                required
+                onChange={(e) => {
+                  setCategoryFilteringRequestTimeout(e.target.value);
+                }}
+              />
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="flex items-center mb-4">
-        <div>Category filtering service provider</div>
-        <div className="ml-auto">
-          <select
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            value={categoryFilteringServiceProvider}
-            onChange={(e) =>
-              setCategoryFilteringServiceProvider(e.target.value)
-            }
+        <div className="mt-10 pt-8 border-t border-white/5 flex justify-end">
+          <button
+            className="px-10 py-4 bg-v-cyan text-v-ink font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-v-yellow hover:scale-105 transition-all shadow-[0_10px_20px_rgba(27,206,220,0.2)] disabled:opacity-50"
+            onClick={handleUpdate}
+            disabled={isUpdating}
           >
-            <option value="">Select a provider</option>
-            <option value="TextRazor">TextRazor</option>
-            <option value="InterfaceAPI">InterfaceAPI</option>
-            <option value="ClassifierAPI">ClassifierAPI</option>
-            <option value="disabled">Disabled</option>
-          </select>
+            {isUpdating ? (
+              <span className="flex items-center gap-2">
+                <ButtonLoadingSpinner />
+                Syncing...
+              </span>
+            ) : (
+              "Apply Config"
+            )}
+          </button>
         </div>
-      </div>
-
-      <div className="flex items-center mb-4">
-        <div>Category filtering request timeout (ms)</div>
-        <div className="ml-auto">
-          <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            type="number"
-            value={categoryFilteringRequestTimeout}
-            min={0}
-            max={500000}
-            required
-            onChange={(e) => {
-              setCategoryFilteringRequestTimeout(e.target.value);
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-end">
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
-          onClick={handleUpdate}
-          disabled={isUpdating}
-        >
-          {isUpdating ? "Updating..." : "Update"}
-        </button>
       </div>
     </div>
   );

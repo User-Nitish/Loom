@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import PageTransition from "./components/layout/PageTransition";
 
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
@@ -25,90 +26,90 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 export const privateRoutes = [
   {
     path: "/",
-    element: <Home />,
+    element: <PageTransition><Home /></PageTransition>,
   },
   {
     path: "/home",
-    element: <Home />,
+    element: <PageTransition><Home /></PageTransition>,
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: <PageTransition><Profile /></PageTransition>,
   },
   {
     path: "/post/:postId",
-    element: <Post />,
+    element: <PageTransition><Post /></PageTransition>,
   },
   {
     path: "/my/post/:postId",
-    element: <OwnPost />,
+    element: <PageTransition><OwnPost /></PageTransition>,
   },
   {
     path: "/community/:communityName",
-    element: <CommunityHome />,
+    element: <PageTransition><CommunityHome /></PageTransition>,
   },
   {
     path: "/community/:communityName/reported-post",
-    element: <ReportedPost />,
+    element: <PageTransition><ReportedPost /></PageTransition>,
   },
   {
     path: "/community/:communityName/moderator",
-    element: <Moderator />,
+    element: <PageTransition><Moderator /></PageTransition>,
   },
   {
     path: "/saved",
-    element: <Saved />,
+    element: <PageTransition><Saved /></PageTransition>,
   },
   {
     path: "/user/:userId",
-    element: <PublicProfile />,
+    element: <PageTransition><PublicProfile /></PageTransition>,
   },
   {
     path: "/communities",
-    element: <AllCommunities />,
+    element: <PageTransition><AllCommunities /></PageTransition>,
   },
   {
     path: "/my-communities",
-    element: <MyCommunities />,
+    element: <PageTransition><MyCommunities /></PageTransition>,
   },
   {
     path: "/following",
-    element: <Following />,
+    element: <PageTransition><Following /></PageTransition>,
   },
   {
     path: "/devices-locations",
-    element: <DevicesLocations />,
+    element: <PageTransition><DevicesLocations /></PageTransition>,
   },
 ];
 
 export const publicRoutes = [
   {
     path: "/signup",
-    element: <SignUp />,
+    element: <PageTransition><SignUp /></PageTransition>,
   },
 
   {
     path: "/auth/verify",
-    element: <VerifyEmail />,
+    element: <PageTransition><VerifyEmail /></PageTransition>,
   },
   {
     path: "/email-verified",
-    element: <EmailVerifiedMessage />,
+    element: <PageTransition><EmailVerifiedMessage /></PageTransition>,
   },
   {
     path: "/block-device",
-    element: <BlockDevice />,
+    element: <PageTransition><BlockDevice /></PageTransition>,
   },
   {
     path: "/verify-login",
-    element: <LoginVerified />,
+    element: <PageTransition><LoginVerified /></PageTransition>,
   },
   {
     path: "/access-denied",
-    element: <AccessDenied />,
+    element: <PageTransition><AccessDenied /></PageTransition>,
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: <PageTransition><NotFound /></PageTransition>,
   },
 ];

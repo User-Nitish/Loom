@@ -21,28 +21,37 @@ const Following = () => {
   }, [dispatch]);
 
   return (
-    <div className="main-section bg-white border">
+    <div className="space-y-8 pb-10">
+      {/* Header Section */}
+      <div className="text-left pt-6 pb-2 border-b border-white/5">
+        <h1 className="text-4xl font-bold text-white mb-2">
+          Following
+        </h1>
+        <div className="flex items-center gap-3">
+          <p className="text-white/40 text-sm font-medium">
+            People you follow
+          </p>
+        </div>
+      </div>
+
       {loading ? (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center min-h-[40vh]">
           <CommonLoading />
         </div>
       ) : (
-        <div>
-          <h2 className="font-semibold text-gray-700 mb-4 text-center border-b py-3">
-            People you're following
-          </h2>
+        <div className="p-8">
           {followingUsers?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center px-3 py-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               {followingUsers.map((user) => (
                 <PublicProfileCard key={user._id} user={user} />
               ))}
             </div>
           ) : (
-           <div className="text-center flex justify-center items-center flex-col">
-            <p className="text-gray-500 py-5">
-             You are not following anyone yet.
-            </p>
-              <img src={noFollow} alt="no post" className="max-w-md" />
+            <div className="text-center py-20 flex justify-center items-center flex-col">
+              <p className="text-white/40 text-xl font-medium mb-10">
+                You're not following anyone yet.
+              </p>
+              <img src={noFollow} alt="no post" className="max-w-md w-full opacity-40 rounded-3xl grayscale" />
             </div>
           )}
         </div>

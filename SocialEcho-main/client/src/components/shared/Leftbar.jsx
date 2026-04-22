@@ -1,18 +1,21 @@
 import { useMemo, useEffect, memo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getJoinedCommunitiesAction } from "../../redux/actions/communityActions";
 import {
-  HiOutlineHome,
-  HiOutlineUserCircle,
-  HiOutlineRectangleStack,
-  HiOutlineTag,
-} from "react-icons/hi2";
-import { HiOutlineUserGroup } from "react-icons/hi2";
-import { GiTeamIdea } from "react-icons/gi";
+  Home,
+  User,
+  Bookmark,
+  Users,
+  Compass,
+  Globe,
+  PlusCircle,
+  Hash
+} from "lucide-react";
 
 const Leftbar = ({ showLeftbar }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const user = useSelector((state) => state.auth?.userData);
   const joinedCommunities = useSelector(
@@ -24,7 +27,7 @@ const Leftbar = ({ showLeftbar }) => {
   }, [dispatch]);
 
   const visibleCommunities = useMemo(() => {
-    return joinedCommunities?.slice(0, 5);
+    return joinedCommunities?.slice(0, 8);
   }, [joinedCommunities]);
 
   const communityLinks = useMemo(() => {
@@ -34,90 +37,78 @@ const Leftbar = ({ showLeftbar }) => {
     }));
   }, [visibleCommunities]);
 
+  const navLinks = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/profile", label: "Profile", icon: User },
+    { href: "/saved", label: "Saved", icon: Bookmark },
+    { href: "/following", label: "Following", icon: Users, role: "general" },
+  ];
+
   return (
-    <div className={`${showLeftbar ? "" : "hidden"} leftbar`}>
-      <div className="flex flex-col justify-start items-center">
-        <div className="flex flex-col items-start gap-4 w-full p-5">
-          <Link
-            className="flex items-center gap-2 text-lg font-medium hover:text-primary"
-            to="/home"
-          >
-            <HiOutlineHome className="text-xl" />
-            <p>Home</p>
-          </Link>
-          <Link
-            className="flex items-center gap-2 text-lg font-medium hover:text-primary"
-            to="/profile"
-          >
-            <HiOutlineUserCircle className="text-xl" />
-            <p>Profile</p>
-          </Link>
-          <Link
-            className="flex items-center gap-2 text-lg font-medium hover:text-primary"
-            to="/saved"
-          >
-            <HiOutlineTag className="text-xl" />
-            <p>Saved</p>
-          </Link>
+    <div className={`fixed inset-y-0 left-0 z-40 w-72 transition-transform duration-500 transform ${showLeftbar ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0 md:flex flex-col pt-24 md:pt-0`}>
+      <div className="flex flex-col h-full glass-card border-r border-white/5 p-6 space-y-8">
+        
+        {/* Navigation Group */}
+        <div className="space-y-1">
+          <p className="text-[11px] font-bold text-white/30 mb-4 px-2 uppercase tracking-wide">Main Menu</p>
+          {navLinks.map((link) => {
+            if (link.role && user?.role !== link.role) return null;
+            const Icon = link.icon;
+            const isActive = location.pathname === link.href;
+            
+            return (
+              <Link
+                key={link.href}
+                className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group ${
+                  isActive 
+                    ? "bg-v-yellow text-v-ink" 
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }`}
+                to={link.href}
+              >
+                <Icon size={18} strokeWidth={isActive ? 2.5 : 1.5} />
+                <span className="text-sm font-medium">{link.label}</span>
+              </Link>
+            );
+          })}
+        </div>
 
-          {user && user.role === "general" && (
-            <Link
-              className="flex items-center gap-2 text-lg font-medium hover:text-primary"
-              to="/following"
-            >
-              <HiOutlineRectangleStack className="text-xl" />
-              <p>Following</p>
+        {/* Communities Group */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between px-2">
+            <p className="text-[11px] font-bold text-white/30 uppercase tracking-wide">Communities</p>
+            <Link to="/my-communities" className="text-[10px] font-medium text-v-yellow hover:underline transition-colors">
+              Manage
             </Link>
-          )}
+          </div>
 
-          <hr className="w-full my-4 border-gray-300" />
-
-          {communityLinks && communityLinks.length > 0 ? (
-            <div className="w-full">
-              <div className="flex items-center justify-between">
-                <div className="flex gap-1 font-medium items-center">
-                  <HiOutlineUserGroup className="text-xl" />
-                  Communities
-                </div>
-
+          <div className="space-y-1">
+            {communityLinks && communityLinks.length > 0 ? (
+              communityLinks.map((community) => (
                 <Link
-                  className="flex relative items-center text-sm font-medium text-primary mr-4"
-                  to="/my-communities"
+                  key={community.href}
+                  className="flex items-center gap-3 px-4 py-2 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all truncate group"
+                  to={community.href}
                 >
-                  See all
-                  <p className="absolute -top-2 -right-4 text-white text-xs bg-primary w-4 h-4 rounded-full flex justify-center items-center">
-                    {" "}
-                    {joinedCommunities.length}
-                  </p>
+                  <Hash size={14} className="text-white/20 group-hover:text-v-yellow transition-colors" />
+                  <span className="text-sm font-medium truncate">{community.label}</span>
                 </Link>
-              </div>
-              <ul className="w-full mt-3">
-                {communityLinks.map((communityLink) => (
-                  <li key={communityLink.href}>
-                    <Link
-                      className="flex items-center hover:text-primary text-gray-600 font-medium gap-2 py-1"
-                      to={communityLink.href}
-                    >
-                      {communityLink.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <div>No communities found.</div>
-          )}
-          {user && user.role === "general" && (
-            <div className="md:hidden">
-              <hr className="w-full my-4 border-gray-300" />
-              <div className="flex justify-center gap-1 items-center">
-                <GiTeamIdea />
-                <Link to="/communities" className="text-primary font-medium">
-                  See all communities
-                </Link>
-              </div>
-            </div>
-          )}
+              ))
+            ) : (
+              <div className="px-4 py-2 text-xs text-white/20">No communities joined</div>
+            )}
+          </div>
+        </div>
+
+        {/* Secondary Actions */}
+        <div className="pt-4 mt-auto border-t border-white/5">
+          <Link
+            to="/communities"
+            className="flex items-center gap-4 px-4 py-3 rounded-xl bg-white/5 text-white/80 font-medium hover:bg-white/10 transition-all border border-white/10"
+          >
+            <Compass size={18} />
+            <span className="text-sm">Discover</span>
+          </Link>
         </div>
       </div>
     </div>

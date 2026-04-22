@@ -84,36 +84,34 @@ const Rightbar = () => {
         {isModeratorOfThisCommunity && (
           <Link
             to={`/community/${communityName}/moderator`}
-            className="px-4 bg-primary text-white shadow-md shadow-gray-50 text-sm py-1 rounded-md flex justify-center items-center w-full my-2 hover:bg-primary-600"
+            className="px-4 bg-v-yellow text-v-ink text-sm py-2 rounded-lg flex justify-center items-center w-full font-bold transition-transform hover:scale-[1.02]"
           >
-            Moderation Panel
+            Manage Community
           </Link>
         )}
 
-        {isModeratorUpdated && !isModeratorOfThisCommunity && (
+        {!isModeratorOfThisCommunity && (
           <button
             onClick={toggleLeaveModal}
-            className="px-4 shadow-md shadow-red-50 text-sm py-1 border border-red-400 hover:text-white hover:bg-red-400 text-red-400 rounded-md flex justify-center items-center w-full my-2"
+            className="px-4 text-sm py-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-lg flex justify-center items-center w-full font-medium transition-colors"
           >
             Leave Community
           </button>
         )}
-        {
-          <LeaveModal
-            show={showLeaveModal}
-            toggle={toggleLeaveModal}
-            communityName={communityName}
-          />
-        }
+        <LeaveModal
+          show={showLeaveModal}
+          toggle={toggleLeaveModal}
+          communityName={communityName}
+        />
       </div>
       {rules && rules.length > 0 && (
-        <div className="text-slate-900 mb-4">
-          <span className="font-bold">Community Guidelines:</span>
-          <ul className="flex flex-col gap-2 ">
+        <div className="text-white/80 mb-4">
+          <span className="font-bold block mb-3 text-white/30 text-xs uppercase tracking-wide">Rules</span>
+          <ul className="flex flex-col gap-3">
             {rules.map((rule) => (
-              <li key={rule._id} className="flex items-start gap-2 ">
-                <HiOutlineCheckBadge className="text-lg flex-shrink-0 mt-1" />
-                {rule.rule}
+              <li key={rule._id} className="flex items-start gap-3 text-sm">
+                <HiOutlineCheckBadge className="text-v-yellow text-lg flex-shrink-0" />
+                <span>{rule.rule}</span>
               </li>
             ))}
           </ul>

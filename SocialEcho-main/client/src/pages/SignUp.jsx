@@ -98,8 +98,9 @@ const SignUpNew = () => {
     <section className="bg-white">
       <div className="container mx-auto flex min-h-screen items-center justify-center px-6">
         <form className="w-full max-w-md" onSubmit={handleSubmit}>
-          <div className="mx-auto flex justify-center">
-            <span className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500 tracking-wider">Loom</span>
+          <div className="mx-auto flex justify-center items-center mb-4">
+            <img src="/loom.png" alt="L" className="h-12 w-auto object-contain" />
+            <span className="text-[42px] font-bold text-gray-800 -ml-2 leading-none">oom</span>
           </div>
           {signUpError &&
             Array.isArray(signUpError) &&
