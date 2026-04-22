@@ -45,69 +45,66 @@ const Leftbar = ({ showLeftbar }) => {
   ];
 
   return (
-    <div className={`fixed inset-y-0 left-0 z-40 w-72 transition-transform duration-500 transform ${showLeftbar ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0 md:flex flex-col pt-24 md:pt-0`}>
-      <div className="flex flex-col h-full glass-card border-r border-white/5 p-6 space-y-8">
-        
-        {/* Navigation Group */}
+    <div className={`fixed inset-y-0 left-0 z-40 w-72 transition-all duration-500 transform ${showLeftbar ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0 md:flex flex-col pt-24 md:pt-4 px-4 gap-6`}>
+      {/* Navigation Capsule */}
+      <div className="flex flex-col bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-6 rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+        <p className="text-[10px] font-black text-white/20 mb-6 px-2 uppercase tracking-[0.4em]">Main</p>
         <div className="space-y-1">
-          <p className="text-[11px] font-bold text-white/30 mb-4 px-2 uppercase tracking-wide">Main Menu</p>
           {navLinks.map((link) => {
             if (link.role && user?.role !== link.role) return null;
             const Icon = link.icon;
             const isActive = location.pathname === link.href;
-            
+
             return (
               <Link
                 key={link.href}
-                className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group ${
-                  isActive 
-                    ? "bg-v-yellow text-v-ink" 
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                }`}
+                className={`flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group ${isActive
+                    ? "bg-v-red text-white shadow-[0_10px_20px_rgba(250,38,38,0.3)]"
+                    : "text-white/40 hover:text-white hover:bg-white/5"
+                  }`}
                 to={link.href}
               >
                 <Icon size={18} strokeWidth={isActive ? 2.5 : 1.5} />
-                <span className="text-sm font-medium">{link.label}</span>
+                <span className="text-[11px] font-black uppercase tracking-widest">{link.label}</span>
               </Link>
             );
           })}
         </div>
+      </div>
 
-        {/* Communities Group */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between px-2">
-            <p className="text-[11px] font-bold text-white/30 uppercase tracking-wide">Communities</p>
-            <Link to="/my-communities" className="text-[10px] font-medium text-v-yellow hover:underline transition-colors">
-              Manage
-            </Link>
-          </div>
-
-          <div className="space-y-1">
-            {communityLinks && communityLinks.length > 0 ? (
-              communityLinks.map((community) => (
-                <Link
-                  key={community.href}
-                  className="flex items-center gap-3 px-4 py-2 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all truncate group"
-                  to={community.href}
-                >
-                  <Hash size={14} className="text-white/20 group-hover:text-v-yellow transition-colors" />
-                  <span className="text-sm font-medium truncate">{community.label}</span>
-                </Link>
-              ))
-            ) : (
-              <div className="px-4 py-2 text-xs text-white/20">No communities joined</div>
-            )}
-          </div>
+      {/* Communities Capsule */}
+      <div className="flex flex-col flex-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-6 rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.3)] overflow-hidden">
+        <div className="flex items-center justify-between px-2 mb-6">
+          <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">Nodes</p>
+          <Link to="/my-communities" className="text-[10px] font-black text-v-red hover:underline transition-colors uppercase tracking-widest">
+            Edit
+          </Link>
         </div>
 
-        {/* Secondary Actions */}
-        <div className="pt-4 mt-auto border-t border-white/5">
+        <div className="space-y-1 overflow-y-auto no-scrollbar flex-1">
+          {communityLinks && communityLinks.length > 0 ? (
+            communityLinks.map((community) => (
+              <Link
+                key={community.href}
+                className="flex items-center gap-3 px-4 py-2 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all truncate group"
+                to={community.href}
+              >
+                <Hash size={14} className="text-white/10 group-hover:text-v-red transition-colors" />
+                <span className="text-[11px] font-bold truncate">{community.label}</span>
+              </Link>
+            ))
+          ) : (
+            <div className="px-4 py-2 text-[10px] font-bold text-white/10 uppercase tracking-widest">No nodes</div>
+          )}
+        </div>
+
+        <div className="pt-6 mt-4 border-t border-white/5">
           <Link
             to="/communities"
-            className="flex items-center gap-4 px-4 py-3 rounded-xl bg-white/5 text-white/80 font-medium hover:bg-white/10 transition-all border border-white/10"
+            className="flex items-center gap-4 px-5 py-4 rounded-3xl bg-v-red text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:scale-105 transition-all"
           >
             <Compass size={18} />
-            <span className="text-sm">Discover</span>
+            <span>Discover</span>
           </Link>
         </div>
       </div>

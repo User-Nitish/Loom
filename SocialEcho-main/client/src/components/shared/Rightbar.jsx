@@ -76,17 +76,18 @@ const Rightbar = () => {
   const currentLocation = useLocation().pathname;
 
   return (
-    <div className="rightbar overflow-auto space-y-8 pr-2 no-scrollbar">
+    <div className="rightbar flex flex-col gap-6 pr-2 no-scrollbar min-h-[calc(100vh-160px)]">
+      {/* Recommended Communities Module */}
       {currentLocation !== "/communities" && (
-        <div className="space-y-4">
+        <div className="bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-7 rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.3)] space-y-6">
           <div className="flex items-end justify-between px-2">
-            <h5 className="font-bold text-[11px] uppercase tracking-wide text-white/30">Recommended Communities</h5>
+            <h5 className="font-black text-[10px] uppercase tracking-[0.4em] text-white/20">Discovery</h5>
             {remainingCount > 0 && (
               <Link
-                className="text-xs font-bold text-v-yellow hover:underline transition-colors"
+                className="text-[10px] font-black text-v-red hover:underline transition-colors uppercase tracking-widest"
                 to="/communities"
               >
-                See all ({remainingCount})
+                All ({remainingCount})
               </Link>
             )}
           </div>
@@ -134,55 +135,55 @@ const Rightbar = () => {
         </div>
       )}
 
-      <div className="space-y-4">
-        <h5 className="px-2 text-[11px] font-bold uppercase tracking-wide text-white/30">Who to follow</h5>
+      {/* People to Follow Module */}
+      <div className="bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-7 rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.3)] space-y-6">
+        <h5 className="px-2 text-[10px] font-black uppercase tracking-[0.4em] text-white/20">Sync Network</h5>
 
         {publicUsersFetched && recommendedUsers?.length === 0 && (
-          <div className="text-center text-sm text-white/20 py-4 bg-white/5 rounded-2xl">
-            No suggestions right now.
+          <div className="text-center text-[10px] font-black uppercase tracking-widest text-white/10 py-8">
+            Network Idle
           </div>
         )}
-        
-        <ul className="flex flex-col gap-3">
+
+        <div className="flex flex-col gap-4">
           {recommendedUsers?.length > 0 &&
             recommendedUsers.map((user) => (
-              <li
+              <div
                 key={user._id}
-                className="flex justify-between items-center bg-white/5 border border-white/10 px-4 py-3 rounded-2xl hover:bg-white/10 transition-all"
+                className="flex justify-between items-center group transition-all"
               >
                 <div className="flex items-center min-w-0">
-                  <img
-                    className="h-9 w-9 rounded-full shrink-0 object-cover border border-white/10"
-                    src={user.avatar}
-                    alt={user.name}
-                  />
-                  <div className="ml-3 min-w-0">
+                  <div className="relative">
+                    <img
+                      className="h-10 w-10 rounded-full shrink-0 object-cover border border-white/10 group-hover:border-v-red transition-all"
+                      src={user.avatar?.url || placeholder}
+                      alt={user.name}
+                    />
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-[#0a0a0a] rounded-full" />
+                  </div>
+                  <div className="ml-4 min-w-0">
                     <Link
                       to={`/user/${user._id}`}
-                      className="text-sm font-bold text-white hover:text-v-yellow transition-colors line-clamp-1"
+                      className="text-[11px] font-black text-white hover:text-v-red transition-all uppercase tracking-wider line-clamp-1"
                     >
                       {user.name}
                     </Link>
-                    <div className="text-[10px] text-white/40 font-medium">
-                      {user.followerCount} followers
+                    <div className="text-[9px] text-white/20 font-black uppercase tracking-tighter">
+                      {user.followerCount || 0} Synced
                     </div>
                   </div>
                 </div>
-                
+
                 <button
                   disabled={followLoading[user._id]}
                   onClick={() => followUserHandler(user._id)}
-                  className="flex-shrink-0 ml-3 text-v-yellow hover:text-white transition-colors text-xs font-bold"
+                  className="p-2.5 rounded-full bg-white/5 text-white/20 hover:bg-v-red hover:text-white transition-all shadow-lg"
                 >
-                  {followLoading[user._id] ? (
-                    "..."
-                  ) : (
-                    "Follow"
-                  )}
+                  <BsPersonPlusFill size={16} />
                 </button>
-              </li>
+              </div>
             ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
