@@ -107,7 +107,7 @@ const Post = ({ post, index = 0 }) => {
               <div className="absolute inset-0 bg-neutral-800 rounded-full animate-pulse" />
             )}
           </motion.div>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               {userData._id === user._id ? (
@@ -146,7 +146,7 @@ const Post = ({ post, index = 0 }) => {
             </p>
           </div>
         </div>
-        
+
         {/* Post Actions */}
         <div className="flex items-center gap-2">
           {userData?._id === post.user._id && (
@@ -251,14 +251,13 @@ const Post = ({ post, index = 0 }) => {
             <span className="text-xs font-medium">{comments.length} Comments</span>
           </motion.button>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <motion.button
-            className={`p-3 rounded-xl transition-all duration-300 ${
-              isLiked
+            className={`p-3 rounded-xl transition-all duration-300 ${isLiked
                 ? 'text-v-red bg-v-red/10 shadow-[0_0_20px_rgba(250,38,38,0.2)]'
                 : 'text-white/20 hover:text-v-red hover:bg-v-red/10'
-            }`}
+              }`}
             onClick={(e) => {
               e.stopPropagation();
               setIsLiked(!isLiked);

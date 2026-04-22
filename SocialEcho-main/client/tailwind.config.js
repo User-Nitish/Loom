@@ -71,7 +71,7 @@ module.exports = {
         'v-teal': '#417E8C',
         'v-paper': '#FDFBF7',
         'v-ink': '#2A1F1D',
-        
+
         neutral: {
           50: '#FDFBF7',
           100: '#F4F1E1',

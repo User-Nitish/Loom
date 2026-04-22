@@ -18,7 +18,7 @@ const Hero = () => {
         <h1 className="text-8xl md:text-[11rem] font-black text-white leading-[0.75] tracking-tightest select-none mb-10 -ml-2 md:-ml-4">
           LOOM<span className="text-v-yellow">.</span>
         </h1>
-        
+
         <p className="text-xl md:text-2xl text-v-yellow font-black uppercase tracking-[0.4em] mb-6">
           The Social Fabric
         </p>
@@ -42,9 +42,9 @@ const Hero = () => {
           </Link>
         </div>
       </motion.div>
-      
+
       {/* Scroll Hint - Pushed to absolute edge for maximum left weight */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
