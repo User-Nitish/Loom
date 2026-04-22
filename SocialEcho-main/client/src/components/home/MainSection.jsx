@@ -51,25 +51,28 @@ const MainSection = ({ userData }) => {
       <section className="py-32 px-6 max-w-7xl mx-auto w-full">
         <SectionHeader title="Discovery" subtitle="Handpicked spaces and trending echoes." />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <motion.div whileHover={{ y: -10 }} className="md:col-span-2 glass-card rounded-[40px] p-10 min-h-[400px] flex flex-col justify-end border border-white/10 group relative overflow-hidden">
-            <div className="absolute top-10 right-10 w-16 h-16 rounded-full bg-v-yellow/10 border border-v-yellow/20 flex items-center justify-center">
-              <div className="w-3 h-3 rounded-full bg-v-yellow animate-pulse" />
+          <motion.div 
+            whileHover={{ y: -10, scale: 1.01 }} 
+            className="md:col-span-2 glass-card rounded-[80px_20px_100px_40px] p-10 min-h-[400px] flex flex-col justify-end border border-white/10 group relative overflow-hidden transition-all duration-700"
+          >
+            <div className="absolute top-10 right-10 w-16 h-16 rounded-full bg-v-red/10 border border-v-red/20 flex items-center justify-center">
+              <div className="w-3 h-3 rounded-full bg-v-red animate-pulse" />
             </div>
             <h3 className="text-4xl font-bold text-white mb-4">The future of <br />connection.</h3>
             <p className="text-white/40 max-w-sm">Explore how niche communities are reclaiming the digital landscape from algorithmic noise.</p>
           </motion.div>
           <div className="space-y-6">
-            <div className="glass-card rounded-[40px] p-8 border border-white/10">
+            <div className="glass-card rounded-[30px_60px_20px_50px] p-8 border border-white/10">
               <p className="text-xs font-bold text-white/20 uppercase tracking-widest mb-4">Trending</p>
               <div className="space-y-3">
-                <p className="text-lg font-bold text-white hover:text-v-yellow cursor-pointer">#Web3Design</p>
-                <p className="text-lg font-bold text-white hover:text-v-yellow cursor-pointer">#Minimalism</p>
-                <p className="text-lg font-bold text-white hover:text-v-yellow cursor-pointer">#CreativeFocus</p>
+                <p className="text-lg font-bold text-white hover:text-v-red cursor-pointer transition-colors">#Web3Design</p>
+                <p className="text-lg font-bold text-white hover:text-v-red cursor-pointer transition-colors">#Minimalism</p>
+                <p className="text-lg font-bold text-white hover:text-v-red cursor-pointer transition-colors">#CreativeFocus</p>
               </div>
             </div>
-            <div className="glass-card rounded-[40px] p-8 border border-white/10 bg-v-yellow group cursor-pointer">
-              <h3 className="text-2xl font-bold text-v-ink mb-2">Join Loom</h3>
-              <p className="text-v-ink/60 text-sm font-medium">Start your own community node today.</p>
+            <div className="glass-card rounded-[40px_10px_60px_20px] p-8 border border-white/10 bg-v-red group cursor-pointer hover:rounded-[20px_60px_10px_40px] transition-all duration-700">
+              <h3 className="text-2xl font-bold text-white mb-2">Join Loom</h3>
+              <p className="text-white/60 text-sm font-medium">Start your own community node today.</p>
             </div>
           </div>
         </div>
@@ -77,7 +80,7 @@ const MainSection = ({ userData }) => {
 
       {/* 2. Explore Communities Hub */}
       <section className="mx-6 py-24 px-6 bg-black/55 backdrop-blur-[70px] border border-white/5 relative overflow-hidden rounded-[80px]">
-        <div className="absolute inset-0 bg-gradient-to-br from-v-yellow/10 to-transparent pointer-events-none opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-v-red/10 to-transparent pointer-events-none opacity-20" />
         <div className="max-w-7xl mx-auto relative z-10">
           <SectionHeader
             title="Explore Communities"
@@ -95,7 +98,7 @@ const MainSection = ({ userData }) => {
                 to="/communities"
                 className="bg-black/40 backdrop-blur-[40px] p-8 rounded-[48px] border border-white/10 text-center hover:bg-black/60 transition-all group duration-500 shadow-xl hover:scale-105"
               >
-                <p className="text-base font-bold text-white group-hover:text-v-yellow transition-colors tracking-tight">{tag}</p>
+                <p className="text-base font-bold text-white group-hover:text-v-red transition-colors tracking-tight">{tag}</p>
               </Link>
             ))}
           </div>
@@ -104,11 +107,11 @@ const MainSection = ({ userData }) => {
 
       {/* 3. Platform Pulse / Stats */}
       <section className="py-32 px-6 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-v-yellow/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-v-red/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
           {[
             { label: "Connections", value: "1.2M", color: "text-white" },
-            { label: "Threads", value: "450k", color: "text-v-yellow" },
+            { label: "Threads", value: "450k", color: "text-v-red" },
             { label: "Nodes", value: "24k", color: "text-white" },
             { label: "Echos", value: "12k", color: "text-white" },
           ].map((stat, i) => (
