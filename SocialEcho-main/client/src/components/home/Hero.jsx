@@ -1,63 +1,60 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
-    <div className="relative w-full min-h-[95vh] flex flex-col items-center justify-center px-6">
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto space-y-7">
+    <div className="relative w-full h-screen flex items-center justify-start px-6 md:px-12 lg:px-16 overflow-hidden">
+      {/* Background Cinematic Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-v-ink/60 via-transparent to-transparent pointer-events-none" />
 
-        {/* Headline */}
-        <h1
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight tracking-tight flex items-center justify-center gap-2"
-        >
-          Connect on{" "}
-          <span className="inline-flex items-center">
-            <img src="/loom.png" alt="L" className="h-[0.9em] w-auto object-contain" />
-            <span style={{ color: "#FADB17" }} className="-ml-[0.1em]">oom</span>
-          </span>
+      {/* Main Content Block - Pushed further to Left */}
+      <motion.div
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 flex flex-col items-start text-left max-w-4xl"
+      >
+        <h1 className="text-8xl md:text-[11rem] font-black text-white leading-[0.75] tracking-tightest select-none mb-10 -ml-2 md:-ml-4">
+          LOOM<span className="text-v-yellow">.</span>
         </h1>
-
-        {/* Subtitle */}
-        <p
-          className="text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-white/60"
-        >
-          Join the conversation. Discover new communities and connect with people around the world.
+        
+        <p className="text-xl md:text-2xl text-v-yellow font-black uppercase tracking-[0.4em] mb-6">
+          The Social Fabric
         </p>
 
-        {/* CTA Buttons — pill shaped like the reference */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-          {/* Primary CTA */}
+        <p className="text-lg md:text-2xl text-white/40 font-medium leading-relaxed mb-14 max-w-3xl">
+          A minimalist sanctuary for deep focus, niche communities, and meaningful conversation.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-6">
           <Link
             to="/signup"
-            className="flex items-center gap-2 px-7 py-3 rounded-full font-semibold text-sm transition-all hover:scale-105 active:scale-95"
-            style={{
-              background: "#FADB17",
-              color: "#2A1F1D",
-              boxShadow: "0 4px 24px rgba(250, 219, 23, 0.25)",
-            }}
+            className="px-14 py-5 rounded-full bg-v-yellow text-v-ink font-bold text-lg hover:scale-105 transition-transform"
           >
-            <span>Join Now</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7M17 7H7M17 7v10" />
-            </svg>
+            Get Started
           </Link>
-
-          {/* Secondary CTA */}
           <Link
             to="/signin"
-            className="flex items-center gap-2 px-7 py-3 rounded-full font-semibold text-sm transition-all hover:scale-105 active:scale-95"
-            style={{
-              background: "rgba(255,255,255,0.07)",
-              color: "rgba(255,255,255,0.85)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              backdropFilter: "blur(8px)",
-            }}
+            className="text-white/60 hover:text-white font-bold text-lg transition-colors border-b border-white/10 pb-1"
           >
             Sign in
           </Link>
         </div>
-      </div>
+      </motion.div>
+      
+      {/* Scroll Hint - Pushed to absolute edge for maximum left weight */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.5 }}
+        className="absolute bottom-10 left-6 md:left-12 lg:left-16 flex items-center gap-6"
+      >
+        <div className="h-px w-32 bg-gradient-to-r from-white/40 to-transparent" />
+        <span className="text-[10px] text-white/10 font-black uppercase tracking-[0.5em] animate-pulse">
+          Scroll to Weave
+        </span>
+      </motion.div>
     </div>
   );
 };

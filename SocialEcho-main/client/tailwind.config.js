@@ -18,9 +18,9 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        'display': ['Inter', 'system-ui', 'sans-serif'],
-        'body': ['Inter', 'system-ui', 'sans-serif'],
-        'mono': ['Inter', 'monospace'],
+        'display': ['Inter', 'sans-serif'],
+        'body': ['Inter', 'sans-serif'],
+        'mono': ['Inter', 'sans-serif'],
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.05em' }],

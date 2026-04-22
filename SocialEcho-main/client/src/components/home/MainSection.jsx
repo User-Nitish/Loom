@@ -5,328 +5,153 @@ import {
   clearPostsAction,
 } from "../../redux/actions/postActions";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import Post from "../post/Post";
 import CommonLoading from "../loader/CommonLoading";
-import Home from "../../assets/home.jpg";
 
 const MemoizedPost = memo(Post);
 
-const LoadMoreButton = ({ onClick, isLoading }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: 0.2 }}
-    >
-      <motion.button
-        className="btn-accent w-full my-8 group relative overflow-hidden"
-        onClick={onClick}
-        disabled={isLoading}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-      >
-        <span className="relative z-10">
-          {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Loading more posts...
-            </span>
-          ) : (
-            "Load More Posts"
-          )}
-        </span>
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-accent-600 to-accent-400"
-          initial={{ x: "-100%" }}
-          whileHover={{ x: "0%" }}
-          transition={{ duration: 0.3 }}
-        />
-      </motion.button>
-    </motion.div>
-  );
-};
-
-const EmptyState = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-200px" });
-  
-  return (
-    <motion.div
-      ref={ref}
-      className="flex flex-col items-center justify-center py-20 px-6 min-h-[60vh]"
-      initial={{ opacity: 0 }}
-      animate={isInView ? { opacity: 1 } : {}}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="relative mb-8">
-        <motion.div
-          className="absolute inset-0 bg-secondary-900/40 blur-3xl rounded-full"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="relative glass-card rounded-2xl p-8 border border-secondary-500/30 bg-neutral-600/20 backdrop-blur-md"
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <motion.div 
-            className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-secondary-500/40 to-secondary-900/50 flex items-center justify-center border border-secondary-500/30 shadow-[0_0_25px_rgba(189,9,39,0.35)]"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <svg className="w-12 h-12 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </motion.div>
-          <motion.h3 
-            className="text-2xl font-semibold text-neutral-100 mb-3 text-center font-display"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            No posts yet
-          </motion.h3>
-          <motion.p 
-            className="text-neutral-400 text-center max-w-md mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            Join communities and start sharing to see posts in your feed. Your social journey begins here.
-          </motion.p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <motion.button
-              className="btn-accent"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              Explore Communities
-            </motion.button>
-            <motion.button
-              className="btn-ghost"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.7 }}
-            >
-              Create Post
-            </motion.button>
-          </div>
-        </motion.div>
-      </div>
-      <motion.img
-        src={Home}
-        alt="No posts illustration"
-        className="w-full max-w-2xl max-h-80 object-contain mx-auto opacity-80 rounded-[2rem]"
-        loading="lazy"
-        initial={{ opacity: 0, scale: 0.8, y: 50 }}
-        animate={isInView ? { opacity: 0.8, scale: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      />
-    </motion.div>
-  );
-};
-
-const ScrollAnimatedPost = ({ post, index }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50, scale: 0.95 }}
-      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ 
-        duration: 0.6, 
-        delay: index * 0.1,
-        ease: [0.22, 1, 0.36, 1]
-      }}
-    >
-      <MemoizedPost post={post} index={index} />
-    </motion.div>
-  );
-};
+const SectionHeader = ({ title, subtitle, align = "left" }) => (
+  <div className={`mb-12 ${align === "center" ? "text-center" : "text-left"}`}>
+    <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase mb-3">{title}</h2>
+    <p className="text-white/40 text-sm md:text-base font-medium tracking-wide">{subtitle}</p>
+    {align === "center" && <div className="w-24 h-1 bg-v-yellow mx-auto mt-6 rounded-full" />}
+  </div>
+);
 
 const MainSection = ({ userData }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  const posts = useSelector((state) => state.posts?.posts);
-  const totalPosts = useSelector((state) => state.posts?.totalPosts);
-  const [isLoadMoreLoading, setIsLoadMoreLoading] = useState(false);
+  const posts = useSelector((state) => state.posts?.posts || []);
+  const totalPosts = useSelector((state) => state.posts?.totalPosts || 0);
   
-  const headerRef = useRef(null);
-  const footerRef = useRef(null);
-  const isHeaderInView = useInView(headerRef, { once: true, margin: "-100px" });
-  const isFooterInView = useInView(footerRef, { once: true, margin: "-100px" });
-
   const LIMIT = 10;
 
   useEffect(() => {
-    if (userData) {
-      dispatch(getPostsAction(LIMIT, 0)).finally(() => {
-        setIsLoading(false);
-      });
-    }
+    dispatch(getPostsAction(LIMIT, 0)).finally(() => {
+      setIsLoading(false);
+    });
 
     return () => {
       dispatch(clearPostsAction());
     };
-  }, [userData, dispatch, LIMIT]);
+  }, [dispatch]);
 
-  const handleLoadMore = useCallback(() => {
-    setIsLoadMoreLoading(true);
-    dispatch(getPostsAction(LIMIT, posts.length)).finally(() => {
-      setIsLoadMoreLoading(false);
-    });
-  }, [dispatch, LIMIT, posts.length]);
-
-  const memoizedPosts = useMemo(() => {
-    return posts.map((post, index) => (
-      <ScrollAnimatedPost key={post._id} post={post} index={index} />
-    ));
-  }, [posts]);
-
-  if (isLoading) {
-    return (
-      <motion.div
-        className="flex justify-center items-center min-h-screen"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <div className="text-center">
-          <div className="relative inline-flex">
-            <motion.div
-              className="w-16 h-16 border-4 border-neutral-800 border-t-accent-500 rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute inset-2 w-12 h-12 border-4 border-neutral-900 border-b-accent-400 rounded-full"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-            />
-          </div>
-          <p className="mt-4 text-neutral-400 text-sm">Loading your feed...</p>
-        </div>
-      </motion.div>
-    );
-  }
+  if (isLoading) return <div className="flex justify-center py-20"><CommonLoading /></div>;
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        className="space-y-6 min-h-screen"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Header Section - Scroll Triggered */}
-        <motion.div
-          ref={headerRef}
-          className="text-center py-8 mb-8"
-          initial={{ opacity: 0, y: -50 }}
-          animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <motion.h1 
-            className="text-4xl md:text-5xl font-bold text-gradient mb-4 font-display"
-            initial={{ opacity: 0, y: -30 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Your Feed
-          </motion.h1>
-          <motion.p 
-            className="text-neutral-400 text-lg max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: -20 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            Discover what's happening in your communities
-          </motion.p>
-        </motion.div>
-
-        {/* Posts Grid - Each post animates when scrolled into view */}
-        <div className="space-y-6">
-          {memoizedPosts}
-        </div>
-
-        {/* Load More Button - Scroll Triggered */}
-        {posts.length > 0 && posts.length < totalPosts && (
-          <LoadMoreButton
-            onClick={handleLoadMore}
-            isLoading={isLoadMoreLoading}
-          />
-        )}
-
-        {/* Empty State - Scroll Triggered */}
-        {posts.length === 0 && <EmptyState />}
-
-        {/* Footer Stats */}
-        {posts.length > 0 && (
-          <motion.div
-            ref={footerRef}
-            className="rounded-xl p-8 mt-12 text-center bg-white/5 border border-white/10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isFooterInView ? { opacity: 1, y: 0 } : {}}
-          >
-            <div className="flex items-center justify-center gap-12">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-v-yellow">{posts.length}</div>
-                <div className="text-sm text-white/40 mt-1">Posts</div>
-              </div>
-              {totalPosts && (
-                <>
-                  <div className="w-px h-10 bg-white/10" />
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-v-cyan">{totalPosts}</div>
-                    <div className="text-sm text-white/40 mt-1">Total Available</div>
-                  </div>
-                </>
-              )}
-            </div>
+    <div className="flex flex-col">
+      
+      {/* 1. Featured / Bento Discovery (Start Directly Here) */}
+      <section className="py-32 px-6 max-w-7xl mx-auto w-full">
+        <SectionHeader title="Discovery" subtitle="Handpicked spaces and trending echoes." />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div whileHover={{ y: -10 }} className="md:col-span-2 glass-card rounded-[40px] p-10 min-h-[400px] flex flex-col justify-end border border-white/10 group relative overflow-hidden">
+             <div className="absolute top-10 right-10 w-16 h-16 rounded-full bg-v-yellow/10 border border-v-yellow/20 flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-v-yellow animate-pulse" />
+             </div>
+             <h3 className="text-4xl font-bold text-white mb-4">The future of <br/>connection.</h3>
+             <p className="text-white/40 max-w-sm">Explore how niche communities are reclaiming the digital landscape from algorithmic noise.</p>
           </motion.div>
-        )}
+          <div className="space-y-6">
+             <div className="glass-card rounded-[40px] p-8 border border-white/10">
+                <p className="text-xs font-bold text-white/20 uppercase tracking-widest mb-4">Trending</p>
+                <div className="space-y-3">
+                   <p className="text-lg font-bold text-white hover:text-v-yellow cursor-pointer">#Web3Design</p>
+                   <p className="text-lg font-bold text-white hover:text-v-yellow cursor-pointer">#Minimalism</p>
+                   <p className="text-lg font-bold text-white hover:text-v-yellow cursor-pointer">#CreativeFocus</p>
+                </div>
+             </div>
+             <div className="glass-card rounded-[40px] p-8 border border-white/10 bg-v-yellow group cursor-pointer">
+                <h3 className="text-2xl font-bold text-v-ink mb-2">Join Loom</h3>
+                <p className="text-v-ink/60 text-sm font-medium">Start your own community node today.</p>
+             </div>
+          </div>
+        </div>
+      </section>
 
-        {/* Simple Discovery Section */}
-        <section className="py-20 border-t border-white/5">
-          <h2 className="text-3xl font-bold text-white mb-10 text-center">Explore More</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* 2. Explore Communities Hub */}
+      <section className="py-32 px-6 bg-white/[0.02]">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader 
+            title="Explore Communities" 
+            subtitle="Discover niche spaces where you belong." 
+            align="center"
+          />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
             {[
-              { title: "Trending", desc: "See what's hot in the community right now." },
-              { title: "New Communities", desc: "Discover fresh spaces to share your thoughts." },
-              { title: "Saved Posts", desc: "Revisit the conversations you cared about most." }
-            ].map((item, i) => (
-              <div 
-                key={i}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
+              "Architecture", "Coding", "Music", "Philosophy", 
+              "Art", "Science", "Gaming", "Travel"
+            ].map((tag, i) => (
+              <Link 
+                key={i} 
+                to="/communities" 
+                className="glass-card p-8 rounded-3xl border border-white/5 text-center hover:bg-white/10 transition-all group"
               >
-                <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
-                <p className="text-white/50 text-sm leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
+                <p className="text-base font-bold text-white/40 group-hover:text-v-yellow transition-colors tracking-tight">{tag}</p>
+              </Link>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Decorative Spacer */}
-        <div className="h-40" />
+      {/* 3. Platform Pulse / Stats */}
+      <section className="py-32 px-6 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-v-yellow/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="max-w-5xl mx-auto relative z-10 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+          {[
+            { label: "Connections", value: "1.2M", color: "text-white" },
+            { label: "Threads", value: "450k", color: "text-v-yellow" },
+            { label: "Nodes", value: "24k", color: "text-white" },
+            { label: "Echos", value: "12k", color: "text-white" },
+          ].map((stat, i) => (
+            <div key={i}>
+              <p className={`text-4xl md:text-5xl font-black mb-2 ${stat.color}`}>{stat.value}</p>
+              <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      </motion.div>
-    </AnimatePresence>
+      {/* 4. Latest Activity Feed */}
+      <section className="py-32 px-6">
+        <div className="max-w-3xl mx-auto">
+          <SectionHeader 
+            title="Latest Activity" 
+            subtitle="Real-time updates from across the Loom network." 
+          />
+          
+          <div className="space-y-8 mt-16">
+            {posts.length > 0 ? (
+              posts.map((post, index) => (
+                <motion.div
+                  key={post._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <MemoizedPost post={post} index={index} />
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center py-24 bg-white/5 rounded-[40px] border border-white/5">
+                <p className="text-white/20 font-medium text-xl italic tracking-wide">
+                  The feed is quiet... for now.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Minimal */}
+      <footer className="py-20 border-t border-white/5 text-center">
+        <p className="text-white/10 text-[9px] font-black uppercase tracking-[0.6em]">
+          Loom &copy; 2026 / Zero Noise / Full Focus
+        </p>
+      </footer>
+    </div>
   );
 };
 
