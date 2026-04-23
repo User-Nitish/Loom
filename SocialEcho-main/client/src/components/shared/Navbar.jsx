@@ -91,25 +91,38 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
           <span className="text-[28px] font-bold tracking-tighter text-white hidden sm:block leading-none -ml-1.5">oom</span>
         </Link>
 
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navItems.map(({ path, label }) => {
-            const isActive = location.pathname === path;
-            return (
-              <Link
-                key={path}
-                to={path}
-                className="px-4 py-1.5 rounded-full text-xs font-medium transition-all"
-                style={{
-                  color: isActive ? "#120806" : "rgba(255,255,255,0.7)",
-                  background: isActive ? "#FADB17" : "transparent",
-                }}
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Navigation - Conditional Rendering */}
+        {location.pathname === "/" || location.pathname === "/home" ? (
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map(({ path, label }) => {
+              const isActive = location.pathname === path;
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className="px-4 py-1.5 rounded-full text-xs font-medium transition-all"
+                  style={{
+                    color: isActive ? "#120806" : "rgba(255,255,255,0.7)",
+                    background: isActive ? "#FADB17" : "transparent",
+                  }}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </nav>
+        ) : (
+          <div className="hidden md:flex items-center gap-3">
+            <div className="h-1 w-1 rounded-full bg-v-cyan animate-pulse" />
+            <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.6em]">
+              {location.pathname.includes("profile") ? "Profile" : 
+               location.pathname.includes("communities") ? "Explore" :
+               location.pathname.includes("saved") ? "Saved" :
+               location.pathname.includes("following") ? "Network" : "Loom"}
+            </span>
+            <div className="h-1 w-1 rounded-full bg-v-cyan animate-pulse delay-75" />
+          </div>
+        )}
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
