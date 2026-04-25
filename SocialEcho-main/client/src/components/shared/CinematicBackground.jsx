@@ -109,12 +109,20 @@ const CinematicBackground = () => {
     <div className="fixed inset-0 w-full h-screen overflow-hidden no-scrollbar z-0 pointer-events-none bg-[#0a0a0a]">
       <canvas
         ref={canvasRef}
-        className="w-full h-full object-cover opacity-100 transition-opacity duration-1000"
-        style={{ mixBlendMode: "screen" }}
+        className="w-full h-full object-cover opacity-60 md:opacity-75 transition-opacity duration-1000"
+        style={{ mixBlendMode: "lighten" }}
       />
+
+      {/* Dynamic Ambient Glows for Life */}
+      <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-v-cyan/10 blur-[120px] rounded-full animate-pulse" />
+      <div className="absolute bottom-1/4 -right-20 w-[800px] h-[800px] bg-v-red/5 blur-[150px] rounded-full" />
+      
+      {/* Noise Texture Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
       {/* Deep ambient gradients to blend with content */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-40" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050505_100%)] opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent opacity-80" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050505_100%)] opacity-40" />
     </div>
   );
 };
