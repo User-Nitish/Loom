@@ -34,13 +34,76 @@ const getCommunity = async (req, res) => {
 
 const createCommunity = async (req, res) => {
   try {
-    const communities = req.body;
-    const savedCommunities = await Community.insertMany(communities);
-    res.status(201).json(savedCommunities);
+    const { name, description, banner } = req.body;
+    const userId = req.userId;
+
+    const existingCommunity = await Community.findOne({ name });
+    if (existingCommunity) {
+      return res.status(400).json({ message: "Community name already exists" });
+    }
+
+    const newCommunity = new Community({
+      name,
+      description,
+      banner: banner || "https://raw.githubusercontent.com/nz-m/public-files/main/community-banner.jpg",
+      members: [userId],
+      moderators: [userId]
+    });
+
+    const savedCommunity = await newCommunity.save();
+    res.status(201).json(savedCommunity);
   } catch (error) {
-    res.status(409).json({
+    res.status(500).json({
       message: "Error creating community",
     });
+  }
+};
+
+const updateCommunity = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const { description, banner } = req.body;
+    const userId = req.userId;
+
+    const community = await Community.findOne({ name });
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    // Only moderators can update
+    if (!community.moderators.includes(userId)) {
+      return res.status(403).json({ message: "Unauthorized to update this community" });
+    }
+
+    community.description = description || community.description;
+    community.banner = banner || community.banner;
+
+    await community.save();
+    res.status(200).json(community);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating community" });
+  }
+};
+
+const deleteCommunity = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const userId = req.userId;
+
+    const community = await Community.findOne({ name });
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    // Only moderators (owners) can delete
+    if (!community.moderators.includes(userId)) {
+      return res.status(403).json({ message: "Unauthorized to delete this community" });
+    }
+
+    await community.remove();
+    res.status(200).json({ message: "Community deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting community" });
   }
 };
 
@@ -526,4 +589,6 @@ module.exports = {
   getCommunityMods,
   banUser,
   unbanUser,
+  deleteCommunity,
+  updateCommunity,
 };

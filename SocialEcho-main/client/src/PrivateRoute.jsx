@@ -15,6 +15,8 @@ const noRightbarRoutes = [
   /\/community\/[^/]+\/report$/,
   /\/community\/[^/]+\/reported-post$/,
   /\/community\/[^/]+\/moderator$/,
+  /\/communities\/create$/,
+  /\/chat$/,
 ].map((regex) => new RegExp(regex));
 
 const PrivateRoute = ({ userData }) => {

@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Search from "./Search";
 import { memo } from "react";
 import { logoutAction } from "../../redux/actions/authActions";
+import NotificationDropdown from "../layout/NotificationDropdown";
+import { useSelector } from "react-redux";
 import {
   Home,
   Compass,
@@ -16,6 +18,9 @@ import {
   X,
   User,
   Search as SearchIcon,
+  Bell,
+  MessageCircle,
+  ShieldAlert,
 } from "lucide-react";
 
 const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
@@ -25,6 +30,8 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const { unreadCount } = useSelector((state) => state.notifications);
 
   const dropdownRef = useRef(null);
 
@@ -40,6 +47,9 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
+      }
+      if (!event.target.closest(".notification-trigger")) {
+        setShowNotifications(false);
       }
     };
     document.addEventListener("click", handleOutsideClick);
@@ -132,6 +142,39 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
           >
             <SearchIcon size={18} />
           </button>
+
+          <Link
+            to="/chat"
+            className="p-2 rounded-full hover:bg-white/5 transition-colors text-white/50"
+          >
+            <MessageCircle size={18} />
+          </Link>
+
+          {userData.role === "admin" && (
+            <Link
+              to="/admin/reports"
+              className="p-2 rounded-full hover:bg-white/5 transition-colors text-v-red/70 hover:text-v-red"
+              title="Moderation Queue"
+            >
+              <ShieldAlert size={18} />
+            </Link>
+          )}
+
+          <div className="relative notification-trigger">
+            <button
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="p-2 rounded-full hover:bg-white/5 transition-colors text-white/50 relative"
+            >
+              <Bell size={18} />
+              {unreadCount > 0 && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full border border-slate-900" />
+              )}
+            </button>
+            <NotificationDropdown 
+              isOpen={showNotifications} 
+              onClose={() => setShowNotifications(false)} 
+            />
+          </div>
 
           <div className="relative" ref={dropdownRef}>
             <button

@@ -18,6 +18,7 @@ const {
   unsavePost,
   getSavedPosts,
   clearPendingPosts,
+  updatePost,
 } = require("../controllers/post.controller");
 const {
   postValidator,
@@ -82,5 +83,6 @@ router.patch("/:id/save", savePost);
 router.patch("/:id/unsave", unsavePost);
 router.patch("/:id/like", likePost);
 router.patch("/:id/unlike", unlikePost);
+router.patch("/:id", updatePost);
 
 module.exports = router;

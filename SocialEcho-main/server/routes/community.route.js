@@ -16,6 +16,8 @@ const {
   getCommunity,
   getCommunities,
   createCommunity,
+  updateCommunity,
+  deleteCommunity,
   addRulesToCommunity,
   addRules,
   addModToCommunity,
@@ -40,7 +42,9 @@ router.post("/:name/unban/:id", unbanUser);
 router.post("/:name/join", joinCommunity);
 router.post("/:name/leave", leaveCommunity);
 router.post("/:name/add-all-rules", addRulesToCommunity);
-router.post("/:name", createCommunity);
+router.post("/", createCommunity);
+router.patch("/:name", updateCommunity);
+router.delete("/:name", deleteCommunity);
 
 router.delete("/reported-posts/:postId", removeReportedPost);
 

@@ -61,3 +61,11 @@ export const getFollowingUsers = async () => {
     return handleApiError(error);
   }
 };
+export const deleteUser = async (id) => {
+  try {
+    const { data } = await API.delete(`/users/${id}`);
+    return { error: null, data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};

@@ -125,3 +125,29 @@ export const unbanUser = async (communityName, userId) => {
     return handleApiError(error);
   }
 };
+export const createCommunity = async (formData) => {
+  try {
+    const { data } = await COMMUNITY_API.post("/communities", formData);
+    return { error: null, data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export const updateCommunity = async (name, formData) => {
+  try {
+    const { data } = await COMMUNITY_API.patch(`/communities/${name}`, formData);
+    return { error: null, data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export const deleteCommunity = async (name) => {
+  try {
+    const { data } = await COMMUNITY_API.delete(`/communities/${name}`);
+    return { error: null, data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};

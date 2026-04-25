@@ -12,6 +12,10 @@ import AllCommunities from "./pages/AllCommunities";
 import MyCommunities from "./pages/MyCommunities";
 import Following from "./pages/Following";
 import SignUp from "./pages/SignUp";
+import Chat from "./pages/Chat";
+import CreateCommunity from "./pages/CreateCommunity";
+import SearchResults from "./pages/SearchResults";
+import AdminReports from "./pages/AdminReports";
 
 const ReportedPost = lazy(() => import("./pages/ReportedPost"));
 const Moderator = lazy(() => import("./pages/Moderator"));
@@ -22,6 +26,7 @@ const BlockDevice = lazy(() => import("./pages/BlockDevice"));
 const LoginVerified = lazy(() => import("./pages/LoginVerified"));
 const AccessDenied = lazy(() => import("./pages/AccessDenied"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Settings = lazy(() => import("./pages/Settings"));
 
 export const privateRoutes = [
   {
@@ -77,8 +82,28 @@ export const privateRoutes = [
     element: <PageTransition><Following /></PageTransition>,
   },
   {
+    path: "/communities/create",
+    element: <PageTransition><CreateCommunity /></PageTransition>,
+  },
+  {
+    path: "/search",
+    element: <PageTransition><SearchResults /></PageTransition>,
+  },
+  {
+    path: "/admin/reports",
+    element: <PageTransition><AdminReports /></PageTransition>,
+  },
+  {
     path: "/devices-locations",
     element: <PageTransition><DevicesLocations /></PageTransition>,
+  },
+  {
+    path: "/chat",
+    element: <PageTransition><Chat /></PageTransition>,
+  },
+  {
+    path: "/settings",
+    element: <PageTransition><Settings /></PageTransition>,
   },
 ];
 

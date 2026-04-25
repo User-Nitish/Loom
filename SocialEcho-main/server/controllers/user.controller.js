@@ -455,6 +455,60 @@ const updateInfo = async (req, res) => {
   }
 };
 
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { deleteFromS3 } = require("../utils/s3.util");
+    const Relationship = require("../models/relationship.model");
+    const Comment = require("../models/comment.model");
+    const Token = require("../models/token.model");
+
+    // 1. Delete Avatar from S3 (if not default)
+    if (user.avatar && !user.avatar.includes("public-files/main/dp.jpg")) {
+      await deleteFromS3(user.avatar);
+    }
+
+    // 2. Find all user posts and delete their S3 attachments
+    const userPosts = await Post.find({ user: userId });
+    for (const post of userPosts) {
+      if (post.fileUrl) {
+        await deleteFromS3(post.fileUrl);
+      }
+    }
+
+    // 3. Delete all user posts and comments
+    await Post.deleteMany({ user: userId });
+    await Comment.deleteMany({ user: userId });
+
+    // 4. Remove from all relationships
+    await Relationship.deleteMany({
+      $or: [{ follower: userId }, { following: userId }],
+    });
+
+    // 5. Remove from all communities
+    await Community.updateMany(
+      { members: userId },
+      { $pull: { members: userId, moderators: userId, bannedUsers: userId } }
+    );
+
+    // 6. Delete all tokens
+    await Token.deleteMany({ user: userId });
+
+    // 7. Delete User
+    await user.remove();
+
+    res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting account" });
+  }
+};
+
 module.exports = {
   addUser,
   signin,
@@ -463,4 +517,5 @@ module.exports = {
   getModProfile,
   getUser,
   updateInfo,
+  deleteAccount,
 };

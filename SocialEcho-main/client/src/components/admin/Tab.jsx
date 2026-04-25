@@ -7,7 +7,8 @@ import {
   LogOut, 
   Settings, 
   Activity, 
-  Users 
+  Users,
+  ShieldAlert
 } from "lucide-react";
 
 const Tab = ({ activeTab, handleTabClick }) => {
@@ -27,6 +28,7 @@ const Tab = ({ activeTab, handleTabClick }) => {
     { id: "logs", label: "Activity Logs", icon: Activity },
     { id: "settings", label: "System Settings", icon: Settings },
     { id: "Community Management", label: "Communities", icon: Users },
+    { id: "reports", label: "Moderation", icon: ShieldAlert },
   ];
 
   return (

@@ -11,6 +11,8 @@ const {
   addModerator,
   removeModerator,
   getModerators,
+  getAllReports,
+  actOnReport,
 } = require("../controllers/admin.controller");
 
 const requireAdminAuth = require("../middlewares/auth/adminAuth");
@@ -27,6 +29,8 @@ router.use(requireAdminAuth);
 router.get("/community/:communityId", getCommunity);
 router.get("/communities", getCommunities);
 router.get("/moderators", getModerators);
+router.get("/reports", getAllReports);
+router.post("/reports/:reportId", actOnReport);
 
 router.patch("/add-moderators", addModerator);
 router.patch("/remove-moderators", removeModerator);

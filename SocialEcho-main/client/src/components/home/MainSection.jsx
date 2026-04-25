@@ -7,7 +7,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Post from "../post/Post";
-import CommonLoading from "../loader/CommonLoading";
+import { PostSkeleton } from "../shared/Skeleton";
 
 const MemoizedPost = memo(Post);
 
@@ -42,7 +42,16 @@ const MainSection = ({ userData }) => {
     };
   }, [dispatch]);
 
-  if (isLoading) return <div className="flex justify-center py-20"><CommonLoading /></div>;
+  const loadMoreRef = useRef(null);
+  const isLoadMoreInView = useInView(loadMoreRef);
+
+  useEffect(() => {
+    if (isLoadMoreInView && !isLoading && posts.length < totalPosts) {
+      dispatch(getPostsAction(LIMIT, posts.length));
+    }
+  }, [isLoadMoreInView, isLoading, posts.length, totalPosts, dispatch]);
+
+  // Initial loading state handled by Skeletons in the feed section
 
   return (
     <div className="flex flex-col">
@@ -132,18 +141,27 @@ const MainSection = ({ userData }) => {
           />
 
           <div className="space-y-8 mt-16">
-            {posts.length > 0 ? (
-              posts.map((post, index) => (
-                <motion.div
-                  key={post._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <MemoizedPost post={post} index={index} />
-                </motion.div>
-              ))
+            {isLoading && posts.length === 0 ? (
+              <div className="space-y-8 mt-16">
+                {[1, 2, 3].map((i) => <PostSkeleton key={i} />)}
+              </div>
+            ) : posts.length > 0 ? (
+              <>
+                {posts.map((post, index) => (
+                  <motion.div
+                    key={post._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <MemoizedPost post={post} index={index} />
+                  </motion.div>
+                ))}
+                <div ref={loadMoreRef} className="h-20 flex items-center justify-center">
+                  {posts.length < totalPosts && <PostSkeleton />}
+                </div>
+              </>
             ) : (
               <div className="text-center py-24 bg-white/5 rounded-[40px] border border-white/5">
                 <p className="text-white/20 font-medium text-xl italic tracking-wide">

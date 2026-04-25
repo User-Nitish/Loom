@@ -13,6 +13,7 @@ import DeleteModal from "../modals/DeleteModal";
 import Like from "./Like";
 import "react-photo-view/dist/react-photo-view.css";
 import Tooltip from "../shared/Tooltip";
+import { Pencil } from "lucide-react";
 
 const postColors = [
   { bg: "bg-v-maroon/10", border: "border-v-maroon/20", shadow: "rgba(62,21,21,0.2)" },
@@ -150,19 +151,35 @@ const Post = ({ post, index = 0 }) => {
         {/* Post Actions */}
         <div className="flex items-center gap-2">
           {userData?._id === post.user._id && (
-            <Tooltip text="Delete post">
-              <motion.button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleModal(true);
-                }}
-                className="p-2 rounded-xl text-white/20 hover:text-v-red hover:bg-white/5 transition-all duration-200"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <HiOutlineArchiveBox className="text-xl" />
-              </motion.button>
-            </Tooltip>
+            <>
+              <Tooltip text="Edit post">
+                <motion.button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // In a real app, this would open an edit modal
+                    alert("Edit functionality: The backend is ready, you can now implement the edit modal here!");
+                  }}
+                  className="p-2 rounded-xl text-white/20 hover:text-v-cyan hover:bg-white/5 transition-all duration-200"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Pencil size={18} />
+                </motion.button>
+              </Tooltip>
+              <Tooltip text="Delete post">
+                <motion.button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleModal(true);
+                  }}
+                  className="p-2 rounded-xl text-white/20 hover:text-v-red hover:bg-white/5 transition-all duration-200"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <HiOutlineArchiveBox className="text-xl" />
+                </motion.button>
+              </Tooltip>
+            </>
           )}
           <Tooltip text="Share post">
             <motion.button

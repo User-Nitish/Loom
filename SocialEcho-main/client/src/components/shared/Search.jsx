@@ -73,6 +73,13 @@ const Search = ({ onClose }) => {
     debouncedHandleSearch(value);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && inputValue.trim()) {
+      navigate(`/search?q=${encodeURIComponent(inputValue)}`);
+      onClose && onClose();
+    }
+  };
+
   const clearValues = () => {
     setInitialValue();
     setInputValue("");
@@ -102,6 +109,7 @@ const Search = ({ onClose }) => {
           autoFocus
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           placeholder="Search the fabric..."
           className="w-full bg-white/[0.03] border border-white/10 rounded-[28px] py-4 pl-14 pr-12 text-sm font-medium text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/[0.08] focus:outline-none transition-all shadow-inner"
           aria-label="Search"

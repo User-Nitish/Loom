@@ -8,6 +8,8 @@ const AdminToken = require("../models/token.admin.model");
 const Config = require("../models/config.model");
 const Community = require("../models/community.model");
 const User = require("../models/user.model");
+const Report = require("../models/report.model");
+const Post = require("../models/post.model");
 
 /**
  * @route GET /admin/logs
@@ -285,6 +287,44 @@ const removeModerator = async (req, res) => {
   }
 };
 
+const getAllReports = async (req, res) => {
+  try {
+    const reports = await Report.find({ status: "pending" })
+      .populate("post")
+      .populate("community", "name")
+      .populate("reportedBy", "name")
+      .sort({ reportDate: -1 });
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching reports" });
+  }
+};
+
+const actOnReport = async (req, res) => {
+  try {
+    const { reportId } = req.params;
+    const { action } = req.body; // 'resolve' or 'dismiss'
+
+    const report = await Report.findById(reportId);
+    if (!report) {
+      return res.status(404).json({ message: "Report not found" });
+    }
+
+    if (action === "resolve") {
+      // Delete the post
+      await Post.findByIdAndDelete(report.post);
+      report.status = "resolved";
+    } else if (action === "dismiss") {
+      report.status = "dismissed";
+    }
+
+    await report.save();
+    res.status(200).json({ message: `Report ${action}ed successfully` });
+  } catch (error) {
+    res.status(500).json({ message: "Error acting on report" });
+  }
+};
+
 module.exports = {
   retrieveServicePreference,
   updateServicePreference,
@@ -296,4 +336,6 @@ module.exports = {
   addModerator,
   removeModerator,
   getModerators,
+  getAllReports,
+  actOnReport,
 };

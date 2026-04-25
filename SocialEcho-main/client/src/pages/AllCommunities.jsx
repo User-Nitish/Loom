@@ -8,6 +8,8 @@ import Post from "../components/post/Post";
 import SectionHeader from "../components/shared/SectionHeader";
 import { motion } from "framer-motion";
 import { memo } from "react";
+import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 const MemoizedPost = memo(Post);
 
@@ -37,10 +39,19 @@ const AllCommunities = () => {
     <div className="space-y-20 pb-20 max-w-6xl mx-auto px-4">
       {/* 1. Community Discovery */}
       <section>
-        <SectionHeader 
-          title="Discover" 
-          subtitle="Spaces that resonate with your frequencies." 
-        />
+        <div className="flex justify-between items-end">
+          <SectionHeader 
+            title="Discover" 
+            subtitle="Spaces that resonate with your frequencies." 
+          />
+          <Link
+            to="/communities/create"
+            className="mb-12 flex items-center gap-2 px-6 py-3 bg-v-cyan text-v-ink rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-v-cyan/20"
+          >
+            <Plus size={16} />
+            Launch Community
+          </Link>
+        </div>
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12"
           initial={{ opacity: 0, y: 20 }}

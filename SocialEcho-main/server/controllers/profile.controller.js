@@ -198,6 +198,10 @@ const followUser = async (req, res) => {
 
     await Relationship.create({ follower: followerId, following: followingId });
 
+    // Trigger Notification
+    const { createNotification } = require("../services/notificationService");
+    await createNotification(followingId, followerId, "follow");
+
     res.status(200).json({
       message: "User followed successfully",
     });

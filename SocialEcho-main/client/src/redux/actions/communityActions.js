@@ -302,6 +302,19 @@ export const joinCommunityAndFetchData =
     }
   };
 
+export const createCommunityAction = (formData, navigate) => async (dispatch) => {
+  try {
+    const { error, data } = await api.createCommunity(formData);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch({ type: types.GET_COMMUNITY_SUCCESS, payload: data });
+    navigate(`/community/${data.name}`);
+  } catch (error) {
+    console.error("Error creating community:", error);
+  }
+};
+
 export const leaveFetchData = (communityName) => async (dispatch) => {
   try {
     await dispatch(leaveCommunityAction(communityName));

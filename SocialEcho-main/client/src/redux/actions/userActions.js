@@ -152,3 +152,16 @@ export const followUserAndFetchData =
       });
     }
   };
+
+export const deleteAccountAction = (id) => async (dispatch) => {
+  try {
+    const { error } = await api.deleteUser(id);
+    if (error) {
+      throw new Error(error);
+    }
+    dispatch({ type: "LOGOUT" }); // Automatically log out after deletion
+    window.location.href = "/signup";
+  } catch (error) {
+    console.error("Error deleting account:", error);
+  }
+};

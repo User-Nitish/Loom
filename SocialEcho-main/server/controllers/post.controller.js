@@ -412,6 +412,10 @@ const likePost = async (req, res) => {
 
     const formattedPost = await populatePost(updatedPost);
 
+    // Trigger Notification
+    const { createNotification } = require("../services/notificationService");
+    await createNotification(updatedPost.user._id, userId, "like", { postId: id });
+
     res.status(200).json(formattedPost);
   } catch (error) {
     res.status(500).json({
@@ -478,6 +482,11 @@ const addComment = async (req, res) => {
         },
       }
     );
+    // Trigger Notification
+    const { createNotification } = require("../services/notificationService");
+    const post = await Post.findById(postId);
+    await createNotification(post.user, userId, "comment", { postId });
+
     res.status(200).json({
       message: "Comment added successfully",
     });
@@ -640,6 +649,31 @@ const getPublicPosts = async (req, res) => {
   }
 };
 
+const updatePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+    const userId = req.userId;
+
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.user.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Unauthorized to edit this post" });
+    }
+
+    post.content = content || post.content;
+    await post.save();
+
+    const formattedPost = await populatePost(post);
+    res.status(200).json(formattedPost);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating post" });
+  }
+};
+
 module.exports = {
   getPost,
   getPosts,
@@ -657,4 +691,5 @@ module.exports = {
   getSavedPosts,
   getPublicPosts,
   getFollowingUsersPosts,
+  updatePost,
 };

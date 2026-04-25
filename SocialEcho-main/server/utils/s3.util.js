@@ -1,4 +1,5 @@
 const { S3Client, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const sharp = require("sharp");
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION,
@@ -12,11 +13,27 @@ const uploadToS3 = async (file, folder = "user-uploads") => {
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   const fileName = `${folder}/${uniqueSuffix}-${file.originalname}`;
 
+  let fileBuffer = file.buffer;
+  let contentType = file.mimetype;
+
+  // Compress if it's an image
+  if (file.mimetype.startsWith("image/")) {
+    try {
+      fileBuffer = await sharp(file.buffer)
+        .resize({ width: 1200, withoutEnlargement: true }) // Max width 1200px
+        .jpeg({ quality: 80 }) // Convert to JPEG with 80% quality
+        .toBuffer();
+      contentType = "image/jpeg";
+    } catch (sharpError) {
+      console.error("Sharp compression failed, uploading original:", sharpError);
+    }
+  }
+
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: fileName,
-    Body: file.buffer,
-    ContentType: file.mimetype,
+    Body: fileBuffer,
+    ContentType: contentType,
   };
 
   try {

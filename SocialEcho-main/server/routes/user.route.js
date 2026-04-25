@@ -11,6 +11,7 @@ const {
   getModProfile,
   getUser,
   updateInfo,
+  deleteAccount,
 } = require("../controllers/user.controller");
 
 const {
@@ -73,5 +74,6 @@ router.put("/:id", requireAuth, decodeToken, avatarUpload, updateInfo);
 router.use(followLimiter);
 router.patch("/:id/follow", requireAuth, decodeToken, followUser);
 router.patch("/:id/unfollow", requireAuth, decodeToken, unfollowUser);
+router.delete("/:id", requireAuth, decodeToken, deleteAccount);
 
 module.exports = router;

@@ -9,17 +9,50 @@
 
 require("dotenv").config();
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 const adminRoutes = require("./routes/admin.route");
 const userRoutes = require("./routes/user.route");
 const postRoutes = require("./routes/post.route");
 const communityRoutes = require("./routes/community.route");
 const contextAuthRoutes = require("./routes/context-auth.route");
+const notificationRoutes = require("./routes/notification.route");
+const messageRoutes = require("./routes/message.route");
 const search = require("./controllers/search.controller");
 const Database = require("./config/database");
 const decodeToken = require("./middlewares/auth/decodeToken");
 const { initCleanupCron } = require("./scripts/cleanupJobs");
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
+  },
+});
+
+// Socket.io Logic
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  socket.on("join_room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room ${roomId}`);
+  });
+
+  socket.on("send_message", (data) => {
+    // data: { conversationId, content, senderId }
+    socket.to(data.conversationId).emit("receive_message", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
+// Make io accessible to routes
+app.set("io", io);
 
 const cors = require("cors");
 const morgan = require("morgan");
@@ -61,6 +94,8 @@ app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/communities", communityRoutes);
 app.use("/admin", adminRoutes);
+app.use("/notifications", notificationRoutes);
+app.use("/messages", messageRoutes);
 
 process.on("SIGINT", async () => {
   try {
@@ -73,4 +108,6 @@ process.on("SIGINT", async () => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server up and running on port ${PORT}!`));
+server.listen(PORT, () => {
+  console.log(`Server up and running on port ${PORT}!`);
+});
