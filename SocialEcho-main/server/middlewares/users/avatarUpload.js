@@ -42,7 +42,7 @@ function avatarUpload(req, res, next) {
       req.files[0].s3Url = s3Url; // Attach S3 URL to req.files[0]
       // The original controller uses fileUrl from filename, I'll adapt it in the controller if needed.
       // But let's make it consistent.
-      
+
       next();
     } catch (error) {
       return res.status(500).json({

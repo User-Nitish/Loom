@@ -39,54 +39,44 @@ const AdminSignIn = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
-      {/* Cinematic Static Background - Red Tinted with Blurred Texture */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        {/* Background Texture - Full Coverage with Subtle Blur */}
-        <div
-          className="absolute inset-0 w-full h-full opacity-40 blur-[4px]"
-          style={{
-            backgroundImage: "url('/bundle.jpeg')",
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-          }}
-        />
-
-        <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-v-red/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-v-red/5 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2" />
-      </div>
+      {/* Sleek Technical Background */}
+      <div 
+        className="absolute inset-0 z-0 opacity-40 bg-cover bg-center"
+        style={{ backgroundImage: "url('/admin_bg.png')" }}
+      />
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
 
       <motion.div
-        className="relative z-10 w-full max-w-lg mx-auto px-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        className="relative z-10 w-full max-w-md mx-auto px-6"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
       >
-        <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter mb-4 select-none uppercase">
-            Admin<span className="text-v-red">.</span>Node
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase">
+            Admin<span className="text-v-red">.</span>Login
           </h1>
-          <p className="text-[10px] font-black text-v-red uppercase tracking-[0.6em]">Restricted Access Zone</p>
+          <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.5em] mt-2">Sign in to manage your platform</p>
         </div>
 
-        <div className="bg-transparent backdrop-blur-none rounded-[48px] border border-v-red/20 shadow-2xl p-10 md:p-14">
-          <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="bg-white/[0.02] backdrop-blur-xl rounded-[32px] border border-white/5 p-8 md:p-10 shadow-2xl">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] ml-2">Operator ID</label>
+              <label className="text-[9px] font-bold text-white/40 uppercase tracking-widest ml-1">Username</label>
               <input
                 onChange={handleUsernameChange}
-                className="w-full bg-white/[0.03] border border-white/5 rounded-3xl py-4 px-6 text-sm font-mono text-white placeholder:text-white/10 focus:border-v-red/30 focus:bg-white/[0.08] focus:outline-none transition-all"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-2xl py-3 px-5 text-sm text-white focus:border-v-red/50 focus:bg-white/[0.08] focus:outline-none transition-all"
                 type="text"
-                placeholder="0x_OPERATOR"
+                placeholder="Enter admin username"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em] ml-2">Security Key</label>
+              <label className="text-[9px] font-bold text-white/40 uppercase tracking-widest ml-1">Password</label>
               <input
                 onChange={handlePasswordChange}
-                className="w-full bg-white/[0.03] border border-white/5 rounded-3xl py-4 px-6 text-sm font-mono text-white placeholder:text-white/10 focus:border-v-red/30 focus:bg-white/[0.08] focus:outline-none transition-all"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-2xl py-3 px-5 text-sm text-white focus:border-v-red/50 focus:bg-white/[0.08] focus:outline-none transition-all"
                 type="password"
                 placeholder="••••••••"
                 required
@@ -94,29 +84,23 @@ const AdminSignIn = () => {
             </div>
 
             {signInError && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="p-4 rounded-2xl bg-v-red/5 border border-v-red/20 text-v-red text-[11px] font-bold uppercase tracking-widest text-center"
-              >
+              <div className="p-3 rounded-xl bg-v-red/10 border border-v-red/20 text-v-red text-[10px] font-bold text-center uppercase tracking-widest">
                 {signInError}
-              </motion.div>
+              </div>
             )}
 
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-4">
-              <Link to="/" className="flex items-center gap-2 text-white/20 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest">
-                <IoIosArrowRoundBack className="text-2xl" />
-                Abandon Station
-              </Link>
-
-              <button
-                disabled={signingIn}
-                type="submit"
-                className="w-full md:w-auto px-10 py-4 bg-v-red text-white font-black uppercase tracking-[0.2em] rounded-3xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
-              >
-                {signingIn ? <ButtonLoadingSpinner /> : "Authorize"}
-              </button>
-            </div>
+            <button
+              disabled={signingIn}
+              type="submit"
+              className="w-full py-4 bg-v-red text-white font-black uppercase tracking-widest rounded-2xl shadow-lg hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+            >
+              {signingIn ? <ButtonLoadingSpinner /> : "Sign In"}
+            </button>
+            
+            <Link to="/" className="flex items-center justify-center gap-2 text-white/20 hover:text-white/40 transition-colors text-[9px] font-black uppercase tracking-widest pt-2">
+              <IoIosArrowRoundBack className="text-xl" />
+              Return to Public Site
+            </Link>
           </form>
         </div>
       </motion.div>

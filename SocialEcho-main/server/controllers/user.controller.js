@@ -66,6 +66,8 @@ const signin = async (req, res, next) => {
       existingUser.password
     );
 
+    console.log(`Login attempt for: ${email} | Password Match: ${isPasswordCorrect}`);
+
     if (!isPasswordCorrect) {
       await saveLogInfo(
         req,
@@ -307,17 +309,11 @@ const addUser = async (req, res, next) => {
 
   try {
     await newUser.save();
-    if (newUser.isNew) {
-      throw new Error("Failed to add user");
-    }
+    console.log(`New user created: ${newUser.email}`);
 
-    if (isConsentGiven === false) {
-      res.status(201).json({
-        message: "User added successfully",
-      });
-    } else {
-      next();
-    }
+    res.status(201).json({
+      message: "User added successfully. You can now log in!",
+    });
   } catch (err) {
     res.status(400).json({
       message: "Failed to add user",
@@ -438,16 +434,20 @@ const updateInfo = async (req, res) => {
     }
 
     const { location, interests, bio } = req.body;
+    const fileUrl = req.files?.[0]?.s3Url ? req.files[0].s3Url : null;
 
-    user.location = location;
-    user.interests = interests;
-    user.bio = bio;
+    user.location = location || user.location;
+    user.interests = interests || user.interests;
+    user.bio = bio || user.bio;
+    if (fileUrl) {
+      user.avatar = fileUrl;
+    }
 
     await user.save();
 
-    res.status(200).json({
-      message: "User info updated successfully",
-    });
+    const updatedUser = await User.findById(user._id).select("-password").lean();
+
+    res.status(200).json(updatedUser);
   } catch (err) {
     res.status(500).json({
       message: "Error updating user info",

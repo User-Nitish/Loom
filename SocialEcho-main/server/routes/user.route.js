@@ -54,8 +54,8 @@ router.post(
   avatarUpload,
   addUserValidator,
   addUserValidatorHandler,
-  addUser,
-  sendVerificationEmail
+  addUser
+  // sendVerificationEmail
 );
 router.post("/refresh-token", refreshToken);
 router.post(
@@ -63,12 +63,12 @@ router.post(
   signUpSignInLimiter,
   requestIp.mw(),
   useragent.express(),
-  signin,
-  sendLoginVerificationEmail
+  signin
+  // sendLoginVerificationEmail
 );
 router.post("/logout", logout);
 
-router.put("/:id", requireAuth, decodeToken, updateInfo);
+router.put("/:id", requireAuth, decodeToken, avatarUpload, updateInfo);
 
 router.use(followLimiter);
 router.patch("/:id/follow", requireAuth, decodeToken, followUser);

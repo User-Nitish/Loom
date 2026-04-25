@@ -62,10 +62,10 @@ const Logs = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="space-y-1">
             <h1 className="text-3xl font-black text-white tracking-tighter uppercase font-display">
-              System Telemetry
+              Activity Logs
             </h1>
             <p className="text-v-red text-[10px] font-black uppercase tracking-[0.4em]">
-              Operator: System_Root
+              Administrator View
             </p>
           </div>
           <CurrentTime />
@@ -73,7 +73,7 @@ const Logs = () => {
 
         <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
           <div className="text-[10px] font-black uppercase tracking-widest text-white/30 italic">
-            {`Synchronized: ${logs.length} operations detected (L7D_BUFFER)`}
+            {`Total Logs: ${logs.length} activities found`}
           </div>
 
           <div className="flex items-center space-x-4">
@@ -93,7 +93,7 @@ const Logs = () => {
               {clearing ? (
                 <ButtonLoadingSpinner loadingText="Wiping..." />
               ) : (
-                "Wipe Logs"
+                "Clear Logs"
               )}
             </button>
           </div>
@@ -102,18 +102,18 @@ const Logs = () => {
         {!loading ? (
           logs.length === 0 ? (
             <div className="text-white/20 text-center py-20 font-black uppercase tracking-widest italic">
-              Buffer empty. No telemetry detected.
+              No activity logs found.
             </div>
           ) : (
             <>
               <div className="h-[500px] relative overflow-auto custom-scrollbar pr-2">
                 <div className="w-full">
                   <div className="grid grid-cols-5 gap-6 items-center border-b border-white/5 py-4 text-[10px] font-black uppercase tracking-widest text-white/40">
-                    <p className="text-center">Temporal Index</p>
-                    <p>Operation/Signal</p>
-                    <p>Target Node</p>
-                    <p>Level</p>
-                    <p>Payload Data</p>
+                    <p className="text-center">Time</p>
+                    <p>Activity</p>
+                    <p>User Account</p>
+                    <p>Status</p>
+                    <p>Log Details</p>
                   </div>
                   {logs.map((log) => (
                     <div
@@ -170,7 +170,7 @@ const Logs = () => {
               </div>
 
               <div className="flex justify-center text-[10px] font-black uppercase tracking-widest text-white/20 mt-6 pt-4 border-t border-white/5 italic">
-                Logs purge automatically after 168_HOUR cycle
+                Logs are automatically cleared every 7 days
               </div>
             </>
           )

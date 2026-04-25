@@ -6,7 +6,7 @@ import {
 } from "../../redux/actions/userActions";
 import { useDispatch } from "react-redux";
 import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
-import { FiUser, FiMapPin, FiEdit } from "react-icons/fi";
+import { FiUser, FiMapPin, FiEdit, FiCamera } from "react-icons/fi";
 
 const suggestedInterests = [
   "🎨 Art",
@@ -35,20 +35,36 @@ const ProfileUpdateModal = ({ user, isOpen, onClose }) => {
   const dispatch = useDispatch();
 
   const [isUpdating, setIsUpdating] = useState(false);
-  const [bio, setBio] = useState(user.bio ? user.bio : "");
+   const [bio, setBio] = useState(user.bio ? user.bio : "");
   const [location, setLocation] = useState(user.location ? user.location : "");
   const [interests, setInterests] = useState(
     user.interests ? user.interests : ""
   );
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(user.avatar);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleUpdateProfile = async () => {
     setIsUpdating(true);
 
-    const formData = {
-      bio,
-      location,
-      interests,
-    };
+    const formData = new FormData();
+    formData.append("bio", bio);
+    formData.append("location", location);
+    formData.append("interests", interests);
+    if (avatar) {
+      formData.append("avatar", avatar);
+    }
 
     await dispatch(updateUserAction(user._id, formData));
     await dispatch(getUserAction(user._id));
@@ -102,6 +118,35 @@ const ProfileUpdateModal = ({ user, isOpen, onClose }) => {
                   </Dialog.Title>
 
                   <div className="space-y-6">
+                    {/* Avatar Upload */}
+                    <div className="flex flex-col items-center justify-center mb-8">
+                      <div className="relative group cursor-pointer">
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-v-cyan/20 group-hover:border-v-cyan transition-all shadow-2xl">
+                          <img 
+                            src={avatarPreview} 
+                            alt="Avatar" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <label 
+                          htmlFor="avatar-upload" 
+                          className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-full cursor-pointer"
+                        >
+                          <FiCamera className="text-white text-xl" />
+                        </label>
+                        <input 
+                          id="avatar-upload"
+                          type="file" 
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleAvatarChange}
+                        />
+                      </div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mt-3">
+                        Change Profile Picture
+                      </p>
+                    </div>
+
                     <div>
                       <div className="flex items-center space-x-2 mb-2">
                         <FiUser className="text-v-cyan" />
@@ -154,8 +199,8 @@ const ProfileUpdateModal = ({ user, isOpen, onClose }) => {
                         maxLength={50}
                       />
 
-                      <div className="mt-4 h-28 overflow-y-auto pr-2 no-scrollbar">
-                        <div className="flex flex-wrap gap-2">
+                      <div className="mt-4 h-32 overflow-y-auto pr-2 custom-scrollbar touch-pan-y">
+                        <div className="flex flex-wrap gap-2 pb-4">
                           {suggestedInterests.map((interest, index) => (
                             <button
                               key={index}

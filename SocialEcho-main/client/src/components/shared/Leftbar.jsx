@@ -101,10 +101,18 @@ const Leftbar = ({ showLeftbar }) => {
         <div className="pt-6 mt-4 border-t border-white/5">
           <Link
             to="/communities"
-            className="flex items-center gap-4 px-5 py-4 rounded-3xl bg-v-red text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:scale-105 transition-all"
+            className="flex items-center gap-4 px-5 py-4 rounded-3xl bg-v-red text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:scale-105 transition-all mb-3"
           >
             <Compass size={18} />
             <span>Discover</span>
+          </Link>
+          
+          <Link
+            to="/admin/signin"
+            className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-white/[0.03] border border-white/5 text-white/30 hover:text-white/60 font-black uppercase tracking-widest text-[9px] transition-all"
+          >
+            <Hash size={14} />
+            <span>Admin Terminal</span>
           </Link>
         </div>
       </div>

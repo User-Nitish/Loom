@@ -62,7 +62,7 @@ const Settings = () => {
   if (isLoading || !servicePreferences) {
     return (
       <div className="flex items-center justify-center py-20 text-v-cyan font-black uppercase tracking-[0.4em] animate-pulse">
-        Polling_Config...
+        Loading_Settings...
       </div>
     );
   }
@@ -74,24 +74,24 @@ const Settings = () => {
         
         <div className="text-center mb-10">
           <h2 className="text-2xl font-black tracking-tighter uppercase font-display mb-2">
-            Service Config_Registry
+            Service Settings
           </h2>
           <p className="text-v-cyan text-[10px] font-black uppercase tracking-[0.4em]">
-            Parameter Group: CONTENT_MODERATION
+            Configuration: Content Moderation
           </p>
         </div>
 
         {isSuccess && (
           <div className="bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-black uppercase tracking-widest p-4 mb-8 rounded-xl text-center">
-            Preferences synchronized successfully
+            Settings saved successfully
           </div>
         )}
 
         <div className="space-y-8">
           <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5">
             <div className="space-y-1">
-              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">AI Moderation Bridge</p>
-              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Toggle Perspective_API Logic</p>
+              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">AI Content Moderation</p>
+              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Enable automated post filtering</p>
             </div>
             <div className="ml-auto">
               <input
@@ -105,8 +105,8 @@ const Settings = () => {
 
           <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 gap-4">
             <div className="space-y-1">
-              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">Filtering Provider</p>
-              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Select Signal Processor</p>
+              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">AI Service Provider</p>
+              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Select the AI engine for moderation</p>
             </div>
             <div className="md:ml-auto w-full md:w-64">
               <select
@@ -116,19 +116,19 @@ const Settings = () => {
                   setCategoryFilteringServiceProvider(e.target.value)
                 }
               >
-                <option value="" className="bg-v-ink">NULL_PROVIDER</option>
-                <option value="TextRazor" className="bg-v-ink">TEXT_RAZOR</option>
-                <option value="InterfaceAPI" className="bg-v-ink">INTERFACE_CORE</option>
-                <option value="ClassifierAPI" className="bg-v-ink">GENESIS_CLASSIFIER</option>
-                <option value="disabled" className="bg-v-ink">SYSTEM_DISABLE</option>
+                <option value="" className="bg-v-ink">Default</option>
+                <option value="TextRazor" className="bg-v-ink">TextRazor API</option>
+                <option value="InterfaceAPI" className="bg-v-ink">HuggingFace Interface</option>
+                <option value="ClassifierAPI" className="bg-v-ink">Local AI Classifier</option>
+                <option value="disabled" className="bg-v-ink">Disabled</option>
               </select>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 gap-4">
             <div className="space-y-1">
-              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">API Latency Cap</p>
-              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Timeout Millis (MAX_WAIT)</p>
+              <p className="text-sm font-bold text-white/90 uppercase tracking-tight">API Timeout</p>
+              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest">Maximum wait time (milliseconds)</p>
             </div>
             <div className="md:ml-auto w-full md:w-64">
               <input
@@ -154,10 +154,10 @@ const Settings = () => {
             {isUpdating ? (
               <span className="flex items-center gap-2">
                 <ButtonLoadingSpinner />
-                Syncing...
+                Saving...
               </span>
             ) : (
-              "Apply Config"
+              "Save Changes"
             )}
           </button>
         </div>

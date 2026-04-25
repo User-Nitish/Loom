@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 
 const CurrentTime = () => {
-  const [time, setTime] = useState(new Date().toLocaleString());
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(new Date().toLocaleString());
+      setDate(new Date());
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const date = new Date(time);
   const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
   const month = date.toLocaleDateString("en-US", { month: "long" });
   const day = date.toLocaleDateString("en-US", { day: "numeric" });
@@ -23,8 +22,8 @@ const CurrentTime = () => {
   const timeString = `${hours}:${minutes}:${seconds} ${amPm}`;
 
   return (
-    <div className="text-sm text-gray-800 mt-1">
-      {`${weekday}, ${month} ${day}, ${year} ${timeString}`}
+    <div className="text-[10px] font-black text-v-red uppercase tracking-[0.2em] bg-v-red/5 border border-v-red/20 px-4 py-2 rounded-xl">
+      {`${weekday}, ${month} ${day}, ${year} | ${timeString}`}
     </div>
   );
 };
