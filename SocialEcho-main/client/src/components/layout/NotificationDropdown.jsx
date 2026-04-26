@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNotifications, markAllRead, markRead } from "../../redux/actions/notification";
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
-import { Bell, Check, Trash2 } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { Bell, Check, Heart, MessageCircle, UserPlus, Info, CheckCircle, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NotificationDropdown = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
@@ -14,77 +15,154 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
     }
   }, [dispatch, isOpen]);
 
-  if (!isOpen) return null;
+  const getIcon = (type) => {
+    switch (type) {
+      case "like":
+        return <Heart size={14} className="text-orange-500 fill-orange-500/20" />;
+      case "comment":
+        return <MessageCircle size={14} className="text-amber-400" />;
+      case "follow":
+        return <UserPlus size={14} className="text-yellow-400" />;
+      default:
+        return <Info size={14} className="text-zinc-400" />;
+    }
+  };
+
+  const getNotificationText = (notification) => {
+    switch (notification.type) {
+      case "like":
+        return "liked your post";
+      case "comment":
+        return "commented on your post";
+      case "follow":
+        return "started following you";
+      default:
+        return "interacted with you";
+    }
+  };
 
   return (
-    <div className="absolute right-0 mt-2 w-80 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
-      <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-800/50">
-        <h3 className="text-white font-semibold flex items-center gap-2">
-          <Bell size={18} className="text-blue-400" />
-          Notifications
-          {unreadCount > 0 && (
-            <span className="bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">
-              {unreadCount}
-            </span>
-          )}
-        </h3>
-        {unreadCount > 0 && (
-          <button
-            onClick={() => dispatch(markAllRead())}
-            className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-40 lg:hidden" 
+            onClick={onClose}
+          />
+          
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute right-0 mt-3 w-[380px] max-w-[95vw] bg-[#0c0c0c]/98 backdrop-blur-[40px] z-50 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,1)] border border-white/5 rounded-2xl"
           >
-            Mark all read
-          </button>
-        )}
-      </div>
-
-      <div className="max-h-96 overflow-y-auto">
-        {notifications.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 text-sm">
-            No notifications yet
-          </div>
-        ) : (
-          notifications.map((notification) => (
-            <div
-              key={notification._id}
-              onClick={() => dispatch(markRead(notification._id))}
-              className={`p-4 border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer transition-colors relative ${
-                !notification.isRead ? "bg-blue-600/5" : ""
-              }`}
-            >
-              <div className="flex gap-3">
-                <img
-                  src={notification.sender?.avatar || "https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"}
-                  alt=""
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div className="flex-1">
-                  <p className="text-sm text-slate-200">
-                    <span className="font-bold text-white">{notification.sender?.name}</span>{" "}
-                    {notification.type === "like" && "liked your post"}
-                    {notification.type === "comment" && "commented on your post"}
-                    {notification.type === "follow" && "started following you"}
-                  </p>
-                  <p className="text-[10px] text-slate-500 mt-1">
-                    {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-                  </p>
+            {/* Header */}
+            <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.05] backdrop-blur-[48px]">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Bell size={20} className="text-amber-500" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 border-2 border-[#0c0c0c] rounded-full animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
+                  )}
                 </div>
-                {!notification.isRead && (
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
+                <h3 className="text-zinc-100 font-bold tracking-tight uppercase text-xs">Tactical Feed</h3>
+                {unreadCount > 0 && (
+                  <span className="bg-amber-500/10 text-amber-500 text-[10px] font-black px-2 py-0.5 rounded border border-amber-500/20">
+                    {unreadCount}
+                  </span>
                 )}
               </div>
+              
+              {unreadCount > 0 && (
+                <button
+                  onClick={() => dispatch(markAllRead())}
+                  className="group flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tighter text-zinc-500 hover:text-amber-500 transition-all duration-300"
+                >
+                  <CheckCircle size={12} className="group-hover:scale-110 transition-transform" />
+                  Clear Data
+                </button>
+              )}
             </div>
-          ))
-        )}
-      </div>
-      
-      <div className="p-3 text-center bg-slate-800/20">
-        <button className="text-xs text-slate-400 hover:text-white transition-colors">
-          View all activity
-        </button>
-      </div>
-    </div>
+
+            {/* Notifications List */}
+            <div className="max-h-[450px] overflow-y-auto custom-scrollbar">
+              {notifications.length === 0 ? (
+                <div className="py-20 px-8 flex flex-col items-center text-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center border border-white/5">
+                    <Sparkles className="text-white/10" size={32} />
+                  </div>
+                  <div>
+                    <p className="text-zinc-400 font-medium text-xs uppercase tracking-widest font-black">Zero Activity</p>
+                    <p className="text-zinc-600 text-[10px] mt-1">Standby for incoming signals.</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="divide-y divide-white/5">
+                  {notifications.map((notification, index) => (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                      key={notification._id}
+                      onClick={() => {
+                        dispatch(markRead(notification._id));
+                      }}
+                      className={`group p-4 flex gap-4 hover:bg-white/[0.03] cursor-pointer transition-all relative ${
+                        !notification.isRead ? "bg-amber-500/[0.02]" : ""
+                      }`}
+                    >
+                      {!notification.isRead && (
+                        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-amber-500" />
+                      )}
+
+                      <div className="relative shrink-0">
+                        <img
+                          src={notification.sender?.avatar || "https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"}
+                          alt=""
+                          className="w-12 h-12 rounded-lg object-cover grayscale group-hover:grayscale-0 transition-all border border-white/5"
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded bg-[#0c0c0c] border border-white/10 flex items-center justify-center shadow-lg">
+                          {getIcon(notification.type)}
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-zinc-400 leading-snug">
+                          <span className="font-black text-zinc-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight">
+                            {notification.sender?.name}
+                          </span>{" "}
+                          {getNotificationText(notification)}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <p className="text-[10px] text-zinc-600 font-black uppercase tracking-tighter">
+                            {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+                          </p>
+                        </div>
+                      </div>
+
+                      {!notification.isRead && (
+                        <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 shadow-[0_0_8px_rgba(245,158,11,1)]" />
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="p-3 border-t border-white/5 bg-white/[0.01] flex justify-center">
+              <button className="w-full py-2 px-4 rounded border border-white/5 text-[10px] font-black text-zinc-400 hover:bg-white/5 hover:text-amber-500 transition-all duration-300 tracking-widest uppercase">
+                Access All Channels
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+
   );
 };
 
 export default NotificationDropdown;
+
+

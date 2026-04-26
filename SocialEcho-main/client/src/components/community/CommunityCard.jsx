@@ -21,6 +21,7 @@ const CommunityCard = ({ community }) => {
       transition={{ duration: 0.3 }}
     >
       <div className="absolute top-0 right-0 w-24 h-24 bg-v-cyan/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
       
       <div className="flex flex-col h-full">
         <div className="flex items-center gap-4 mb-6">

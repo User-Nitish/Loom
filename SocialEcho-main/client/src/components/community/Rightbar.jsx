@@ -5,12 +5,13 @@ import LeaveModal from "../modals/LeaveModal";
 import { getCommunityAction } from "../../redux/actions/communityActions";
 import placeholder from "../../assets/placeholder.png";
 import CommonLoading from "../loader/CommonLoading";
+import { motion } from "framer-motion";
+import { Users, Shield, LogOut, Info, List, Radio } from "lucide-react";
 
 import {
   useBannerLoading,
   useIsModeratorUpdated,
 } from "../../hooks/useCommunityData";
-import { HiUserGroup, HiOutlineCheckBadge } from "react-icons/hi2";
 
 const Rightbar = () => {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
@@ -38,63 +39,73 @@ const Rightbar = () => {
   );
 
   const bannerLoaded = useBannerLoading(banner);
-  const isModeratorUpdated = useIsModeratorUpdated(isModeratorOfThisCommunity);
 
   if (!communityData) {
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center py-20">
         <CommonLoading />
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-md ">
-      <div className="flex flex-col ">
-        <h2 className="text-lg font-bold">{name}</h2>
-        <div className="flex items-center gap-2 text-primary mb-4">
-          <HiUserGroup />
-          <span className="mr-2">
-            {members?.length || 0}{" "}
-            {members?.length === 1 ? "member" : "members"}
-          </span>
+    <div className="flex flex-col space-y-8">
+      {/* 1. Community Header Card */}
+      <div>
+        <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">{name}</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 px-4 py-2 bg-v-cyan/10 border border-v-cyan/20 rounded-full">
+            <Users size={14} className="text-v-cyan" />
+            <span className="text-[10px] font-black text-v-cyan uppercase tracking-widest">
+              {members?.length || 0} Members
+            </span>
+          </div>
+          <div className="p-2 rounded-xl bg-white/5 border border-white/5 text-white/20">
+             <Info size={14} />
+          </div>
         </div>
       </div>
 
-      {bannerLoaded ? (
+      {/* 2. Banner Preview */}
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-v-cyan to-v-yellow opacity-20 blur-lg rounded-2xl group-hover:opacity-40 transition-opacity" />
         <img
-          src={banner}
+          src={bannerLoaded ? banner : placeholder}
           alt="community banner"
-          className="w-full h-40 rounded-md object-cover mb-4"
+          className="relative w-full h-48 rounded-2xl object-cover border border-white/10"
           onError={(e) => {
             e.target.src = placeholder;
           }}
         />
-      ) : (
-        <img
-          src={placeholder}
-          alt="community banner placeholder"
-          className="w-full h-40 rounded-md object-cover mb-4"
-        />
-      )}
+        <div className="absolute bottom-4 right-4 px-3 py-1 bg-v-ink/80 backdrop-blur-md rounded-lg border border-white/10 text-[8px] font-black text-white/40 uppercase tracking-widest">
+           Community Preview
+        </div>
+      </div>
 
-      <h3>{description}</h3>
+      {/* 3. Description */}
+      <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 relative overflow-hidden group">
+        <div className="absolute top-0 left-0 w-1 h-full bg-v-cyan opacity-20" />
+        <h3 className="text-sm text-white/70 leading-relaxed font-medium italic">
+          "{description || "No community description available."}"
+        </h3>
+      </div>
 
-      <div className="my-4">
-        {isModeratorOfThisCommunity && (
+      {/* 4. Actions */}
+      <div className="flex flex-col gap-4">
+        {isModeratorOfThisCommunity ? (
           <Link
             to={`/community/${communityName}/moderator`}
-            className="px-4 bg-v-yellow text-v-ink text-sm py-2 rounded-lg flex justify-center items-center w-full font-bold transition-transform hover:scale-[1.02]"
+            className="flex items-center justify-center gap-3 py-4 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] hover:bg-v-cyan hover:text-v-ink transition-all shadow-xl hover:scale-105 active:scale-95"
           >
+            <Shield size={14} />
             Manage Community
           </Link>
-        )}
-
-        {!isModeratorOfThisCommunity && (
+        ) : (
           <button
             onClick={toggleLeaveModal}
-            className="px-4 text-sm py-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-lg flex justify-center items-center w-full font-medium transition-colors"
+            className="flex items-center justify-center gap-3 py-4 bg-white/5 border border-white/10 text-white/40 rounded-2xl text-[10px] font-black uppercase tracking-[0.4em] hover:bg-v-red/10 hover:text-v-red hover:border-v-red/30 transition-all active:scale-95 group"
           >
+            <LogOut size={14} className="group-hover:-translate-x-1 transition-transform" />
             Leave Community
           </button>
         )}
@@ -104,15 +115,30 @@ const Rightbar = () => {
           communityName={communityName}
         />
       </div>
+
+      {/* 5. Rules Matrix */}
       {rules && rules.length > 0 && (
-        <div className="text-white/80 mb-4">
-          <span className="font-bold block mb-3 text-white/30 text-xs uppercase tracking-wide">Rules</span>
-          <ul className="flex flex-col gap-3">
-            {rules.map((rule) => (
-              <li key={rule._id} className="flex items-start gap-3 text-sm">
-                <HiOutlineCheckBadge className="text-v-yellow text-lg flex-shrink-0" />
-                <span>{rule.rule}</span>
-              </li>
+        <div className="pt-8 border-t border-white/5">
+          <div className="flex items-center gap-3 mb-6">
+             <List size={14} className="text-v-yellow" />
+             <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">Community Rules</span>
+          </div>
+          <ul className="flex flex-col gap-4">
+            {rules.map((rule, i) => (
+              <motion.li 
+                key={rule._id} 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="flex items-start gap-4 p-4 bg-white/[0.01] rounded-2xl border border-white/[0.03] group hover:border-v-yellow/20 transition-all cursor-default"
+              >
+                <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black text-v-yellow group-hover:bg-v-yellow group-hover:text-v-ink transition-all">
+                   {i + 1}
+                </div>
+                <span className="text-[11px] text-white/60 font-medium leading-relaxed group-hover:text-white transition-colors">
+                   {rule.rule}
+                </span>
+              </motion.li>
             ))}
           </ul>
         </div>

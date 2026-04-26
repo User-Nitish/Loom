@@ -163,11 +163,16 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
           <div className="relative notification-trigger">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="p-2 rounded-full hover:bg-white/5 transition-colors text-white/50 relative"
+              className={`p-2 rounded-xl transition-all duration-300 relative group ${
+                showNotifications ? "bg-white/10 text-indigo-400" : "hover:bg-white/5 text-white/50 hover:text-white"
+              }`}
             >
-              <Bell size={18} />
+              <Bell size={18} className={`${unreadCount > 0 ? "animate-wiggle" : ""}`} />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full border border-slate-900" />
+                <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500 border border-[#0a0a0a]"></span>
+                </span>
               )}
             </button>
             <NotificationDropdown 

@@ -73,7 +73,7 @@ const Leftbar = ({ showLeftbar }) => {
       </div>
 
       {/* Communities Capsule */}
-      <div className="flex flex-col flex-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-6 rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.3)] overflow-hidden">
+      <div className="flex flex-col flex-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-6 rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.3)] min-h-0">
         <div className="flex items-center justify-between px-2 mb-6">
           <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">Nodes</p>
           <Link to="/my-communities" className="text-[10px] font-black text-v-red hover:underline transition-colors uppercase tracking-widest">
@@ -81,7 +81,7 @@ const Leftbar = ({ showLeftbar }) => {
           </Link>
         </div>
 
-        <div className="space-y-1 overflow-y-auto no-scrollbar flex-1">
+        <div className="space-y-1 overflow-y-auto custom-scrollbar flex-1 -mx-2 px-2 scroll-smooth touch-pan-y">
           {communityLinks && communityLinks.length > 0 ? (
             communityLinks.map((community) => (
               <Link
@@ -90,7 +90,7 @@ const Leftbar = ({ showLeftbar }) => {
                 to={community.href}
               >
                 <Hash size={14} className="text-white/10 group-hover:text-v-red transition-colors" />
-                <span className="text-[11px] font-bold truncate">{community.label}</span>
+                <span className="text-[11px] font-bold line-clamp-2 leading-tight">{community.label}</span>
               </Link>
             ))
           ) : (

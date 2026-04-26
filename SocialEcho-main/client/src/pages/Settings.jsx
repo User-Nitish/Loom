@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserAction, deleteAccountAction } from "../redux/actions/userActions";
-import { User, Shield, Trash2, Bell, Smartphone, ChevronRight } from "lucide-react";
+import { User, Shield, Trash2, Bell, Smartphone, ChevronRight, Heart, MessageCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Settings = () => {
@@ -57,7 +57,7 @@ const Settings = () => {
         </div>
 
         {/* Content */}
-        <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-8 shadow-2xl">
+        <div className="flex-1 bg-[#0a0a0a]/98 backdrop-blur-[40px] border border-white/10 rounded-3xl p-8 shadow-2xl">
           {activeTab === "profile" && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
               <h3 className="text-xl font-bold text-white mb-6">Profile Settings</h3>
@@ -112,19 +112,62 @@ const Settings = () => {
             </motion.div>
           )}
 
+          {activeTab === "notifications" && (
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xl font-black text-white uppercase tracking-tighter">Signal Matrix</h3>
+                <div className="px-2 py-1 bg-amber-500/10 text-amber-500 text-[10px] font-black rounded-md uppercase border border-amber-500/20">
+                  Secure-Link
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                {[
+                  { id: "likes", label: "Impact Events", desc: "When your data receives positive reinforcement", icon: Heart, color: "text-orange-500" },
+                  { id: "comments", label: "Signal Bursts", desc: "Incoming text-based interactions", icon: MessageCircle, color: "text-amber-500" },
+                  { id: "followers", label: "Network Growth", desc: "New nodes connecting to your stream", icon: User, color: "text-yellow-500" },
+                  { id: "mentions", label: "Direct Ping", desc: "When you are targeted in external logs", icon: Sparkles, color: "text-zinc-400" }
+                ].map((item) => (
+                  <div key={item.id} className="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center justify-between group hover:bg-white/[0.04] transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform border border-white/5`}>
+                        <item.icon size={18} className={item.color} />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-black text-zinc-100 uppercase tracking-widest">{item.label}</h4>
+                        <p className="text-[10px] text-zinc-600 uppercase font-bold tracking-tight">{item.desc}</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" defaultChecked />
+                      <div className="w-10 h-5 bg-zinc-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-[#0c0c0c] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 after:shadow-lg"></div>
+                    </label>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-4 p-4 bg-white/[0.01] border border-white/5 rounded-xl flex gap-4">
+                <Bell className="text-zinc-600 shrink-0" size={18} />
+                <p className="text-[10px] text-zinc-500 leading-relaxed font-black uppercase tracking-tighter">
+                  Warning: Signal modifications are local to this terminal. Global relay settings available in core console.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === "danger" && (
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-              <h3 className="text-xl font-bold text-red-400">Danger Zone</h3>
-              <div className="p-6 border border-red-500/20 bg-red-500/5 rounded-2xl">
-                <h4 className="text-sm font-bold text-white mb-2">Delete Account</h4>
-                <p className="text-xs text-slate-400 mb-6">
-                  Once you delete your account, there is no going back. All your media will be wiped from our AWS storage.
+              <h3 className="text-xl font-black text-orange-600 uppercase tracking-tighter">Terminal Termination</h3>
+              <div className="p-6 border border-orange-600/20 bg-orange-600/5 rounded-2xl">
+                <h4 className="text-xs font-black text-zinc-100 mb-2 uppercase tracking-widest">Delete Sequence</h4>
+                <p className="text-[10px] text-zinc-500 mb-6 font-black uppercase leading-relaxed tracking-tighter">
+                  Initiating this command will permanently purge your data nodes from the network. This action is irreversible.
                 </p>
                 <button 
                   onClick={handleDelete}
-                  className="px-6 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-red-600/20"
+                  className="px-6 py-2 bg-orange-600/10 hover:bg-orange-600 text-orange-600 hover:text-white border border-orange-600/20 rounded-lg text-[10px] font-black transition-all shadow-lg shadow-orange-600/20 uppercase tracking-widest"
                 >
-                  Delete My Account Permanently
+                  Confirm Full Purge
                 </button>
               </div>
             </motion.div>
