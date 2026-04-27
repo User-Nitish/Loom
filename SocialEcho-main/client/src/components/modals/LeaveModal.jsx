@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import LoadingSpinner from "../loader/ButtonLoadingSpinner";
 import { leaveFetchData } from "../../redux/actions/communityActions";
+import { motion, AnimatePresence } from "framer-motion";
+import { LogOut, X, Loader2, AlertTriangle } from "lucide-react";
 
 const LeaveModal = ({ show, communityName, toggle }) => {
   const [leaving, setLeaving] = useState(false);
@@ -18,67 +19,98 @@ const LeaveModal = ({ show, communityName, toggle }) => {
   };
 
   return (
-    <div className={`fixed inset-0 overflow-y-auto ${show ? "" : "hidden"}`}>
-      <div className="flex min-h-screen items-center justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
-        <div
-          className={`fixed inset-0 transition-opacity ${show ? "" : "hidden"}`}
-          aria-hidden="true"
-          onClick={toggle}
-        >
-          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
+    <AnimatePresence>
+      {show && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={toggle}
+            className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+          />
 
-        <span
-          className="hidden sm:inline-block sm:h-screen sm:align-middle"
-          aria-hidden="true"
-        >
-          &#8203;
-        </span>
-
-        <div
-          className="inline-block transform overflow-hidden rounded-md bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:align-middle z-50"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-headline"
-        >
-          <div>
-            <div className="mt-3 text-center sm:mt-5">
-              <h3
-                className="text-lg font-medium leading-6 text-gray-900"
-                id="modal-headline"
-              >
+          {/* Modal Content */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="relative w-full max-w-md bg-v-ink/80 border border-white/10 rounded-[48px] p-10 shadow-[0_32px_128px_rgba(0,0,0,1)] backdrop-blur-3xl overflow-hidden"
+          >
+            {/* Header/Icon */}
+            <div className="flex flex-col items-center text-center mb-8">
+              <div className="relative group">
+                <div className="absolute inset-0 bg-v-red/20 blur-2xl rounded-full group-hover:bg-v-red/30 transition-all duration-500" />
+                <div className="relative w-20 h-20 rounded-3xl bg-v-red/10 border border-v-red/20 flex items-center justify-center mb-6 rotate-3 group-hover:rotate-6 transition-transform duration-500">
+                  <LogOut size={32} className="text-v-red" />
+                </div>
+              </div>
+              
+              <h3 className="text-xl font-black text-white uppercase tracking-wider mb-2">
                 Leave Community
               </h3>
-              <div className="mt-2">
-                <p className="text-sm text-gray-500">
-                  Are you sure you want to leave this community?
-                </p>
-              </div>
+              <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">
+                Disconnecting Frequency
+              </p>
             </div>
-          </div>
-          <div className="mt-5 flex justify-center space-x-2 sm:mt-6">
+
+            {/* Community Info */}
+            <div className="mb-10 text-center">
+              <p className="text-white/60 font-medium leading-relaxed">
+                Are you sure you want to disconnect from <span className="text-v-red font-black">{communityName}</span>? Your node will be removed from this cluster immediately.
+              </p>
+            </div>
+
+            {/* Warning Banner */}
+            <div className="mb-10 p-4 rounded-2xl bg-v-red/5 border border-v-red/10 flex items-start gap-3">
+              <AlertTriangle className="text-v-red shrink-0" size={16} />
+              <p className="text-[10px] font-bold text-v-red uppercase tracking-widest leading-relaxed">
+                Note: You can always re-synchronize with this community later if the cluster remains public.
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                type="button"
+                className="flex-1 px-8 py-4 rounded-2xl bg-white/[0.03] border border-white/5 text-white/40 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white/[0.05] hover:text-white transition-all order-2 sm:order-1"
+                onClick={toggle}
+                disabled={leaving}
+              >
+                Abort
+              </button>
+              <button
+                type="button"
+                className="flex-1 px-8 py-4 rounded-2xl bg-v-red text-white text-[10px] font-black uppercase tracking-[0.3em] hover:scale-105 active:scale-95 shadow-[0_0_24px_rgba(239,68,68,0.2)] transition-all order-1 sm:order-2 flex items-center justify-center gap-2"
+                onClick={leaveCommunityHandler}
+                disabled={leaving}
+              >
+                {leaving ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" />
+                    Severing...
+                  </>
+                ) : (
+                  <>
+                    <LogOut size={14} />
+                    Confirm_Leave
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Close */}
             <button
-              disabled={leaving}
               onClick={toggle}
-              className="w-1/2 rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+              className="absolute top-8 right-8 p-2 rounded-xl hover:bg-white/5 text-white/10 hover:text-white transition-all"
             >
-              Cancel
+              <X size={20} />
             </button>
-            <button
-              disabled={leaving}
-              onClick={leaveCommunityHandler}
-              className="w-1/2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:text-sm"
-            >
-              {leaving ? (
-                <LoadingSpinner loadingText={"Leaving..."} />
-              ) : (
-                <span>Leave</span>
-              )}
-            </button>
-          </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 };
 
