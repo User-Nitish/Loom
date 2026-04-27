@@ -208,6 +208,149 @@ const signin = async (req, res, next) => {
   }
 };
 
+const demoSignin = async (req, res, next) => {
+  try {
+    const Comment = require("../models/comment.model");
+    const Relationship = require("../models/relationship.model");
+
+    // 1. Ensure Communities exist with simple language
+    const communities = [
+      { name: "Health and Fitness", description: "Share your gym journey and healthy eating tips." },
+      { name: "Patna Community", description: "A place for people from Patna to connect and share local news." }
+    ];
+
+    const seededCommunities = [];
+    for (const com of communities) {
+      let c = await Community.findOne({ name: com.name });
+      if (!c) {
+        c = new Community({ name: com.name, description: com.description });
+        await c.save();
+      }
+      seededCommunities.push(c);
+    }
+
+    // 2. Ensure Bots exist
+    const botsData = [
+      { name: "Aarav", email: "aarav.bot@loom.com", avatar: "https://i.pravatar.cc/150?u=aarav" },
+      { name: "Priya", email: "priya.bot@loom.com", avatar: "https://i.pravatar.cc/150?u=priya" },
+      { name: "Rahul", email: "rahul.bot@loom.com", avatar: "https://i.pravatar.cc/150?u=rahul" }
+    ];
+
+    const bots = [];
+    for (const b of botsData) {
+      let bot = await User.findOne({ email: b.email });
+      if (!bot) {
+        const h = await bcrypt.hash("bot123", 10);
+        bot = new User({ ...b, password: h, isEmailVerified: true });
+        await bot.save();
+      }
+      bots.push(bot);
+    }
+
+    // 3. Ensure Neil exists
+    const demoEmail = "neil.demo@loom.com";
+    let user = await User.findOne({ email: demoEmail });
+
+    if (!user) {
+      const hashedPassword = await bcrypt.hash("demo123456", 10);
+      user = new User({
+        name: "Neil",
+        email: demoEmail,
+        password: hashedPassword,
+        avatar: "/demo/avatar.png",
+        bio: "21 years old from Patna, Bihar. I love gym and my city.",
+        location: "Patna, Bihar",
+        role: "general",
+        isEmailVerified: true
+      });
+      await user.save();
+    }
+
+    // 4. Ensure Neil is in the communities
+    for (const c of seededCommunities) {
+      if (!c.members.includes(user._id)) {
+        c.members.push(user._id);
+        await c.save();
+      }
+    }
+
+    // 5. Seed Neil's Posts if they don't exist
+    const existingPosts = await Post.find({ user: user._id });
+    if (existingPosts.length === 0) {
+      const post1 = new Post({
+        user: user._id,
+        community: seededCommunities[0]._id,
+        content: "Just finished a heavy leg day! Feeling great. How is everyone's workout going today?",
+        fileUrl: "/demo/gym_post.png",
+        fileType: "image"
+      });
+      await post1.save();
+
+      const post2 = new Post({
+        user: user._id,
+        community: seededCommunities[1]._id,
+        content: "Love walking around the city in the evening. Patna is beautiful!",
+        fileUrl: "/demo/patna_post.png",
+        fileType: "image"
+      });
+      await post2.save();
+
+      // Add Fake Interactions to Post 1
+      post1.likes = bots.map(b => b._id);
+      await post1.save();
+
+      // Seed a Bot post for Neil to save
+      const botPost = new Post({
+        user: bots[0]._id,
+        community: seededCommunities[0]._id,
+        content: "Consistency is key! Don't skip your Monday workouts.",
+        fileUrl: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800",
+        fileType: "image"
+      });
+      await botPost.save();
+
+      // Neil saves his own posts and the bot post
+      user.savedPosts = [post1._id, post2._id, botPost._id];
+      await user.save();
+
+      const comments = [
+        { user: bots[0]._id, content: "Great work Neil! Keep it up." },
+        { user: bots[1]._id, content: "Motivation for today! Awesome." }
+      ];
+
+      for (const com of comments) {
+        const newCom = new Comment({ ...com, postId: post1._id });
+        await newCom.save();
+        post1.comments.push(newCom._id);
+      }
+      await post1.save();
+    }
+
+    const payload = { id: user._id, email: user.email };
+    const accessToken = jwt.sign(payload, process.env.SECRET, { expiresIn: "6h" });
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "7d" });
+
+    const newRefreshToken = new Token({ user: user._id, refreshToken, accessToken });
+    await newRefreshToken.save();
+
+    res.status(200).json({
+      accessToken,
+      refreshToken,
+      accessTokenUpdatedAt: new Date().toLocaleString(),
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar,
+      },
+    });
+  } catch (err) {
+    console.error("DEMO LOGIN ERROR:", err);
+    res.status(500).json({ message: "Demo login failed: " + err.message });
+  }
+};
+
 /**
  * Retrieves a user's profile information, including their total number of posts,
  * the number of communities they are in, the number of communities they have posted in,
@@ -518,4 +661,5 @@ module.exports = {
   getUser,
   updateInfo,
   deleteAccount,
+  demoSignin,
 };

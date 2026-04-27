@@ -18,11 +18,15 @@ const getPublicUsers = async (req, res) => {
   try {
     const userId = req.userId;
 
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const followingIds = await Relationship.find({ follower: userId }).distinct(
       "following"
     );
 
-    const userIdObj = mongoose.Types.ObjectId(userId);
+    const userIdObj = new mongoose.Types.ObjectId(userId);
 
     const excludedIds = [...followingIds, userIdObj];
 
@@ -68,7 +72,8 @@ const getPublicUsers = async (req, res) => {
 
     res.status(200).json(usersToDisplay);
   } catch (error) {
-    res.status(500).json({ message: "An error occurred" });
+    console.error("GET PUBLIC USERS ERROR:", error);
+    res.status(500).json({ message: "An error occurred: " + error.message });
   }
 };
 

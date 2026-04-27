@@ -47,7 +47,9 @@ const getCategoriesFromTextRazor = async (content, timeout) => {
       console.log("TextRazor request cancelled");
       return categories;
     } else {
-      const { status, statusText } = error.response;
+      const status = error.response?.status || 500;
+      const statusText = error.response?.statusText || error.message || "Unknown Error";
+      console.error(`TextRazor API Error ${status}: ${statusText}`);
       throw new Error(`Error ${status}: ${statusText}`);
     }
   } finally {
@@ -98,7 +100,9 @@ const getCategoriesFromClassifierAPI = async (content, timeout) => {
       console.log("Classifier API request cancelled");
       return categories;
     } else {
-      const { status, statusText } = error.response;
+      const status = error.response?.status || 500;
+      const statusText = error.response?.statusText || error.message || "Unknown Error";
+      console.error(`Classifier API Error ${status}: ${statusText}`);
       throw new Error(`Error ${status}: ${statusText}`);
     }
   } finally {
@@ -167,7 +171,9 @@ const getCategoriesFromInterfaceAPI = async (content, timeout) => {
       console.log("Interface API request cancelled");
       return categories;
     } else {
-      const { status, statusText } = error.response;
+      const status = error.response?.status || 500;
+      const statusText = error.response?.statusText || error.message || "Unknown Error";
+      console.error(`Interface API Error ${status}: ${statusText}`);
       throw new Error(`Error ${status}: ${statusText}`);
     }
   } finally {

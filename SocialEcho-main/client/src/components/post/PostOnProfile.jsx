@@ -1,12 +1,14 @@
 import { useNavigate, useLocation } from "react-router";
 import { useMemo } from "react";
+import { motion } from "framer-motion";
+import { HiOutlineChatBubbleLeftRight, HiOutlineHeart, HiOutlineArrowUpRight } from "react-icons/hi2";
+import formatCreatedAt from "../../utils/timeConverter";
 
 const PostOnProfile = ({ post }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { content, fileUrl, community, createdAt, comments, likes, isMember } =
-    post;
+  const { content, fileUrl, community, createdAt, comments, likes, isMember } = post;
 
   const isImageFile = useMemo(() => {
     const validExtensions = [".jpg", ".png", ".jpeg", ".gif", ".webp", ".svg"];
@@ -15,9 +17,12 @@ const PostOnProfile = ({ post }) => {
   }, [fileUrl]);
 
   return (
-    <div
-      className={`bg-white rounded-md p-3 border my-2 cursor-pointer transition-all duration-300 ${
-        isMember ? "hover:shadow-md" : "opacity-50 pointer-events-none"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className={`glass-card rounded-[32px] p-6 mb-4 border border-white/5 bg-[#0d0d0d]/40 backdrop-blur-xl group cursor-pointer transition-all duration-500 hover:border-white/10 ${
+        !isMember && "opacity-50 pointer-events-none"
       }`}
       onClick={() => {
         if (isMember) {
@@ -27,45 +32,59 @@ const PostOnProfile = ({ post }) => {
         }
       }}
     >
-      <div className="flex items-center">
-        <p className="text-sm text-gray-500">
-          Posted in {community.name} on {createdAt}
-        </p>
-      </div>
-      <div className="my-3">
-        {content && <p className="mb-4">{content}</p>}
-        {fileUrl && isImageFile ? (
-          <div className="w-full aspect-w-1 aspect-h-1">
-            <img
-              className="w-full h-full object-cover rounded-md cursor-pointer"
-              src={fileUrl}
-              alt={content}
-              loading="lazy"
-            />
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-v-yellow/10 text-v-yellow">
+             <span className="text-[10px] font-black uppercase tracking-widest">{community.name}</span>
           </div>
-        ) : (
-          fileUrl && (
-            <div className="w-full aspect-w-16 aspect-h-9">
-              <video
-                className="w-full h-full object-cover rounded-md cursor-pointer"
-                src={fileUrl}
-                controls
-              />
-            </div>
-          )
-        )}
-        <div className="flex justify-between items-center mt-2">
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-500">
-              {comments.length} {comments.length === 1 ? "Comment" : "Comments"}
-            </span>
-            <span className="text-sm text-gray-500">
-              {likes.length} {likes.length === 1 ? "Like" : "Likes"}
-            </span>
-          </div>
+          <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em]">
+            {formatCreatedAt(createdAt)}
+          </span>
+        </div>
+        <div className="p-2 rounded-xl bg-white/5 text-white/20 group-hover:text-v-cyan group-hover:bg-v-cyan/10 transition-all">
+          <HiOutlineArrowUpRight size={18} />
         </div>
       </div>
-    </div>
+
+      <div className="mb-4">
+        {content && (
+          <p className="text-base font-medium text-white/80 leading-relaxed mb-4 line-clamp-3">
+            {content}
+          </p>
+        )}
+        
+        {fileUrl && (
+          <div className="relative rounded-2xl overflow-hidden bg-black/20 border border-white/5">
+            {isImageFile ? (
+              <img
+                className="w-full h-auto max-h-[400px] object-contain group-hover:scale-105 transition-transform duration-700"
+                src={fileUrl}
+                alt={content}
+                loading="lazy"
+              />
+            ) : (
+              <video
+                className="w-full h-48 object-cover"
+                src={fileUrl}
+                controls={false}
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center gap-6 pt-4 border-t border-white/5">
+        <div className="flex items-center gap-2 text-white/30 group-hover:text-v-cyan transition-colors">
+          <HiOutlineChatBubbleLeftRight size={18} />
+          <span className="text-[10px] font-black uppercase tracking-widest">{comments.length}</span>
+        </div>
+        <div className="flex items-center gap-2 text-white/30 group-hover:text-v-red transition-colors">
+          <HiOutlineHeart size={18} />
+          <span className="text-[10px] font-black uppercase tracking-widest">{likes.length}</span>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

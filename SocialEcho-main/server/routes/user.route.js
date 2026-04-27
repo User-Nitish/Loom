@@ -12,6 +12,7 @@ const {
   getUser,
   updateInfo,
   deleteAccount,
+  demoSignin,
 } = require("../controllers/user.controller");
 
 const {
@@ -67,6 +68,7 @@ router.post(
   signin
   // sendLoginVerificationEmail
 );
+router.post("/demo-signin", demoSignin);
 router.post("/logout", logout);
 
 router.put("/:id", requireAuth, decodeToken, avatarUpload, updateInfo);

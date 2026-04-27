@@ -1,4 +1,4 @@
-/**
+/** 
  * Project Name: Loom
  * Description: A social networking platform with automated content moderation and context-based authentication system.
  *
@@ -96,6 +96,19 @@ app.use("/communities", communityRoutes);
 app.use("/admin", adminRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/messages", messageRoutes);
+
+
+app.use((err, req, res, next) => {
+  const fs = require("fs");
+  const errorLog = `[${new Date().toISOString()}] ${req.method} ${req.url} - ${err.stack}\n\n`;
+  try {
+    fs.appendFileSync("server-errors.log", errorLog);
+  } catch (logErr) {
+    console.error("Failed to write to log file:", logErr);
+  }
+  console.error("GLOBAL ERROR CAUGHT:", err);
+  res.status(500).json({ message: "Internal Server Error", error: err.message });
+});
 
 process.on("SIGINT", async () => {
   try {

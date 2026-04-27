@@ -42,6 +42,8 @@ const requireAuth = passport.authenticate("jwt", { session: false }, null);
 
 router.use(requireAuth, decodeToken);
 
+
+
 router.get("/community/:communityId", getCommunityPosts);
 router.get("/saved", getSavedPosts);
 router.get("/:publicUserId/userPosts", getPublicPosts);

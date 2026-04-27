@@ -200,17 +200,27 @@ const getPosts = async (req, res) => {
     const userId = req.userId;
     const { limit = 10, skip = 0 } = req.query;
 
+    // Get IDs of communities the user is in
     const communities = await Community.find({
       members: userId,
     });
-
     const communityIds = communities.map((community) => community._id);
 
-    const posts = await Post.find({
-      community: {
-        $in: communityIds,
-      },
-    })
+    // Get IDs of users the user is following
+    const following = await Relationship.find({
+      follower: userId,
+    });
+    const followingIds = following.map((relationship) => relationship.following);
+
+    // Fetch posts from joined communities OR from followed users
+    const query = {
+      $or: [
+        { community: { $in: communityIds } },
+        { user: { $in: followingIds } },
+      ],
+    };
+
+    const posts = await Post.find(query)
       .sort({
         createdAt: -1,
       })
@@ -225,11 +235,7 @@ const getPosts = async (req, res) => {
       createdAt: dayjs(post.createdAt).fromNow(),
     }));
 
-    const totalPosts = await Post.countDocuments({
-      community: {
-        $in: communityIds,
-      },
-    });
+    const totalPosts = await Post.countDocuments(query);
 
     res.status(200).json({
       formattedPosts,
@@ -614,28 +620,15 @@ const getSavedPosts = async (req, res) => {
 const getPublicPosts = async (req, res) => {
   try {
     const publicUserId = req.params.publicUserId;
-    const currentUserId = req.userId;
 
-    const isFollowing = await Relationship.exists({
-      follower: currentUserId,
-      following: publicUserId,
-    });
-    if (!isFollowing) {
-      return null;
-    }
-
-    const commonCommunityIds = await Community.find({
-      members: { $all: [currentUserId, publicUserId] },
-    }).distinct("_id");
-
+    // Retrieve all posts by the public user
     const publicPosts = await Post.find({
-      community: { $in: commonCommunityIds },
       user: publicUserId,
     })
       .populate("user", "_id name avatar")
       .populate("community", "_id name")
       .sort("-createdAt")
-      .limit(10)
+      .limit(20) // Increased limit to 20
       .exec();
 
     const formattedPosts = publicPosts.map((post) => ({
@@ -693,3 +686,5 @@ module.exports = {
   getFollowingUsersPosts,
   updatePost,
 };
+
+

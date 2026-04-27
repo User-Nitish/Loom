@@ -6,6 +6,8 @@ import OwnProfileCard from "./OwnProfileCard";
 import CommonLoading from "../loader/CommonLoading";
 import OwnInfoCard from "./OwnInfoCard";
 import NoPost from "../../assets/nopost.jpg";
+import { Plus } from "lucide-react";
+import { openCreatePostModalAction } from "../../redux/actions/uiActions";
 
 const UserProfile = ({ userData }) => {
   const dispatch = useDispatch();
@@ -43,13 +45,23 @@ const UserProfile = ({ userData }) => {
           </div>
 
           <div className="mt-12">
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-6 mb-12">
               <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/10" />
-              <h3 className="text-[10px] font-black text-white/40 uppercase tracking-[0.6em] whitespace-nowrap">
-                Your Posts
-              </h3>
+              <div className="flex items-center gap-6">
+                <h3 className="text-[10px] font-black text-white/40 uppercase tracking-[0.6em] whitespace-nowrap">
+                  Your Posts
+                </h3>
+                <button
+                  onClick={() => dispatch(openCreatePostModalAction())}
+                  className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-v-cyan/10 text-v-cyan border border-v-cyan/20 hover:bg-v-cyan hover:text-black transition-all group"
+                >
+                  <Plus size={16} className="group-hover:rotate-90 transition-transform" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Add Post</span>
+                </button>
+              </div>
               <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/10" />
             </div>
+
 
             {postToShow?.length === 0 ? (
               <div className="text-center py-24 px-10 rounded-[48px] border border-dashed border-white/10 bg-white/[0.01] backdrop-blur-sm relative overflow-hidden group">

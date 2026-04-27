@@ -113,6 +113,35 @@ export const signInAction = (formData, navigate) => async (dispatch) => {
       navigate("/");
     }
   } catch (error) {
+    navigate("/signin");
+  }
+};
+
+export const demoSignInAction = (navigate) => async (dispatch) => {
+  try {
+    const response = await api.demoSignIn();
+    const { error, data } = response;
+    if (error) {
+      dispatch({
+        type: types.SIGNIN_FAIL,
+        payload: error,
+      });
+    } else {
+      const { user, accessToken, refreshToken, accessTokenUpdatedAt } = data;
+      const profile = {
+        user,
+        accessToken,
+        refreshToken,
+        accessTokenUpdatedAt,
+      };
+      localStorage.setItem("profile", JSON.stringify(profile));
+      dispatch({
+        type: types.SIGNIN_SUCCESS,
+        payload: profile,
+      });
+      navigate("/");
+    }
+  } catch (error) {
     await dispatch({
       type: types.SIGNIN_FAIL,
       payload: types.ERROR_MESSAGE,

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { signInAction, clearMessage } from "../redux/actions/authActions";
+import { signInAction, demoSignInAction, clearMessage } from "../redux/actions/authActions";
 import {
   AiFillGithub,
 } from "react-icons/ai";
@@ -56,6 +56,10 @@ const SignIn = () => {
     await dispatch(signInAction(formData, navigate));
     setLoading(false);
     clearTimeout(timeout);
+  };
+
+  const handleDemoSignIn = () => {
+    dispatch(demoSignInAction(navigate));
   };
 
   const handleClearMessage = () => {
@@ -205,6 +209,13 @@ const SignIn = () => {
             </form>
 
             <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
+              <button
+                type="button"
+                onClick={handleDemoSignIn}
+                className="text-[10px] font-black text-v-cyan uppercase tracking-[0.5em] hover:text-white transition-all py-2"
+              >
+                Try Demo Access
+              </button>
               <Link to="/signup" className="text-[10px] font-black text-white/40 uppercase tracking-[0.5em] hover:text-white transition-all">Create Account</Link>
             </div>
           </div>

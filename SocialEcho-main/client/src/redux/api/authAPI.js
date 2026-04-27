@@ -13,6 +13,15 @@ export const signIn = async (formData) => {
   }
 };
 
+export const demoSignIn = async () => {
+  try {
+    const res = await API.post("/users/demo-signin");
+    return { error: null, data: res.data };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
 export const signUp = async (formData) => {
   try {
     const res = await API.post("/users/signup", formData, {

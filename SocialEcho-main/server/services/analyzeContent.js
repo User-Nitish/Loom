@@ -69,7 +69,7 @@ const analyzeContent = async (req, res, next) => {
   let usePerspectiveAPI;
   try {
     const config = await Config.findOne({}, { _id: 0, __v: 0 });
-    usePerspectiveAPI = config.usePerspectiveAPI;
+    usePerspectiveAPI = config?.usePerspectiveAPI;
   } catch (error) {
     usePerspectiveAPI = false;
   }

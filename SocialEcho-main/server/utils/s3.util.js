@@ -39,7 +39,7 @@ const uploadToS3 = async (file, folder = "user-uploads") => {
   try {
     const command = new PutObjectCommand(params);
     await s3Client.send(command);
-    
+
     // Return the public URL
     // Format: https://bucket-name.s3.region.amazonaws.com/key
     return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
@@ -53,7 +53,7 @@ const deleteFromS3 = async (fileUrl) => {
   try {
     const urlParts = fileUrl.split(".amazonaws.com/");
     if (urlParts.length < 2) return;
-    
+
     const key = urlParts[1];
 
     const params = {

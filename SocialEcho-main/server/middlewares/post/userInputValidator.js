@@ -4,10 +4,11 @@ const MAX_LENGTH = 3000;
 
 const postValidator = [
   body("content")
-    .isLength({ min: 10 })
-    .withMessage("Your post is too short. Share more of your thoughts!")
     .isLength({ max: MAX_LENGTH })
     .withMessage("Post cannot exceed 3000 characters.")
+    .if((value, { req }) => !req.files || req.files.length === 0)
+    .isLength({ min: 10 })
+    .withMessage("Your post is too short. Share more of your thoughts!")
     .trim(),
 ];
 

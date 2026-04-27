@@ -115,7 +115,7 @@ const SavedPost = ({ post }) => {
               <HiOutlineChatBubbleOvalLeft className="text-2xl text-white/40 group-hover/comment:text-v-cyan" />
             </div>
             <span className="text-xs font-black uppercase tracking-widest text-white/30 group-hover/comment:text-v-cyan">
-              {comments.length} Signals
+              {comments.length} Comments
             </span>
           </Link>
         </div>

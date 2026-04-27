@@ -48,8 +48,14 @@ const Post = () => {
   }
   return (
     <Suspense fallback={<FallbackLoading />}>
-      <PostView post={post} userData={userData} />
-      <CommentSidebar comments={post.comments} />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-[1400px] mx-auto px-6 relative">
+        <div className="lg:col-span-3">
+          <PostView post={post} userData={userData} />
+        </div>
+        <div className="lg:col-span-1">
+          <CommentSidebar comments={post.comments} />
+        </div>
+      </div>
     </Suspense>
   );
 };

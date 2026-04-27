@@ -21,7 +21,9 @@ import {
   Bell,
   MessageCircle,
   ShieldAlert,
+  Plus,
 } from "lucide-react";
+import { openCreatePostModalAction } from "../../redux/actions/uiActions";
 
 const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   const dispatch = useDispatch();
@@ -141,6 +143,15 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
             className="p-2 rounded-full hover:bg-white/5 transition-colors text-white/50"
           >
             <SearchIcon size={18} />
+          </button>
+
+          {/* New Create Post Button */}
+          <button
+            onClick={() => dispatch(openCreatePostModalAction())}
+            className="flex items-center justify-center p-2 rounded-xl bg-v-cyan/10 text-v-cyan hover:bg-v-cyan hover:text-black transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)] hover:shadow-[0_0_25px_rgba(34,211,238,0.4)]"
+            title="Create New Post"
+          >
+            <Plus size={18} />
           </button>
 
           <Link

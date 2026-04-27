@@ -14,6 +14,7 @@ import PrivateRoute from "./PrivateRoute";
 import SignIn from "./pages/SignIn";
 
 import CinematicBackground from "./components/shared/CinematicBackground";
+import CreatePostModal from "./components/modals/CreatePostModal";
 import SmoothScroll from "./components/layout/SmoothScroll";
 import PageTransition from "./components/layout/PageTransition";
 
@@ -31,6 +32,7 @@ const App = () => {
   return (
     <SmoothScroll>
       <CinematicBackground />
+      <CreatePostModal />
       <Suspense fallback={<FallbackLoading />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>

@@ -20,9 +20,10 @@ import {
   Loader2
 } from "lucide-react";
 
-const PostForm = ({ communityId, communityName }) => {
+const PostForm = ({ communityId, communityName, minimal = false }) => {
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
+  const uniqueId = `file-${communityId || 'global'}`;
   
   const [showInappropriateContentModal, setShowInappropriateContentModal] =
     useState(false);
@@ -37,6 +38,7 @@ const PostForm = ({ communityId, communityName }) => {
     file: null,
     error: "",
     loading: false,
+    success: false,
   });
 
   const { isPostInappropriate, postCategory, confirmationToken } = useSelector(
@@ -51,6 +53,7 @@ const PostForm = ({ communityId, communityName }) => {
     setFormData({
       ...formData,
       content: event.target.value,
+      success: false,
     });
   };
 
@@ -62,12 +65,14 @@ const PostForm = ({ communityId, communityName }) => {
           ...formData,
           file: selectedFile,
           error: "",
+          success: false,
         });
       } else {
         setFormData({
           ...formData,
           file: null,
           error: "System_Error: File exceeds 50MB limit.",
+          success: false,
         });
       }
     }
@@ -92,6 +97,15 @@ const PostForm = ({ communityId, communityName }) => {
       return;
     }
 
+    // New validation: if no file, content must be >= 10 chars
+    if (!file && content.length < 10) {
+      setFormData({
+        ...formData,
+        error: "Your post is too short. Share more of your thoughts! (Min 10 chars)",
+      });
+      return;
+    }
+
     const newPost = new FormData();
     newPost.append("content", content);
     newPost.append("communityId", communityId);
@@ -101,6 +115,7 @@ const PostForm = ({ communityId, communityName }) => {
     setFormData({
       ...formData,
       loading: true,
+      error: "",
     });
 
     try {
@@ -110,12 +125,19 @@ const PostForm = ({ communityId, communityName }) => {
         file: null,
         error: "",
         loading: false,
+        success: true,
       });
       if (fileInputRef.current) fileInputRef.current.value = "";
+      
+      // Auto hide success message after 5 seconds
+      setTimeout(() => {
+        setFormData(prev => ({ ...prev, success: false }));
+      }, 5000);
     } catch (error) {
       setFormData({
         ...formData,
         loading: false,
+        error: "Failed to broadcast post. Please try again.",
       });
     }
   };
@@ -125,6 +147,7 @@ const PostForm = ({ communityId, communityName }) => {
       ...formData,
       file: null,
       error: "",
+      success: false,
     });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -159,13 +182,17 @@ const PostForm = ({ communityId, communityName }) => {
         confirmationToken={confirmationToken}
       />
 
-      <div className="glass-card p-8 rounded-[40px] border border-white/5 bg-v-ink/40 shadow-2xl backdrop-blur-3xl relative overflow-hidden group">
+      <div className={`${minimal ? 'p-0 bg-transparent border-none' : 'glass-card p-8 rounded-[40px] border border-white/5 bg-v-ink/40 shadow-2xl backdrop-blur-3xl'} relative overflow-hidden group`}>
         {/* Decorative corner elements */}
-        <div className="absolute top-0 right-0 w-12 h-12 border-t border-r border-white/10 rounded-tr-[40px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-12 h-12 border-b border-l border-white/10 rounded-bl-[40px] pointer-events-none" />
+        {!minimal && (
+          <>
+            <div className="absolute top-0 right-0 w-12 h-12 border-t border-r border-white/10 rounded-tr-[40px] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-12 h-12 border-b border-l border-white/10 rounded-bl-[40px] pointer-events-none" />
+          </>
+        )}
 
         <form onSubmit={handleSubmit} className="relative z-10">
-          <div className="flex items-center gap-4 mb-8">
+          <div className={`flex items-center gap-4 ${minimal ? 'mb-6' : 'mb-8'}`}>
             <div className="w-10 h-10 rounded-2xl bg-v-cyan/10 flex items-center justify-center border border-v-cyan/20">
               <Plus size={20} className="text-v-cyan" />
             </div>
@@ -175,15 +202,14 @@ const PostForm = ({ communityId, communityName }) => {
             </div>
           </div>
 
-          <div className="relative mb-8">
+          <div className={`relative ${minimal ? 'mb-6' : 'mb-8'}`}>
             <textarea
-              className="w-full bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-white placeholder:text-white/10 focus:outline-none focus:border-v-cyan/30 transition-all resize-none min-h-[140px] text-lg font-medium selection:bg-v-cyan/30"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-white placeholder:text-white/10 focus:outline-none focus:border-v-cyan/30 transition-all resize-none min-h-[220px] text-lg font-medium selection:bg-v-cyan/30"
               name="content"
               id="content"
               placeholder="What's on the frequency?"
               value={formData.content}
               onChange={handleContentChange}
-              minLength={10}
               maxLength={3000}
             />
           </div>
@@ -194,15 +220,14 @@ const PostForm = ({ communityId, communityName }) => {
                 ref={fileInputRef}
                 name="file"
                 type="file"
-                id="file"
+                id={uniqueId}
                 accept="image/*, video/*"
                 onChange={handleFileChange}
                 className="hidden"
               />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className={`flex items-center gap-3 px-6 py-3 rounded-2xl border transition-all group/btn ${
+              <label
+                htmlFor={uniqueId}
+                className={`flex items-center gap-3 px-6 py-3 rounded-2xl border cursor-pointer transition-all group/btn ${
                   formData.file 
                     ? "bg-v-cyan/10 border-v-cyan/30 text-v-cyan" 
                     : "bg-white/5 border-white/5 text-white/30 hover:border-white/20 hover:text-white/60"
@@ -216,7 +241,7 @@ const PostForm = ({ communityId, communityName }) => {
                 <span className="text-[10px] font-black uppercase tracking-widest">
                   {formData.file ? "Change_Media" : "Add_Media"}
                 </span>
-              </button>
+              </label>
 
               <AnimatePresence>
                 {formData.file && (
@@ -276,6 +301,18 @@ const PostForm = ({ communityId, communityName }) => {
               >
                 <AlertCircle size={16} />
                 <span className="text-[10px] font-black uppercase tracking-widest">{formData.error}</span>
+              </motion.div>
+            )}
+
+            {formData.success && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="mt-6 flex items-center gap-3 text-v-cyan bg-v-cyan/5 p-4 rounded-2xl border border-v-cyan/10 shadow-[0_0_20px_rgba(34,211,238,0.1)]"
+              >
+                <CheckCircle2 size={16} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Broadcast transmitted successfully!</span>
               </motion.div>
             )}
           </AnimatePresence>

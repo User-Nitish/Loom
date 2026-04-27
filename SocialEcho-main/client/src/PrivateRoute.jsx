@@ -8,6 +8,7 @@ import Rightbar from "./components/shared/Rightbar";
 import Hero from "./components/home/Hero";
 
 import ModeratorRightbar from "./components/moderator/Rightbar";
+import { getSavedPostsAction } from "./redux/actions/postActions";
 
 const noRightbarRoutes = [
   /\/post\/[^/]+$/,
@@ -37,6 +38,8 @@ const PrivateRoute = ({ userData }) => {
   useEffect(() => {
     if (!isAuthenticated(userData, accessToken)) {
       dispatch(setInitialAuthState(navigate));
+    } else {
+      dispatch(getSavedPostsAction());
     }
   }, [dispatch, navigate, userData, accessToken, isAuthenticated]);
 

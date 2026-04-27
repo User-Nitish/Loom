@@ -8,6 +8,7 @@ import userReducer from "./user";
 import adminReducer from "./admin";
 import notificationReducer from "./notification";
 import messageReducer from "./message";
+import uiReducer from "./ui";
 
 const rootReducer = combineReducers({
   posts: postsReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   admin: adminReducer,
   notifications: notificationReducer,
   messages: messageReducer,
+  ui: uiReducer,
 });
 
 export default rootReducer;
