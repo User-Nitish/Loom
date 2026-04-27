@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   getPublicUserAction,
   getPublicUsersAction,
@@ -82,28 +83,41 @@ const PublicProfile = () => {
     commonCommunities,
   } = userProfile;
 
-  const Button = ({ loading, onClick, tooltipText, icon, color }) => (
-    <button
+  const Button = ({ loading, onClick, label, icon, color, active = false }) => (
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       onClick={onClick}
       type="button"
-      className={`absolute bottom-0 right-0 h-9 w-9 rounded-full border px-2 py-2 text-sm font-semibold ${color} bg-white`}
+      className={`flex items-center gap-2 px-6 py-2.5 rounded-2xl border text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 ${
+        active 
+          ? "bg-v-cyan text-v-ink border-v-cyan shadow-[0_0_20px_rgba(34,211,238,0.2)]" 
+          : `${color} bg-white/[0.03] backdrop-blur-md`
+      }`}
       disabled={loading}
     >
       {loading ? (
-        <span className="text-xs">Wait</span>
+        <span className="flex items-center gap-2">
+          <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          Wait...
+        </span>
       ) : (
-        <Tooltip text={tooltipText}>{icon}</Tooltip>
+        <>
+          {icon}
+          <span>{label}</span>
+        </>
       )}
-    </button>
+    </motion.button>
   );
 
   const FollowButton = ({ loading, onClick, name }) => (
     <Button
       loading={loading}
       onClick={onClick}
-      tooltipText={`Follow ${name}`}
-      icon={<FiUserPlus />}
-      color="text-primary border-primary"
+      label="Follow"
+      icon={<FiUserPlus size={16} />}
+      color="text-v-cyan border-white/10 hover:border-v-cyan/50 hover:bg-v-cyan/5"
+      active={true}
     />
   );
 
@@ -111,9 +125,9 @@ const PublicProfile = () => {
     <Button
       loading={loading}
       onClick={onClick}
-      tooltipText={`Unfollow ${name}`}
-      icon={<FiUserMinus />}
-      color="text-red-500 border-red-500"
+      label="Unfollow"
+      icon={<FiUserMinus size={16} />}
+      color="text-v-red border-white/10 hover:border-v-red/50 hover:bg-v-red/5"
     />
   );
 
@@ -131,36 +145,45 @@ const PublicProfile = () => {
               alt="Profile"
               loading="lazy"
             />
-            <div className="absolute -bottom-2 -right-2">
-              <UnfollowButton
-                loading={unfollowLoading}
-                onClick={() => handleUnfollow(publicUserId)}
-                name={name}
-              />
-              {!isModerator && !isFollowing && (
-                <FollowButton
-                  loading={followLoading}
-                  onClick={() => handleFollow(publicUserId)}
-                  name={name}
-                />
-              )}
-            </div>
           </div>
 
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-4xl font-bold text-white mb-2">
-              {name}
-            </h1>
-            <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-white/60">
-              <p className="flex items-center gap-1.5 font-medium">
-                <CiLocationOn className="text-v-yellow text-xl" />
-                {userLocation === "" ? "Not specified" : userLocation}
-              </p>
-              <p className="flex items-center gap-1.5 font-medium">
-                <AiOutlineFieldTime className="text-white/40 text-xl" />
-                Joined {joinedOn}
-              </p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-4">
+              <div>
+                <h1 className="text-4xl font-bold text-white mb-2">
+                  {name}
+                </h1>
+                <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-white/60">
+                  <p className="flex items-center gap-1.5 font-medium">
+                    <CiLocationOn className="text-v-yellow text-xl" />
+                    {userLocation === "" ? "Not specified" : userLocation}
+                  </p>
+                  <p className="flex items-center gap-1.5 font-medium">
+                    <AiOutlineFieldTime className="text-white/40 text-xl" />
+                    Joined {joinedOn}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center md:justify-start gap-4">
+                {isFollowing ? (
+                  <UnfollowButton
+                    loading={unfollowLoading}
+                    onClick={() => handleUnfollow(publicUserId)}
+                    name={name}
+                  />
+                ) : (
+                  !isModerator && (
+                    <FollowButton
+                      loading={followLoading}
+                      onClick={() => handleFollow(publicUserId)}
+                      name={name}
+                    />
+                  )
+                )}
+              </div>
             </div>
+
             {role === "moderator" ? (
               <div className="mt-4 inline-flex items-center px-4 py-1.5 rounded-lg bg-v-yellow text-v-ink font-bold text-xs">
                 Moderator

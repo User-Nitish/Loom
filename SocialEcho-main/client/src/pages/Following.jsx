@@ -4,6 +4,8 @@ import { getFollowingUsersAction } from "../redux/actions/userActions";
 import PublicProfileCard from "../components/profile/PublicProfileCard";
 import CommonLoading from "../components/loader/CommonLoading";
 import noFollow from "../assets/nofollow.jpg";
+import { motion } from "framer-motion";
+import { User } from "lucide-react";
 
 const Following = () => {
   const dispatch = useDispatch();
@@ -39,20 +41,43 @@ const Following = () => {
           <CommonLoading />
         </div>
       ) : (
-        <div className="p-8">
+        <div className="px-4 md:px-8">
           {followingUsers?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <motion.div 
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+              className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-stretch"
+            >
               {followingUsers.map((user) => (
                 <PublicProfileCard key={user._id} user={user} />
               ))}
-            </div>
+            </motion.div>
           ) : (
-            <div className="text-center py-20 flex justify-center items-center flex-col">
-              <p className="text-white/40 text-xl font-medium mb-10">
-                You're not following anyone yet.
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-32 flex justify-center items-center flex-col glass-card rounded-[48px] border border-white/5 bg-white/[0.01]"
+            >
+              <div className="w-20 h-20 rounded-full bg-white/[0.02] flex items-center justify-center mb-8 border border-white/5">
+                <User size={32} className="text-white/10" />
+              </div>
+              <p className="text-white/40 text-xl font-medium mb-10 uppercase tracking-[0.2em] text-sm">
+                The frequency is silent. You're not following anyone.
               </p>
-              <img src={noFollow} alt="no post" className="max-w-md w-full opacity-40 rounded-3xl grayscale" />
-            </div>
+              <div className="max-w-sm w-full relative group">
+                <div className="absolute inset-0 bg-v-cyan/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <img src={noFollow} alt="no followers" className="relative w-full opacity-20 rounded-3xl grayscale transition-all duration-700 group-hover:opacity-40 group-hover:grayscale-0" />
+              </div>
+            </motion.div>
           )}
         </div>
       )}
