@@ -16,52 +16,59 @@ const Post = require("../models/post.model");
  */
 const retrieveLogInfo = async (req, res) => {
   try {
-    // Only sign in logs contain encrypted context data & email
     const [signInLogs, generalLogs] = await Promise.all([
-      Log.find({ type: "sign in" }).sort({ createdAt: -1 }).limit(50),
-
-      Log.find({ type: { $ne: "sign in" } })
-        .sort({ createdAt: -1 })
-        .limit(50),
+      Log.find({ type: "sign in" }).sort({ timestamp: -1 }).limit(100),
+      Log.find({ type: { $ne: "sign in" } }).sort({ timestamp: -1 }).limit(100),
     ]);
 
-    const formattedSignInLogs = [];
-    for (let i = 0; i < signInLogs.length; i++) {
-      const { _id, email, context, message, type, level, timestamp } =
-        signInLogs[i];
-      const contextData = context.split(",");
-      const formattedContext = {};
-
-      for (let j = 0; j < contextData.length; j++) {
-        const [key, value] = contextData[j].split(":");
-        if (key === "IP") {
-          formattedContext["IP Address"] = contextData[j]
-            .split(":")
-            .slice(1)
-            .join(":");
-        } else {
-          formattedContext[key.trim()] = value.trim();
+    const formattedSignInLogs = signInLogs.map((logDocument) => {
+      try {
+        const log = logDocument.toObject ? logDocument.toObject() : logDocument;
+        const { _id, email, context, message, type, level, timestamp } = log;
+        
+        const formattedContext = {};
+        if (context && typeof context === "string") {
+          const contextPairs = context.split(",").map(p => p.trim()).filter(p => p.includes(":"));
+          
+          contextPairs.forEach(pair => {
+            const firstColonIndex = pair.indexOf(":");
+            const key = pair.substring(0, firstColonIndex).trim();
+            const value = pair.substring(firstColonIndex + 1).trim();
+            
+            if (key === "IP") {
+              formattedContext["IP Address"] = value;
+            } else if (key) {
+              formattedContext[key] = value || "unknown";
+            }
+          });
         }
-      }
 
-      formattedSignInLogs.push({
-        _id,
-        email,
-        contextData: formattedContext,
-        message,
-        type,
-        level,
-        timestamp,
-      });
-    }
-    const formattedGeneralLogs = generalLogs.map((log) => ({
-      _id: log._id,
-      email: log.email,
-      message: log.message,
-      type: log.type,
-      level: log.level,
-      timestamp: log.timestamp,
-    }));
+        return {
+          _id,
+          email: email || "system",
+          contextData: Object.keys(formattedContext).length > 0 ? formattedContext : { info: "No data available" },
+          message: message || "No message",
+          type,
+          level,
+          timestamp,
+        };
+      } catch (err) {
+        console.error("Error formatting individual sign-in log:", err);
+        return null;
+      }
+    }).filter(log => log !== null);
+
+    const formattedGeneralLogs = generalLogs.map((logDocument) => {
+      const log = logDocument.toObject ? logDocument.toObject() : logDocument;
+      return {
+        _id: log._id,
+        email: log.email || "system",
+        message: log.message,
+        type: log.type,
+        level: log.level,
+        timestamp: log.timestamp,
+      };
+    });
 
     const formattedLogs = [...formattedSignInLogs, ...formattedGeneralLogs]
       .map((log) => ({
@@ -69,10 +76,11 @@ const retrieveLogInfo = async (req, res) => {
         formattedTimestamp: formatCreatedAt(log.timestamp),
         relativeTimestamp: dayjs(log.timestamp).fromNow(),
       }))
-      .sort((a, b) => b.timestamp - a.timestamp);
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     res.status(200).json(formattedLogs);
   } catch (error) {
+    console.error("CRITICAL ERROR IN retrieveLogInfo:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -12,6 +12,7 @@ const Relationship = require("../models/relationship.model");
 const Report = require("../models/report.model");
 const PendingPost = require("../models/pendingPost.model");
 const { deleteFromS3 } = require("../utils/s3.util");
+const { saveLogInfo } = require("../middlewares/logger/logInfo");
 
 const createPost = async (req, res) => {
   try {
@@ -43,6 +44,13 @@ const createPost = async (req, res) => {
 
     const savedPost = await newPost.save();
     const postId = savedPost._id;
+
+    await saveLogInfo(
+      req,
+      `New post created in ${community.name}: ${content.substring(0, 50)}...`,
+      "post_create",
+      "info"
+    );
 
     const post = await Post.findById(postId)
       .populate("user", "name avatar")
@@ -362,6 +370,12 @@ const deletePost = async (req, res) => {
     }
 
     await post.remove();
+    await saveLogInfo(
+      req,
+      `Post deleted: ${post.content.substring(0, 50)}...`,
+      "post_delete",
+      "info"
+    );
     res.status(200).json({
       message: "Post deleted successfully",
     });

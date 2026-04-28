@@ -5,6 +5,7 @@ const Report = require("../models/report.model");
 const dayjs = require("dayjs");
 const relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
+const { saveLogInfo } = require("../middlewares/logger/logInfo");
 
 const getCommunities = async (req, res) => {
   try {
@@ -51,6 +52,12 @@ const createCommunity = async (req, res) => {
     });
 
     const savedCommunity = await newCommunity.save();
+    await saveLogInfo(
+      req,
+      `New community created: ${name}`,
+      "community_create",
+      "info"
+    );
     res.status(201).json(savedCommunity);
   } catch (error) {
     res.status(500).json({
@@ -101,6 +108,12 @@ const deleteCommunity = async (req, res) => {
     }
 
     await community.remove();
+    await saveLogInfo(
+      req,
+      `Community deleted: ${name}`,
+      "community_delete",
+      "info"
+    );
     res.status(200).json({ message: "Community deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting community" });
