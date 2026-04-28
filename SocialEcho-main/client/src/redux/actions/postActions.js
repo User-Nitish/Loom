@@ -38,6 +38,7 @@ export const createPostAction = (formData) => async (dispatch) => {
     }
   } catch (error) {
     dispatchCreatePostFail(dispatch, types.CREATE_POST_FAIL, error.message);
+    throw error;
   }
 };
 
@@ -388,6 +389,7 @@ export const addCommentAction = (postId, newComment) => async (dispatch) => {
         requiresAuth: true,
       },
     });
+    throw error;
   }
 };
 

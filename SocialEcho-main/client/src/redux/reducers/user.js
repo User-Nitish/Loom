@@ -1,5 +1,5 @@
 import * as types from "../constants/userConstants";
-import { DELETE_POST_SUCCESS } from "../constants/postConstants";
+import { DELETE_POST_SUCCESS, CREATE_POST_SUCCESS } from "../constants/postConstants";
 import { LOGOUT } from "../constants/authConstants";
 
 const initialState = {
@@ -24,6 +24,16 @@ const userReducer = (state = initialState, action) => {
         followingUsers: [],
         isFollowing: null,
         userError: null,
+      };
+
+    case CREATE_POST_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          posts: [payload, ...(state.user?.posts || [])],
+          totalPosts: (state.user?.totalPosts || 0) + 1,
+        },
       };
 
     case types.GET_USER_SUCCESS:

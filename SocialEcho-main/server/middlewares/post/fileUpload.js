@@ -7,7 +7,7 @@ function fileUpload(req, res, next) {
   const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 2 * 1024 * 1024, // 2MB limit
+      fileSize: 50 * 1024 * 1024, // 50MB limit
     },
     fileFilter: (req, file, cb) => {
       if (
@@ -25,7 +25,7 @@ function fileUpload(req, res, next) {
     if (err) {
       return res.status(400).json({
         success: false,
-        message: err.code === "LIMIT_FILE_SIZE" ? "File size exceeds 2MB limit" : "Error uploading file",
+        message: err.code === "LIMIT_FILE_SIZE" ? "File size exceeds 50MB limit" : "Error uploading file",
         error: err.message,
       });
     }
