@@ -26,12 +26,15 @@ export const updateUserAction = (id, formData) => async (dispatch) => {
   try {
     const { error, data } = await api.updateUser(id, formData);
 
+    console.log("Update User Response:", { error, data });
+
     if (error) {
+      console.error("Update User Error:", error);
       throw new Error(error);
     }
 
     dispatch({
-      type: types.GET_USER_SUCCESS,
+      type: types.UPDATE_USER_SUCCESS,
       payload: data,
     });
   } catch (error) {

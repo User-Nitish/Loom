@@ -576,19 +576,31 @@ const updateInfo = async (req, res) => {
       });
     }
 
-    const { location, interests, bio } = req.body;
-    const fileUrl = req.files?.[0]?.s3Url ? req.files[0].s3Url : null;
+    const { name, location, interests, bio } = req.body;
+    const fileUrl = req.file?.s3Url ? req.file.s3Url : null;
 
-    user.location = location || user.location;
-    user.interests = interests || user.interests;
-    user.bio = bio || user.bio;
-    if (fileUrl) {
-      user.avatar = fileUrl;
+    // DEBUG LOG
+    const fs = require("fs");
+    fs.appendFileSync("server-errors.log", `[DEBUG UPDATE] User: ${req.userId}, Name: ${name}, FileUrl: ${fileUrl}\n`);
+
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (location) updateData.location = location;
+    if (interests) updateData.interests = interests;
+    if (bio) updateData.bio = bio;
+    if (fileUrl) updateData.avatar = fileUrl;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.userId,
+      { $set: updateData },
+      { new: true }
+    ).select("-password").lean();
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found",
+      });
     }
-
-    await user.save();
-
-    const updatedUser = await User.findById(user._id).select("-password").lean();
 
     res.status(200).json(updatedUser);
   } catch (err) {

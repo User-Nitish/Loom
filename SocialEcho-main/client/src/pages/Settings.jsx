@@ -12,11 +12,55 @@ const Settings = () => {
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
+    bio: user?.bio || "",
+    location: user?.location || "",
   });
 
-  const handleUpdate = (e) => {
+  // Sync formData if user data changes (e.g., after update)
+  React.useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+        bio: user.bio || "",
+        location: user.location || "",
+      });
+      setAvatarPreview(user.avatar || "");
+    }
+  }, [user]);
+
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
+  const [loading, setLoading] = useState(false);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    dispatch(updateUserAction(user._id, formData));
+    setLoading(true);
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("bio", formData.bio);
+    data.append("location", formData.location);
+    if (avatar) {
+      data.append("avatar", avatar);
+    }
+    
+    try {
+      await dispatch(updateUserAction(user._id, data));
+      alert("Profile updated successfully!");
+      setAvatar(null);
+    } catch (err) {
+      alert("Failed to update profile. Check console for details.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = () => {
@@ -63,10 +107,17 @@ const Settings = () => {
               <h3 className="text-xl font-bold text-white mb-6">Profile Settings</h3>
               <form onSubmit={handleUpdate} className="space-y-6">
                 <div className="flex items-center gap-6 mb-8">
-                  <img src={user.avatar} className="w-20 h-20 rounded-2xl object-cover border-2 border-white/10" alt="" />
-                  <button className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all border border-white/5">
-                    Change Avatar
-                  </button>
+                  <div className="relative group">
+                    <img src={avatarPreview} className="w-20 h-20 rounded-2xl object-cover border-2 border-white/10 group-hover:opacity-50 transition-opacity" alt="" />
+                    <label className="absolute inset-0 flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Sparkles size={20} className="text-white" />
+                      <input type="file" className="hidden" onChange={handleAvatarChange} accept="image/*" />
+                    </label>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-white">Avatar Image</h4>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mt-1">Recommended: 400x400 PNG/JPG</p>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Full Name</label>
@@ -78,6 +129,24 @@ const Settings = () => {
                   />
                 </div>
                 <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Bio / Transmission</label>
+                  <textarea
+                    className="w-full bg-slate-800/50 border border-white/5 rounded-xl px-4 py-3 text-white focus:border-blue-500/50 outline-none transition-all min-h-[100px]"
+                    value={formData.bio}
+                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                    placeholder="Tell the network who you are..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Sector / Location</label>
+                  <input
+                    type="text"
+                    className="w-full bg-slate-800/50 border border-white/5 rounded-xl px-4 py-3 text-white focus:border-blue-500/50 outline-none transition-all"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Email Address</label>
                   <input
                     type="email"
@@ -86,8 +155,19 @@ const Settings = () => {
                     disabled
                   />
                 </div>
-                <button type="submit" className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20">
-                  Save Changes
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`w-full py-4 rounded-2xl bg-v-cyan text-v-ink text-[10px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)] flex items-center justify-center gap-3 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-3 h-3 border-2 border-v-ink/30 border-t-v-ink rounded-full animate-spin" />
+                      Synchronizing...
+                    </>
+                  ) : (
+                    "Save_Changes"
+                  )}
                 </button>
               </form>
             </motion.div>

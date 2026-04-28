@@ -1,4 +1,5 @@
 import * as types from "../constants/userConstants";
+import { DELETE_POST_SUCCESS } from "../constants/postConstants";
 import { LOGOUT } from "../constants/authConstants";
 
 const initialState = {
@@ -26,10 +27,36 @@ const userReducer = (state = initialState, action) => {
       };
 
     case types.GET_USER_SUCCESS:
-      return { ...state, user: payload, userError: null };
+    case types.UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        user: { ...state.user, ...payload },
+        userError: null,
+      };
 
     case types.GET_USER_FAIL:
       return { ...state, userError: payload };
+
+    case DELETE_POST_SUCCESS:
+      return {
+        ...state,
+        user: state.user?.posts
+          ? {
+              ...state.user,
+              posts: state.user.posts.filter((post) => post._id !== payload),
+              totalPosts: (state.user.totalPosts || 1) - 1,
+            }
+          : state.user,
+        publicUserProfile: state.publicUserProfile?.posts
+          ? {
+              ...state.publicUserProfile,
+              posts: state.publicUserProfile.posts.filter(
+                (post) => post._id !== payload
+              ),
+              totalPosts: (state.publicUserProfile.totalPosts || 1) - 1,
+            }
+          : state.publicUserProfile,
+      };
 
     case types.GET_PUBLIC_USERS_SUCCESS:
       return {

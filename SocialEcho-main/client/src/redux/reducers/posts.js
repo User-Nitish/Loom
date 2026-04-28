@@ -206,6 +206,11 @@ const postsReducer = (state = initialState, action) => {
         communityPosts: state.communityPosts.filter(
           (post) => post._id !== payload
         ),
+        followingUsersPosts: state.followingUsersPosts.filter(
+          (post) => post._id !== payload
+        ),
+        publicPosts: state.publicPosts.filter((post) => post._id !== payload),
+        savedPosts: state.savedPosts.filter((post) => post._id !== payload),
         postError: null,
         totalPosts: state.totalPosts - 1,
         totalCommunityPosts: state.totalCommunityPosts - 1,

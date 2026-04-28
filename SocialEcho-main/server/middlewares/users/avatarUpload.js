@@ -20,9 +20,9 @@ function avatarUpload(req, res, next) {
         cb(null, new Error("Only .jpg, .jpeg and .png formats are allowed"));
       }
     },
-  });
+  }).single("avatar");
 
-  upload.any()(req, res, async (err) => {
+  upload(req, res, async (err) => {
     if (err) {
       return res.status(400).json({
         success: false,
@@ -31,18 +31,14 @@ function avatarUpload(req, res, next) {
       });
     }
 
-    if (!req.files || req.files.length === 0) {
+    if (!req.file) {
       return next();
     }
 
     try {
-      const file = req.files[0];
+      const file = req.file;
       const s3Url = await uploadToS3(file, "avatars");
-
-      req.files[0].s3Url = s3Url; // Attach S3 URL to req.files[0]
-      // The original controller uses fileUrl from filename, I'll adapt it in the controller if needed.
-      // But let's make it consistent.
-
+      req.file.s3Url = s3Url;
       next();
     } catch (error) {
       return res.status(500).json({

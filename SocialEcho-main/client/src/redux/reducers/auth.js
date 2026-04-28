@@ -3,6 +3,7 @@ import {
   GET_COMMUNITY_SUCCESS,
   GET_COMMUNITY_FAIL,
 } from "../constants/communityConstants";
+import { UPDATE_USER_SUCCESS } from "../constants/userConstants";
 
 const initialState = {
   userData: null,
@@ -34,6 +35,7 @@ const authReducer = (state = initialState, action) => {
         refreshToken: payload ? payload : null,
       };
     case types.SET_USER_DATA:
+    case UPDATE_USER_SUCCESS:
       return {
         ...state,
         userData: payload ? payload : null,

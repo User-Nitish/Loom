@@ -360,7 +360,10 @@ const getFollowingUsersPosts = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
+    // DEBUG LOG
+    const fs = require("fs");
+    fs.appendFileSync("server-errors.log", `[DEBUG DELETE] Post: ${id}\n`);
     const post = await Post.findById(id);
 
     if (!post) {
@@ -369,7 +372,16 @@ const deletePost = async (req, res) => {
       });
     }
 
-    await post.remove();
+    if (post.user.toString() !== req.userId.toString()) {
+      return res.status(403).json({ message: "Unauthorized to delete this post" });
+    }
+
+    if (post.fileUrl) {
+      await deleteFromS3(post.fileUrl);
+    }
+
+    await Post.findByIdAndDelete(id);
+
     await saveLogInfo(
       req,
       `Post deleted: ${post.content.substring(0, 50)}...`,
