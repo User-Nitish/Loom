@@ -7,7 +7,7 @@ function avatarUpload(req, res, next) {
   const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 2 * 1024 * 1024, // 2MB limit
+      fileSize: 10 * 1024 * 1024, // 10MB limit
     },
     fileFilter: (req, file, cb) => {
       if (
@@ -26,10 +26,13 @@ function avatarUpload(req, res, next) {
     if (err) {
       return res.status(400).json({
         success: false,
-        message: err.code === "LIMIT_FILE_SIZE" ? "Avatar size exceeds 2MB limit" : "Error uploading avatar",
+        message: err.code === "LIMIT_FILE_SIZE" ? "Avatar size exceeds 10MB limit" : "Error uploading avatar",
         error: err.message,
       });
     }
+
+    const fs = require("fs");
+    fs.appendFileSync("server-errors.log", `[DEBUG MULTER] Body: ${JSON.stringify(req.body)}, File: ${req.file ? req.file.originalname : 'none'}\n`);
 
     if (!req.file) {
       return next();

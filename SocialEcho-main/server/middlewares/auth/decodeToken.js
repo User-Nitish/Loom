@@ -11,6 +11,8 @@ const decodeToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
     req.userId = decoded.id;
+    const fs = require("fs");
+    fs.appendFileSync("server-errors.log", `[DEBUG TOKEN] User: ${req.userId}\n`);
     next();
   } catch (err) {
     res.status(401).json({ message: "Unauthorized" });

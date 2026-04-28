@@ -568,6 +568,8 @@ const getModProfile = async (req, res) => {
  * @route PUT /users/:id
  */
 const updateInfo = async (req, res) => {
+  const fs = require("fs");
+  fs.appendFileSync("server-errors.log", `[DEBUG UPDATE START] User: ${req.userId}, Params: ${req.params.id}\n`);
   try {
     const user = await User.findById(req.userId);
     if (!user) {

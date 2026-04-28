@@ -14,6 +14,7 @@ const Settings = () => {
     email: user?.email || "",
     bio: user?.bio || "",
     location: user?.location || "",
+    interests: user?.interests || "",
   });
 
   // Sync formData if user data changes (e.g., after update)
@@ -24,6 +25,7 @@ const Settings = () => {
         email: user.email || "",
         bio: user.bio || "",
         location: user.location || "",
+        interests: user.interests || "",
       });
       setAvatarPreview(user.avatar || "");
     }
@@ -48,6 +50,7 @@ const Settings = () => {
     data.append("name", formData.name);
     data.append("bio", formData.bio);
     data.append("location", formData.location);
+    data.append("interests", formData.interests);
     if (avatar) {
       data.append("avatar", avatar);
     }
@@ -57,7 +60,7 @@ const Settings = () => {
       alert("Profile updated successfully!");
       setAvatar(null);
     } catch (err) {
-      alert("Failed to update profile. Check console for details.");
+      alert(`Failed to update profile: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -144,6 +147,16 @@ const Settings = () => {
                     className="w-full bg-slate-800/50 border border-white/5 rounded-xl px-4 py-3 text-white focus:border-blue-500/50 outline-none transition-all"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Nodes / Interests (comma separated)</label>
+                  <input
+                    type="text"
+                    className="w-full bg-slate-800/50 border border-white/5 rounded-xl px-4 py-3 text-white focus:border-blue-500/50 outline-none transition-all"
+                    value={formData.interests}
+                    onChange={(e) => setFormData({ ...formData, interests: e.target.value })}
+                    placeholder="Gaming, Tech, Music..."
                   />
                 </div>
                 <div className="space-y-2">

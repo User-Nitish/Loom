@@ -38,10 +38,8 @@ export const updateUserAction = (id, formData) => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    dispatch({
-      type: types.GET_USER_FAIL,
-      payload: error.message,
-    });
+    console.error("Update User Action Error:", error);
+    throw error;
   }
 };
 
