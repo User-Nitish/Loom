@@ -53,7 +53,7 @@ const Post = ({ post, index = 0 }) => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
-      className="glass-card rounded-[40px] p-8 mb-8 group border border-white/5 bg-[#0d0d0d]/40 backdrop-blur-2xl hover:border-white/10 transition-all duration-500"
+      className="glass-card rounded-[32px] sm:rounded-[40px] p-5 sm:p-8 mb-6 sm:mb-8 group border border-white/5 bg-[#0d0d0d]/40 backdrop-blur-2xl hover:border-white/10 transition-all duration-500"
       onClick={(e) => {
         if (!e.target.closest('button') && !e.target.closest('a')) {
           navigate(`/post/${post._id}`, {
@@ -63,8 +63,8 @@ const Post = ({ post, index = 0 }) => {
       }}
     >
       {/* Header Container */}
-      <div className="flex items-start justify-between mb-8">
-        <div className="flex items-center gap-4">
+      <div className="flex items-start justify-between mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link 
             to={userData._id === user._id ? "/profile" : `/user/${user._id}`}
             className="relative shrink-0"
@@ -72,7 +72,7 @@ const Post = ({ post, index = 0 }) => {
           >
             <div className="absolute inset-0 bg-v-cyan/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <img
-              className="relative w-14 h-14 rounded-full object-cover border-2 border-white/5"
+              className="relative w-11 h-11 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-white/5"
               src={user.avatar || "https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"}
               alt={user.name}
               onLoad={() => setIsImageLoading(false)}
@@ -128,15 +128,15 @@ const Post = ({ post, index = 0 }) => {
       </div>
 
       {/* Content */}
-      <div className="mb-8 relative">
-        <p className="text-lg font-medium text-white/90 leading-relaxed tracking-tight">
+      <div className="mb-6 sm:mb-8 relative">
+        <p className="text-[15px] sm:text-lg font-medium text-white/90 leading-relaxed tracking-tight">
           {content}
         </p>
       </div>
 
       {/* Media */}
       {fileUrl && (
-        <div className="relative rounded-[32px] overflow-hidden bg-black/20 border border-white/5 mb-8">
+        <div className="relative rounded-[24px] sm:rounded-[32px] overflow-hidden bg-black/20 border border-white/5 mb-6 sm:mb-8">
           {fileType === "image" ? (
             <PhotoProvider>
               <PhotoView src={fileUrl}>
@@ -144,7 +144,7 @@ const Post = ({ post, index = 0 }) => {
                   <img
                     src={fileUrl}
                     alt={content}
-                    className="w-full h-auto max-h-[800px] object-contain transition-transform duration-700 group-hover/media:scale-105"
+                    className="w-full h-auto max-h-[600px] sm:max-h-[800px] object-contain transition-transform duration-700 group-hover/media:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/media:opacity-100 transition-opacity duration-300" />
                 </div>
@@ -152,7 +152,7 @@ const Post = ({ post, index = 0 }) => {
             </PhotoProvider>
           ) : (
             <video
-              className="w-full max-h-[600px] object-cover"
+              className="w-full max-h-[400px] sm:max-h-[600px] object-cover"
               src={fileUrl}
               controls
               onClick={(e) => e.stopPropagation()}
@@ -162,19 +162,19 @@ const Post = ({ post, index = 0 }) => {
       )}
 
       {/* Actions Footer */}
-      <div className="flex items-center justify-between pt-6 border-t border-white/5">
-        <div className="flex items-center gap-6">
+      <div className="flex items-center justify-between pt-5 sm:pt-6 border-t border-white/5">
+        <div className="flex items-center gap-3 sm:gap-6">
           <Like post={post} />
 
           <button
-            className="flex items-center gap-3 py-2.5 px-4 rounded-2xl bg-white/[0.03] text-white/40 hover:text-v-cyan hover:bg-v-cyan/5 transition-all"
+            className="flex items-center gap-2 sm:gap-3 p-2 sm:py-2.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white/[0.03] text-white/40 hover:text-v-cyan hover:bg-v-cyan/5 transition-all"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/post/${post._id}`, { state: { from: location.pathname } });
             }}
           >
-            <HiOutlineChatBubbleLeftRight size={20} />
-            <span className="text-xs font-black uppercase tracking-widest">{comments.length}</span>
+            <HiOutlineChatBubbleLeftRight size={18} className="sm:text-xl" />
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">{comments.length}</span>
           </button>
         </div>
 

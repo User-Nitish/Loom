@@ -45,20 +45,20 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <>
-          <div 
-            className="fixed inset-0 z-40 lg:hidden" 
+          <div
+            className="fixed inset-0 z-40 lg:hidden"
             onClick={onClose}
           />
-          
+
           <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute right-0 mt-3 w-[380px] max-w-[95vw] bg-[#0c0c0c]/98 backdrop-blur-[40px] z-50 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,1)] border border-white/5 rounded-2xl"
+            className="fixed bottom-[88px] md:top-full md:bottom-auto left-4 right-4 md:absolute md:right-0 md:left-auto md:mt-3 md:w-[380px] bg-[#0c0c0c]/98 backdrop-blur-[40px] z-50 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,1)] border border-white/5 rounded-2xl"
           >
             {/* Header */}
-            <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.05] backdrop-blur-[48px]">
+            <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.05] backdrop-blur-[48px] md:backdrop-blur-[48px]">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Bell size={20} className="text-amber-500" />
@@ -73,7 +73,7 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
                   </span>
                 )}
               </div>
-              
+
               {unreadCount > 0 && (
                 <button
                   onClick={() => dispatch(markAllRead())}
@@ -108,9 +108,8 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
                       onClick={() => {
                         dispatch(markRead(notification._id));
                       }}
-                      className={`group p-4 flex gap-4 hover:bg-white/[0.03] cursor-pointer transition-all relative ${
-                        !notification.isRead ? "bg-amber-500/[0.02]" : ""
-                      }`}
+                      className={`group p-4 flex gap-4 hover:bg-white/[0.03] cursor-pointer transition-all relative ${!notification.isRead ? "bg-amber-500/[0.02]" : ""
+                        }`}
                     >
                       {!notification.isRead && (
                         <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-amber-500" />
@@ -149,7 +148,7 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
                 </div>
               )}
             </div>
-            
+
             <div className="p-3 border-t border-white/5 bg-white/[0.01] flex justify-center">
               <button className="w-full py-2 px-4 rounded border border-white/5 text-[10px] font-black text-zinc-400 hover:bg-white/5 hover:text-amber-500 transition-all duration-300 tracking-widest uppercase">
                 Access All Channels

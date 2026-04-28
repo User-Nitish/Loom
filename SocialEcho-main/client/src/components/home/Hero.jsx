@@ -15,7 +15,7 @@ const Hero = () => {
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 flex flex-col items-start text-left max-w-4xl"
       >
-        <h1 className="text-8xl md:text-[11rem] font-black text-white leading-[0.75] tracking-tightest select-none mb-10 -ml-2 md:-ml-4">
+        <h1 className="text-5xl md:text-7xl lg:text-[11rem] font-black text-white leading-[0.75] tracking-tightest select-none mb-10 -ml-2 md:-ml-4">
           LOOM<span className="text-v-yellow">.</span>
         </h1>
 
@@ -29,16 +29,10 @@ const Hero = () => {
 
         <div className="flex flex-wrap items-center gap-6">
           <Link
-            to="/signup"
-            className="px-14 py-5 rounded-full bg-v-yellow text-v-ink font-bold text-lg hover:scale-105 transition-transform"
+            to="/communities"
+            className="group relative px-8 py-3.5 rounded-full bg-v-yellow text-v-ink font-black text-lg uppercase tracking-widest transition-all duration-300 shadow-[0_8px_0_rgb(182,160,17)] hover:shadow-[0_4px_0_rgb(182,160,17)] hover:translate-y-[4px] active:translate-y-[8px] active:shadow-none"
           >
-            Get Started
-          </Link>
-          <Link
-            to="/signin"
-            className="text-white/60 hover:text-white font-bold text-lg transition-colors border-b border-white/10 pb-1"
-          >
-            Sign in
+            Explore Now
           </Link>
         </div>
       </motion.div>

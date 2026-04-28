@@ -39,26 +39,33 @@ const MyCommunities = () => {
   }
 
   return (
-    <div className="space-y-8 pb-10">
-      {/* Header Section */}
-      <motion.div
-        className="text-left pt-6 pb-2 border-b border-white/5"
-        initial={{ opacity: 0, x: -30 }}
+    <div className="space-y-12 pb-24">
+      {/* Cinematic Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
+        className="relative pt-12 pb-8 border-b border-white/5 px-4 md:px-8"
       >
-        <h1 className="text-5xl font-black text-white tracking-tighter uppercase mb-2 font-display">
-          My Worlds
-        </h1>
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-1 bg-v-cyan rounded-full" />
-          <p className="text-white/30 text-xs font-black uppercase tracking-widest">
-            Established Territory
-          </p>
+        <div className="absolute -top-10 -left-10 w-64 h-64 bg-v-teal/5 blur-[100px] rounded-full pointer-events-none" />
+        
+        <div className="flex items-center gap-4 mb-4">
+          <div className="p-3 rounded-2xl bg-v-teal/10 text-v-teal border border-v-teal/20 shadow-[0_0_20px_rgba(20,184,166,0.1)]">
+            <div className="w-6 h-6 border-2 border-v-teal rounded-lg flex items-center justify-center p-1">
+               <div className="w-full h-full bg-v-teal rounded-sm" />
+            </div>
+          </div>
+          <span className="text-[10px] font-black text-v-teal uppercase tracking-[0.5em]">Established_Territory</span>
         </div>
+        
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+          Territories<span className="text-v-teal">.</span>
+        </h1>
+        <p className="text-white/30 text-xs font-black uppercase tracking-[0.4em]">
+          Secured community nodes and established social frequencies
+        </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-4 md:px-8">
         {communityCards}
       </div>
       

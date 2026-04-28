@@ -109,48 +109,48 @@ const SignIn = () => {
       </div>
 
       <motion.div
-        className="relative z-10 w-full max-w-lg mx-auto px-6"
+        className="relative z-10 w-full max-w-lg md:max-w-xl mx-auto px-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Minimalist Logo Header */}
-        <motion.div className="flex flex-col items-center mb-16" variants={itemVariants}>
+        <motion.div className="flex flex-col items-center mb-10 sm:mb-16" variants={itemVariants}>
           <div className="flex items-center gap-1">
-            <img src="/loom.png" alt="L" className="h-14 w-auto object-contain" />
-            <h1 className="text-6xl font-black text-white tracking-tighter select-none -ml-2">
+            <img src="/loom.png" alt="L" className="h-10 sm:h-14 w-auto object-contain" />
+            <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tighter select-none -ml-1 sm:-ml-2">
               OOM<span className="text-v-red">.</span>
             </h1>
           </div>
-          <p className="text-[9px] font-black text-white/10 uppercase tracking-[0.8em] mt-2 ml-4">The Social Fabric</p>
+          <p className="text-[8px] sm:text-[9px] font-black text-white/10 uppercase tracking-[0.6em] sm:tracking-[0.8em] mt-1 sm:mt-2 ml-2 sm:ml-4">The Social Fabric</p>
         </motion.div>
 
         {/* Login Card */}
         <motion.div
-          className="bg-transparent backdrop-blur-none rounded-[56px] border border-white/10 shadow-2xl p-12 md:p-16 relative overflow-hidden"
+          className="bg-transparent backdrop-blur-none rounded-[40px] sm:rounded-[56px] border border-white/10 shadow-2xl p-8 sm:p-16 relative overflow-hidden"
           variants={itemVariants}
         >
           {/* Subtle Inner Glow - Deep Blue */}
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-10">
-              <h2 className="text-sm font-black text-white uppercase tracking-[0.3em]">Sign In</h2>
-              <div className="h-[1px] w-12 bg-white/10" />
+            <div className="flex items-center justify-between mb-8 sm:mb-10">
+              <h2 className="text-xs sm:text-sm font-black text-white uppercase tracking-[0.3em]">Sign In</h2>
+              <div className="h-[1px] w-8 sm:w-12 bg-white/10" />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
               {/* Email Input */}
               <div className="space-y-3">
-                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Email Address</label>
+                <label className="text-[9px] sm:text-[10px] font-black text-white/50 uppercase tracking-[0.4em] sm:tracking-[0.5em] ml-2">Email Address</label>
                 <div className="relative group">
-                  <HiOutlineMail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
+                  <HiOutlineMail className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-widest"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-4 sm:py-5 pl-14 sm:pl-16 pr-6 sm:pr-8 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-widest"
                     required
                   />
                 </div>
@@ -158,21 +158,21 @@ const SignIn = () => {
 
               {/* Password Input */}
               <div className="space-y-3">
-                <label className="text-[10px] font-black text-white/50 uppercase tracking-[0.5em] ml-2">Password</label>
+                <label className="text-[9px] sm:text-[10px] font-black text-white/50 uppercase tracking-[0.4em] sm:tracking-[0.5em] ml-2">Password</label>
                 <div className="relative group">
-                  <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
+                  <HiOutlineLockClosed className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors" size={16} />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-5 pl-16 pr-16 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-[0.3em]"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-full py-4 sm:py-5 pl-14 sm:pl-16 pr-14 sm:pr-16 text-xs font-bold text-white placeholder:text-white/20 focus:border-white/20 focus:bg-white/[0.08] focus:outline-none transition-all tracking-[0.2em] sm:tracking-[0.3em]"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-6 top-1/2 -translate-y-1/2 text-white/10 hover:text-white transition-colors"
+                    className="absolute right-5 sm:right-6 top-1/2 -translate-y-1/2 text-white/10 hover:text-white transition-colors"
                   >
                     {showPassword ? <HiOutlineEyeOff size={16} /> : <HiOutlineEye size={16} />}
                   </button>

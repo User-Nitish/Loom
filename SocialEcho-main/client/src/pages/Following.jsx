@@ -23,18 +23,29 @@ const Following = () => {
   }, [dispatch]);
 
   return (
-    <div className="space-y-8 pb-10">
-      {/* Header Section */}
-      <div className="text-left pt-6 pb-2 border-b border-white/5">
-        <h1 className="text-4xl font-bold text-white mb-2">
-          Following
-        </h1>
-        <div className="flex items-center gap-3">
-          <p className="text-white/40 text-sm font-medium">
-            People you follow
-          </p>
+    <div className="space-y-12 pb-24">
+      {/* Cinematic Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="relative pt-12 pb-8 border-b border-white/5 px-4 md:px-8"
+      >
+        <div className="absolute -top-10 -left-10 w-64 h-64 bg-v-yellow/5 blur-[100px] rounded-full pointer-events-none" />
+        
+        <div className="flex items-center gap-4 mb-4">
+          <div className="p-3 rounded-2xl bg-v-yellow/10 text-v-yellow border border-v-yellow/20 shadow-[0_0_20px_rgba(234,179,8,0.1)]">
+            <User size={24} />
+          </div>
+          <span className="text-[10px] font-black text-v-yellow uppercase tracking-[0.5em]">Network_Nodes</span>
         </div>
-      </div>
+        
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+          Following<span className="text-v-yellow">.</span>
+        </h1>
+        <p className="text-white/30 text-xs font-black uppercase tracking-[0.4em]">
+          Active frequencies and synchronized user nodes
+        </p>
+      </motion.div>
 
       {loading ? (
         <div className="flex items-center justify-center min-h-[40vh]">
@@ -55,7 +66,7 @@ const Following = () => {
                   }
                 }
               }}
-              className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-stretch"
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch"
             >
               {followingUsers.map((user) => (
                 <PublicProfileCard key={user._id} user={user} />

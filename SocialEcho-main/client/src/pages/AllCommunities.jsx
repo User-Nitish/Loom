@@ -53,7 +53,7 @@ const AllCommunities = () => {
           </Link>
         </div>
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -72,7 +72,7 @@ const AllCommunities = () => {
         />
         <div className="space-y-12 mt-12">
           {posts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {posts.map((post, index) => (
                 <MemoizedPost key={post._id} post={post} index={index} />
               ))}

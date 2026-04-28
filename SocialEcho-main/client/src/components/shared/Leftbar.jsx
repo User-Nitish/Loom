@@ -45,7 +45,7 @@ const Leftbar = ({ showLeftbar }) => {
   ];
 
   return (
-    <div className={`fixed inset-y-0 left-0 z-40 w-72 transition-all duration-500 transform ${showLeftbar ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0 md:flex flex-col pt-24 md:pt-4 px-4 gap-6`}>
+    <div className="flex flex-col w-full h-full gap-6">
       {/* Navigation Capsule */}
       <div className="flex flex-col bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-6 rounded-[40px] shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
         <p className="text-[10px] font-black text-white/20 mb-6 px-2 uppercase tracking-[0.4em]">Main</p>
@@ -59,8 +59,8 @@ const Leftbar = ({ showLeftbar }) => {
               <Link
                 key={link.href}
                 className={`flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group ${isActive
-                    ? "bg-v-red text-white shadow-[0_10px_20px_rgba(250,38,38,0.3)]"
-                    : "text-white/40 hover:text-white hover:bg-white/5"
+                  ? "bg-v-red text-white shadow-[0_10px_20px_rgba(250,38,38,0.3)]"
+                  : "text-white/40 hover:text-white hover:bg-white/5"
                   }`}
                 to={link.href}
               >
@@ -106,7 +106,7 @@ const Leftbar = ({ showLeftbar }) => {
             <Compass size={18} />
             <span>Discover</span>
           </Link>
-          
+
           <Link
             to="/admin/signin"
             className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-white/[0.03] border border-white/5 text-white/30 hover:text-white/60 font-black uppercase tracking-widest text-[9px] transition-all"

@@ -31,7 +31,7 @@ const Saved = () => {
           <span className="text-[10px] font-black text-v-cyan uppercase tracking-[0.5em]">Vault_Storage</span>
         </div>
         
-        <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-4">
           Saved<span className="text-v-cyan">.</span>
         </h1>
         <p className="text-white/30 text-xs font-black uppercase tracking-[0.4em]">
@@ -39,9 +39,9 @@ const Saved = () => {
         </p>
       </motion.div>
 
-      <div className="flex flex-col gap-12 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-[1400px] mx-auto px-6">
         {savedPosts && savedPosts.length > 0 ? (
-          <div className="flex flex-col items-center gap-12">
+          <>
             {[...savedPosts].reverse().map((post, idx) => (
               <motion.div
                 key={post._id}
@@ -53,7 +53,7 @@ const Saved = () => {
                 <SavedPost post={post} />
               </motion.div>
             ))}
-          </div>
+          </>
         ) : (
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}

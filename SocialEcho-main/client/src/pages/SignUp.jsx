@@ -60,7 +60,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden py-20">
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] relative overflow-hidden py-10 sm:py-20">
       {/* Cinematic Static Background - Refined Obsidian with Blurred Texture */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {/* Background Texture - Full Coverage with Subtle Blur */}
@@ -85,90 +85,90 @@ const SignUp = () => {
         transition={{ duration: 0.8 }}
       >
         {/* Minimalist Logo Header */}
-        <div className="flex flex-col items-center mb-16">
+        <div className="flex flex-col items-center mb-10 sm:mb-16">
           <div className="flex items-center gap-1">
-            <img src="/loom.png" alt="L" className="h-14 w-auto object-contain" />
-            <h1 className="text-6xl font-black text-white tracking-tighter select-none -ml-2">
+            <img src="/loom.png" alt="L" className="h-10 sm:h-14 w-auto object-contain" />
+            <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tighter select-none -ml-1 sm:-ml-2">
               OOM<span className="text-v-red">.</span>
             </h1>
           </div>
-          <p className="text-[9px] font-black text-white/10 uppercase tracking-[0.8em] mt-2 ml-4">The Social Fabric</p>
+          <p className="text-[8px] sm:text-[9px] font-black text-white/10 uppercase tracking-[0.6em] sm:tracking-[0.8em] mt-1 sm:mt-2 ml-2 sm:ml-4">The Social Fabric</p>
         </div>
 
         {/* Sign Up Card */}
-        <div className="bg-transparent backdrop-blur-none rounded-[56px] border border-white/10 shadow-2xl p-12 md:p-16 relative overflow-hidden">
+        <div className="bg-transparent backdrop-blur-none rounded-[40px] sm:rounded-[56px] border border-white/10 shadow-2xl p-8 sm:p-12 md:p-16 relative overflow-hidden">
           {/* Subtle Inner Glow - Deep Blue */}
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.03] to-transparent pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-10">
-              <h2 className="text-sm font-black text-white uppercase tracking-[0.3em]">Sign Up</h2>
-              <div className="h-[1px] w-12 bg-white/10" />
+            <div className="flex items-center justify-between mb-8 sm:mb-10">
+              <h2 className="text-xs sm:text-sm font-black text-white uppercase tracking-[0.3em]">Sign Up</h2>
+              <div className="h-[1px] w-8 sm:w-12 bg-white/10" />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Username */}
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Username</label>
+                <div className="space-y-2 sm:space-y-3">
+                  <label className="text-[9px] sm:text-[10px] font-black text-white/30 uppercase tracking-[0.4em] sm:tracking-[0.5em] ml-2">Username</label>
                   <div className="relative group">
-                    <HiOutlineUser className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
+                    <HiOutlineUser className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Node Handle"
-                      className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-widest"
+                      placeholder="Handle"
+                      className="w-full bg-transparent border border-white/5 rounded-full py-4 sm:py-5 pl-14 sm:pl-16 pr-6 sm:pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-widest"
                       required
                     />
                   </div>
                 </div>
 
                 {/* Email */}
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Email Address</label>
+                <div className="space-y-2 sm:space-y-3">
+                  <label className="text-[9px] sm:text-[10px] font-black text-white/30 uppercase tracking-[0.4em] sm:tracking-[0.5em] ml-2">Email Address</label>
                   <div className="relative group">
-                    <HiOutlineMail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
+                    <HiOutlineMail className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Nexus ID"
-                      className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-widest"
+                      className="w-full bg-transparent border border-white/5 rounded-full py-4 sm:py-5 pl-14 sm:pl-16 pr-6 sm:pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-widest"
                       required
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Password */}
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Password</label>
+                <div className="space-y-2 sm:space-y-3">
+                  <label className="text-[9px] sm:text-[10px] font-black text-white/30 uppercase tracking-[0.4em] sm:tracking-[0.5em] ml-2">Password</label>
                   <div className="relative group">
-                    <HiOutlineLockClosed className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
+                    <HiOutlineLockClosed className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-white transition-colors" size={16} />
                     <input
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-[0.3em]"
+                      className="w-full bg-transparent border border-white/5 rounded-full py-4 sm:py-5 pl-14 sm:pl-16 pr-6 sm:pr-8 text-xs font-bold text-white placeholder:text-white/5 focus:border-white/20 focus:outline-none transition-all tracking-[0.2em] sm:tracking-[0.3em]"
                       required
                     />
                   </div>
                 </div>
 
                 {/* Photo */}
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.5em] ml-2">Profile Photo</label>
+                <div className="space-y-2 sm:space-y-3">
+                  <label className="text-[9px] sm:text-[10px] font-black text-white/30 uppercase tracking-[0.4em] sm:tracking-[0.5em] ml-2">Profile Photo</label>
                   <label className="relative flex items-center group cursor-pointer">
-                    <div className="w-full bg-transparent border border-white/5 rounded-full py-5 pl-16 pr-8 text-xs font-bold text-white/40 group-hover:bg-white/5 transition-all flex items-center gap-4">
-                      <HiOutlinePhotograph className="absolute left-6 top-1/2 -translate-y-1/2 text-white/10 group-hover:text-white transition-colors" size={16} />
-                      <span className="truncate tracking-widest uppercase text-[10px]">{avatar ? avatar.name : "Select Asset"}</span>
+                    <div className="w-full bg-transparent border border-white/5 rounded-full py-4 sm:py-5 pl-14 sm:pl-16 pr-6 sm:pr-8 text-xs font-bold text-white/40 group-hover:bg-white/5 transition-all flex items-center gap-4">
+                      <HiOutlinePhotograph className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 text-white/10 group-hover:text-white transition-colors" size={16} />
+                      <span className="truncate tracking-widest uppercase text-[9px] sm:text-[10px]">{avatar ? avatar.name : "Select Asset"}</span>
                     </div>
                     <input type="file" onChange={handleAvatarChange} className="hidden" accept="image/*" />
                   </label>
-                  {avatarError && <p className="text-[9px] text-v-red font-black uppercase tracking-widest mt-2 ml-2">{avatarError}</p>}
+                  {avatarError && <p className="text-[8px] sm:text-[9px] text-v-red font-black uppercase tracking-widest mt-1 sm:mt-2 ml-2">{avatarError}</p>}
                 </div>
               </div>
 

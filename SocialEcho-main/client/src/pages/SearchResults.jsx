@@ -31,13 +31,13 @@ const SearchResults = () => {
   }, [query]);
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-6">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
-          <SearchIcon className="text-blue-400" />
+    <div className="max-w-6xl mx-auto py-6 sm:py-10 px-4 sm:px-6">
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-2xl sm:text-3xl font-black text-white mb-2 flex items-center gap-3 uppercase tracking-tighter">
+          <SearchIcon className="text-v-cyan" size={24} />
           Results for "{query}"
         </h1>
-        <div className="flex gap-4 mt-6 border-b border-white/5">
+        <div className="flex gap-2 sm:gap-4 mt-6 border-b border-white/5 overflow-x-auto no-scrollbar-mobile pb-1">
           {["all", "people", "posts", "communities"].map((tab) => (
             <button
               key={tab}
