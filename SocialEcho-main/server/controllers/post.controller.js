@@ -3,6 +3,7 @@ const relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
 const formatCreatedAt = require("../utils/timeConverter");
 
+const mongoose = require("mongoose");
 const Post = require("../models/post.model");
 const Community = require("../models/community.model");
 const Comment = require("../models/comment.model");
@@ -528,8 +529,9 @@ const saveOrUnsavePost = async (req, res, operation) => {
     const userId = req.userId;
 
     const update = {};
+    const postObjectId = new mongoose.Types.ObjectId(id);
     update[operation === "$addToSet" ? "$addToSet" : "$pull"] = {
-      savedPosts: id,
+      savedPosts: postObjectId,
     };
     const updatedUserPost = await User.findOneAndUpdate(
       {
@@ -543,10 +545,16 @@ const saveOrUnsavePost = async (req, res, operation) => {
       .select("savedPosts")
       .populate({
         path: "savedPosts",
-        populate: {
-          path: "community",
-          select: "name",
-        },
+        populate: [
+          {
+            path: "community",
+            select: "name",
+          },
+          {
+            path: "user",
+            select: "name avatar",
+          },
+        ],
       });
 
     if (!updatedUserPost) {
@@ -556,7 +564,7 @@ const saveOrUnsavePost = async (req, res, operation) => {
     }
 
     const formattedPosts = updatedUserPost.savedPosts.map((post) => ({
-      ...post.toObject(),
+      ...(post.toObject ? post.toObject() : post),
       createdAt: dayjs(post.createdAt).fromNow(),
     }));
 
@@ -584,18 +592,16 @@ const getSavedPosts = async (req, res) => {
     /**
      * send the saved posts of the communities that the user is a member of only
      */
-    const communityIds = await Community.find({ members: userId }).distinct(
-      "_id"
-    );
     const savedPosts = await Post.find({
-      community: { $in: communityIds },
       _id: { $in: user.savedPosts },
     })
       .populate("user", "name avatar")
-      .populate("community", "name");
+      .populate("community", "name")
+      .lean()
+      .exec();
 
     const formattedPosts = savedPosts.map((post) => ({
-      ...post.toObject(),
+      ...(post.toObject ? post.toObject() : post),
       createdAt: dayjs(post.createdAt).fromNow(),
     }));
 
