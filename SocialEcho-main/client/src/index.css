@@ -80,15 +80,19 @@
 
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-color: rgba(34, 211, 238, 0.4) rgba(255, 255, 255, 0.05);
   }
 
   .custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-white/5;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-white/10 rounded-full;
+    @apply bg-v-cyan/30 rounded-full border-2 border-transparent bg-clip-padding hover:bg-v-cyan/50;
   }
 }
 

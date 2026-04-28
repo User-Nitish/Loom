@@ -1,9 +1,11 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Calendar, ChevronRight, User } from "lucide-react";
+import { MapPin, Calendar, ChevronRight, User, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const PublicProfileCard = ({ user }) => {
+  const navigate = useNavigate();
   const followingSince = new Date(user.followingSince).toLocaleString("en-US", {
     year: "numeric",
     month: "long",
@@ -73,11 +75,23 @@ const PublicProfileCard = ({ user }) => {
               </div>
             </div>
             
-            <div className="px-3 py-1.5 rounded-lg bg-v-cyan/5 border border-v-cyan/10">
-              <span className="text-[8px] font-black text-v-cyan uppercase tracking-widest flex items-center gap-2">
-                <User size={10} />
-                Profile
-              </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate("/chat", { state: { recipientId: user._id, recipientName: user.name, recipientAvatar: user.avatar } });
+                }}
+                className="p-2 rounded-lg bg-v-cyan/10 border border-v-cyan/20 text-v-cyan hover:bg-v-cyan/20 transition-all"
+              >
+                <MessageCircle size={14} />
+              </button>
+              <div className="px-3 py-1.5 rounded-lg bg-v-cyan/5 border border-v-cyan/10">
+                <span className="text-[8px] font-black text-v-cyan uppercase tracking-widest flex items-center gap-2">
+                  <User size={10} />
+                  Profile
+                </span>
+              </div>
             </div>
           </div>
         </div>

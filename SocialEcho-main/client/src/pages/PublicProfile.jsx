@@ -13,6 +13,7 @@ import { CiLocationOn } from "react-icons/ci";
 import { AiOutlineFieldTime } from "react-icons/ai";
 import { FiUsers, FiUser, FiUserMinus, FiUserPlus } from "react-icons/fi";
 import { HiOutlineDocumentText } from "react-icons/hi2";
+import { MessageCircle } from "lucide-react";
 import CommonLoading from "../components/loader/CommonLoading";
 import Tooltip from "../components/shared/Tooltip";
 
@@ -167,11 +168,22 @@ const PublicProfile = () => {
 
               <div className="flex items-center justify-center md:justify-start gap-4">
                 {isFollowing ? (
-                  <UnfollowButton
-                    loading={unfollowLoading}
-                    onClick={() => handleUnfollow(publicUserId)}
-                    name={name}
-                  />
+                  <div className="flex gap-4">
+                    <UnfollowButton
+                      loading={unfollowLoading}
+                      onClick={() => handleUnfollow(publicUserId)}
+                      name={name}
+                    />
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => navigate("/chat", { state: { recipientId: publicUserId, recipientName: name, recipientAvatar: avatar } })}
+                      className="flex items-center gap-2 px-6 py-2.5 rounded-2xl border border-v-cyan/30 bg-v-cyan/10 text-v-cyan text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 hover:bg-v-cyan/20 shadow-[0_0_20px_rgba(34,211,238,0.1)]"
+                    >
+                      <MessageCircle size={16} />
+                      <span>Message</span>
+                    </motion.button>
+                  </div>
                 ) : (
                   !isModerator && (
                     <FollowButton

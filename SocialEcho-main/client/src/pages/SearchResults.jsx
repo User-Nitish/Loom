@@ -72,17 +72,28 @@ const SearchResults = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {results.users.map((user) => (
-                  <Link
-                    to={`/user/${user._id}`}
-                    key={user._id}
-                    className="p-4 bg-slate-900/40 border border-white/5 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-all"
-                  >
-                    <img src={user.avatar} className="w-12 h-12 rounded-full object-cover" alt="" />
-                    <div>
-                      <h4 className="text-sm font-bold text-white">{user.name}</h4>
-                      <p className="text-xs text-slate-500">{user.email}</p>
-                    </div>
-                  </Link>
+                  <div key={user._id} className="relative group/card">
+                    <Link
+                      to={`/user/${user._id}`}
+                      className="p-4 bg-slate-900/40 border border-white/5 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-all block"
+                    >
+                      <img src={user.avatar} className="w-12 h-12 rounded-full object-cover" alt="" />
+                      <div className="flex-1 overflow-hidden">
+                        <h4 className="text-sm font-bold text-white truncate">{user.name}</h4>
+                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                      </div>
+                    </Link>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = `/chat?recipientId=${user._id}&name=${user.name}&avatar=${user.avatar}`;
+                      }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-white/5 text-white/20 opacity-0 group-hover/card:opacity-100 hover:text-v-cyan hover:bg-v-cyan/10 transition-all z-10"
+                    >
+                      <MessageSquare size={16} />
+                    </button>
+                  </div>
                 ))}
               </div>
             </section>

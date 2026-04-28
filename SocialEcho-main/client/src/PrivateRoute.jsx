@@ -64,7 +64,7 @@ const PrivateRoute = ({ userData }) => {
       </div>
 
       {/* The Mega Frosted Glass Window */}
-      <div className={`relative z-10 w-full max-w-[1600px] mx-auto pt-24 ${location.pathname === '/' || location.pathname === '/home' ? 'bg-transparent border-none shadow-none' : 'bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[40px] shadow-[0_40px_100px_rgba(0,0,0,0.7)]'} flex flex-col min-h-[calc(100vh-64px)] pb-20 overflow-visible`}>
+      <div className={`relative z-10 w-full max-w-[1600px] mx-auto pt-24 ${location.pathname === '/' || location.pathname === '/home' ? 'bg-transparent border-none shadow-none' : 'bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[40px] shadow-[0_40px_100px_rgba(0,0,0,0.7)]'} flex flex-col min-h-[calc(100vh-64px)] ${location.pathname === '/chat' ? 'pb-0' : 'pb-20'} overflow-visible`}>
 
         <Navbar
           userData={userData}
