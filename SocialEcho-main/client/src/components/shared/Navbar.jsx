@@ -33,6 +33,7 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { unreadCount } = useSelector((state) => state.notifications);
 
   const dropdownRef = useRef(null);
@@ -41,8 +42,16 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   useEffect(() => {
@@ -283,7 +292,9 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
                   </span>
                 )}
               </button>
-              <NotificationDropdown isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
+              {!isMobile && (
+                <NotificationDropdown isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
+              )}
             </div>
 
             <div className="relative" ref={dropdownRef}>
@@ -351,6 +362,12 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {isMobile && (
+        <div className="notification-trigger">
+          <NotificationDropdown isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
+        </div>
+      )}
     </>
   );
 };

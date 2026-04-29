@@ -55,10 +55,10 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed bottom-[88px] md:top-full md:bottom-auto left-4 right-4 md:absolute md:right-0 md:left-auto md:mt-3 md:w-[380px] bg-[#0c0c0c]/98 backdrop-blur-[40px] z-50 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,1)] border border-white/5 rounded-2xl"
+            className="fixed bottom-[88px] md:top-full md:bottom-auto left-4 right-4 md:absolute md:right-0 md:left-auto md:mt-3 md:w-[400px] bg-[#0a0a0a] z-[110] overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,1)] border border-white/10 rounded-2xl"
           >
             {/* Header */}
-            <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.05] backdrop-blur-[48px] md:backdrop-blur-[48px]">
+            <div className="p-4 border-b border-white/5 flex justify-between items-center bg-[#111111]">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Bell size={20} className="text-amber-500" />
@@ -66,9 +66,9 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
                     <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 border-2 border-[#0c0c0c] rounded-full animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
                   )}
                 </div>
-                <h3 className="text-zinc-100 font-bold tracking-tight uppercase text-xs">Tactical Feed</h3>
+                <h3 className="text-zinc-100 font-black tracking-[0.2em] uppercase text-[10px]">Tactical Feed</h3>
                 {unreadCount > 0 && (
-                  <span className="bg-amber-500/10 text-amber-500 text-[10px] font-black px-2 py-0.5 rounded border border-amber-500/20">
+                  <span className="bg-amber-500 text-[#0c0c0c] text-[10px] font-black px-1.5 py-0.5 rounded shadow-[0_0_10px_rgba(245,158,11,0.4)]">
                     {unreadCount}
                   </span>
                 )}
@@ -108,7 +108,7 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
                       onClick={() => {
                         dispatch(markRead(notification._id));
                       }}
-                      className={`group p-4 flex gap-4 hover:bg-white/[0.03] cursor-pointer transition-all relative ${!notification.isRead ? "bg-amber-500/[0.02]" : ""
+                      className={`group p-4 flex gap-4 hover:bg-white/[0.04] cursor-pointer transition-all relative border-b border-white/[0.02] last:border-0 ${!notification.isRead ? "bg-amber-500/[0.03]" : ""
                         }`}
                     >
                       {!notification.isRead && (
@@ -127,14 +127,16 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-zinc-400 leading-snug">
-                          <span className="font-black text-zinc-100 group-hover:text-amber-500 transition-colors uppercase tracking-tight">
+                        <p className="text-xs text-zinc-200 leading-relaxed">
+                          <span className="font-bold text-white group-hover:text-amber-500 transition-colors uppercase tracking-tight">
                             {notification.sender?.name}
                           </span>{" "}
-                          {getNotificationText(notification)}
+                          <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">
+                            {getNotificationText(notification)}
+                          </span>
                         </p>
                         <div className="flex items-center gap-2 mt-1.5">
-                          <p className="text-[10px] text-zinc-600 font-black uppercase tracking-tighter">
+                          <p className="text-[9px] text-zinc-500 font-black uppercase tracking-wider">
                             {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                           </p>
                         </div>
