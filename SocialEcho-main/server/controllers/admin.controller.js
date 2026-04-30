@@ -298,7 +298,13 @@ const removeModerator = async (req, res) => {
 const getAllReports = async (req, res) => {
   try {
     const reports = await Report.find({ status: "pending" })
-      .populate("post")
+      .populate({
+        path: "post",
+        populate: [
+          { path: "user", select: "name avatar" },
+          { path: "community", select: "name" }
+        ]
+      })
       .populate("community", "name")
       .populate("reportedBy", "name")
       .sort({ reportDate: -1 });
@@ -311,24 +317,32 @@ const getAllReports = async (req, res) => {
 const actOnReport = async (req, res) => {
   try {
     const { reportId } = req.params;
-    const { action } = req.body; // 'resolve' or 'dismiss'
+    const { action, status } = req.body; 
+    
+    // Support both 'action' and 'status' fields, and both 'resolve/resolved' naming
+    const finalAction = (action || status || "").toLowerCase();
 
     const report = await Report.findById(reportId);
     if (!report) {
       return res.status(404).json({ message: "Report not found" });
     }
 
-    if (action === "resolve") {
-      // Delete the post
-      await Post.findByIdAndDelete(report.post);
+    if (finalAction === "resolve" || finalAction === "resolved") {
+      // Delete the post if it exists
+      if (report.post) {
+        await Post.findByIdAndDelete(report.post);
+      }
       report.status = "resolved";
-    } else if (action === "dismiss") {
+    } else if (finalAction === "dismiss" || finalAction === "dismissed") {
       report.status = "dismissed";
+    } else {
+      return res.status(400).json({ message: "Invalid action" });
     }
 
     await report.save();
-    res.status(200).json({ message: `Report ${action}ed successfully` });
+    res.status(200).json({ message: `Report ${finalAction}ed successfully` });
   } catch (error) {
+    console.error("Act on report error:", error);
     res.status(500).json({ message: "Error acting on report" });
   }
 };

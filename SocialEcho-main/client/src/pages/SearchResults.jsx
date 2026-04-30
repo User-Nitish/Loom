@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import axios from "axios";
 import { Search as SearchIcon, Users, MessageSquare, Globe, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { API } from "../redux/api/utils";
 
 const SearchResults = () => {
   const location = useLocation();
@@ -13,21 +13,25 @@ const SearchResults = () => {
 
   useEffect(() => {
     const fetchResults = async () => {
+      if (!query) return;
       try {
         setLoading(true);
-        const profile = JSON.parse(localStorage.getItem("profile"));
-        const { data } = await axios.get(`http://localhost:4000/search?q=${query}`, {
-          headers: { Authorization: `Bearer ${profile.accessToken}` }
+        const { data } = await API.get(`/search?q=${query}`);
+        setResults({
+          users: data.users || [],
+          posts: data.posts || [],
+          community: data.community || null,
+          joinedCommunity: data.joinedCommunity || null
         });
-        setResults(data);
       } catch (error) {
         console.error("Search error", error);
+        setResults({ users: [], posts: [], community: null, joinedCommunity: null });
       } finally {
         setLoading(false);
       }
     };
 
-    if (query) fetchResults();
+    fetchResults();
   }, [query]);
 
   return (
@@ -74,13 +78,13 @@ const SearchResults = () => {
                 {results.users.map((user) => (
                   <div key={user._id} className="relative group/card">
                     <Link
-                      to={`/user/${user._id}`}
+                      to={`/user/${user?._id}`}
                       className="p-4 bg-slate-900/40 border border-white/5 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-all block"
                     >
-                      <img src={user.avatar} className="w-12 h-12 rounded-full object-cover" alt="" />
+                      <img src={user?.avatar} className="w-12 h-12 rounded-full object-cover" alt="" />
                       <div className="flex-1 overflow-hidden">
-                        <h4 className="text-sm font-bold text-white truncate">{user.name}</h4>
-                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                        <h4 className="text-sm font-bold text-white truncate">{user?.name}</h4>
+                        <p className="text-xs text-slate-500 truncate">{user?.email}</p>
                       </div>
                     </Link>
                     <button
@@ -109,14 +113,14 @@ const SearchResults = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[results.joinedCommunity, results.community].filter(Boolean).map((com) => (
                   <Link
-                    to={`/community/${com.name}`}
-                    key={com._id}
+                    to={`/community/${com?.name}`}
+                    key={com?._id}
                     className="group relative h-48 rounded-3xl overflow-hidden border border-white/5"
                   >
-                    <img src={com.banner} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="" />
+                    <img src={com?.banner} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-6 flex flex-col justify-end">
-                      <h4 className="text-xl font-bold text-white">{com.name}</h4>
-                      <p className="text-xs text-slate-300 line-clamp-1 mt-1">{com.description}</p>
+                      <h4 className="text-xl font-bold text-white">{com?.name}</h4>
+                      <p className="text-xs text-slate-300 line-clamp-1 mt-1">{com?.description}</p>
                     </div>
                   </Link>
                 ))}
@@ -134,18 +138,18 @@ const SearchResults = () => {
               <div className="space-y-4">
                 {results.posts.map((post) => (
                   <Link
-                    to={`/post/${post._id}`}
-                    key={post._id}
+                    to={`/post/${post?._id}`}
+                    key={post?._id}
                     className="p-6 bg-slate-900/40 border border-white/5 rounded-3xl flex items-center justify-between hover:bg-white/5 transition-all"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <img src={post.user.avatar} className="w-5 h-5 rounded-full" alt="" />
-                        <span className="text-xs font-bold text-white">{post.user.name}</span>
+                        <img src={post.user?.avatar} className="w-5 h-5 rounded-full" alt="" />
+                        <span className="text-xs font-bold text-white">{post.user?.name}</span>
                         <span className="text-[10px] text-slate-500">in</span>
-                        <span className="text-xs font-bold text-blue-400">{post.community.name}</span>
+                        <span className="text-xs font-bold text-blue-400">{post.community?.name}</span>
                       </div>
-                      <p className="text-sm text-slate-300">{post.content}</p>
+                      <p className="text-sm text-slate-300">{post?.content}</p>
                     </div>
                     <ArrowRight size={18} className="text-slate-600 group-hover:text-white" />
                   </Link>

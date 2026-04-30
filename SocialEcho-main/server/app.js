@@ -41,6 +41,16 @@ io.on("connection", (socket) => {
     console.log(`User ${socket.id} joined room ${roomId}`);
   });
 
+  socket.on("join_user", (userId) => {
+    socket.join(`user_${userId}`);
+    console.log(`User ${userId} joined their private notification room.`);
+  });
+
+  socket.on("join_admin", () => {
+    socket.join("admins");
+    console.log("Admin joined the moderation room.");
+  });
+
   socket.on("send_message", (data) => {
     // data: { conversationId, content, senderId }
     socket.to(data.conversationId).emit("receive_message", data);

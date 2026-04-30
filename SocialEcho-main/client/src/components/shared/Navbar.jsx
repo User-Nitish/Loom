@@ -1,12 +1,11 @@
 import { useRef, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Search from "./Search";
 import { memo } from "react";
 import { logoutAction } from "../../redux/actions/authActions";
 import NotificationDropdown from "../layout/NotificationDropdown";
-import { useSelector } from "react-redux";
 import {
   Home,
   Compass,
@@ -24,6 +23,7 @@ import {
   Plus,
 } from "lucide-react";
 import { openCreatePostModalAction } from "../../redux/actions/uiActions";
+import { io } from "socket.io-client";
 
 const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   const dispatch = useDispatch();
@@ -35,8 +35,35 @@ const Navbar = ({ userData, toggleLeftbar, showLeftbar }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { unreadCount } = useSelector((state) => state.notifications);
+  const socket = useRef(null);
 
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    // Initialize Socket.io
+    const SOCKET_URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
+    socket.current = io(SOCKET_URL);
+
+    if (userData?._id) {
+      socket.current.emit("join_user", userData._id);
+      if (userData.role === "admin") {
+        socket.current.emit("join_admin");
+      }
+    }
+
+    socket.current.on("new_notification", (notification) => {
+      dispatch({ type: "NEW_NOTIFICATION", payload: notification });
+    });
+
+    socket.current.on("moderation_alert", (report) => {
+      // If the user is on the AdminReports page, we can refresh it or show a toast
+      console.log("Moderation Alert:", report);
+    });
+
+    return () => {
+      if (socket.current) socket.current.disconnect();
+    };
+  }, [userData, dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {

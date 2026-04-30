@@ -205,7 +205,8 @@ const followUser = async (req, res) => {
 
     // Trigger Notification
     const { createNotification } = require("../services/notificationService");
-    await createNotification(followingId, followerId, "follow");
+    const io = req.app.get("io");
+    await createNotification(followingId, followerId, "follow", {}, io);
 
     res.status(200).json({
       message: "User followed successfully",

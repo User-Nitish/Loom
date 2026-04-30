@@ -447,7 +447,8 @@ const likePost = async (req, res) => {
 
     // Trigger Notification
     const { createNotification } = require("../services/notificationService");
-    await createNotification(updatedPost.user._id, userId, "like", { postId: id });
+    const io = req.app.get("io");
+    await createNotification(updatedPost.user._id, userId, "like", { postId: id }, io);
 
     res.status(200).json(formattedPost);
   } catch (error) {
@@ -518,7 +519,8 @@ const addComment = async (req, res) => {
     // Trigger Notification
     const { createNotification } = require("../services/notificationService");
     const post = await Post.findById(postId);
-    await createNotification(post.user, userId, "comment", { postId });
+    const io = req.app.get("io");
+    await createNotification(post.user, userId, "comment", { postId }, io);
 
     res.status(200).json({
       message: "Comment added successfully",

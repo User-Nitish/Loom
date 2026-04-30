@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { ShieldAlert, CheckCircle, XCircle, ExternalLink, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
+import { API } from "../redux/api/utils";
 
 const AdminReports = () => {
   const [reports, setReports] = useState([]);
@@ -14,10 +14,7 @@ const AdminReports = () => {
 
   const fetchReports = async () => {
     try {
-      const profile = JSON.parse(localStorage.getItem("profile"));
-      const { data } = await axios.get("http://localhost:4000/admin/reports", {
-        headers: { Authorization: `Bearer ${profile.accessToken}` }
-      });
+      const { data } = await API.get("/admin/reports");
       setReports(data);
     } catch (error) {
       console.error("Error fetching reports", error);
@@ -28,11 +25,7 @@ const AdminReports = () => {
 
   const handleAction = async (reportId, action) => {
     try {
-      const profile = JSON.parse(localStorage.getItem("profile"));
-      await axios.patch(`http://localhost:4000/admin/reports/${reportId}`, 
-        { status: action },
-        { headers: { Authorization: `Bearer ${profile.accessToken}` }}
-      );
+      await API.patch(`/admin/reports/${reportId}`, { status: action });
       setReports(reports.filter(r => r._id !== reportId));
     } catch (error) {
       console.error("Error updating report", error);

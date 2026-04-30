@@ -8,9 +8,30 @@ import { getTitleFromRoute } from "./utils/docTitle";
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 
-const ErrorComponent = ({ errorMessage }) => (
-  <div className="text-red-500 font-bold text-center">{errorMessage}</div>
-);
+const ErrorComponent = ({ errorMessage }) => {
+  const handleReset = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-6 p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[32px] max-w-md mx-4">
+      <div className="w-16 h-16 bg-v-red/20 rounded-full flex items-center justify-center">
+        <span className="text-v-red text-3xl">!</span>
+      </div>
+      <div className="text-center">
+        <h3 className="text-white font-black uppercase tracking-widest mb-2">Connection Issue</h3>
+        <p className="text-white/60 text-sm leading-relaxed">{errorMessage}</p>
+      </div>
+      <button 
+        onClick={handleReset}
+        className="px-8 py-3 bg-v-red text-white font-black uppercase tracking-widest rounded-full hover:scale-105 transition-all text-xs"
+      >
+        Reset Session
+      </button>
+    </div>
+  );
+};
 
 const AppContainer = () => {
   const location = useLocation();
@@ -19,41 +40,38 @@ const AppContainer = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const checkServerStatus = async () => {
+    const initializeApp = async () => {
       try {
-        await axios.get("/server-status");
-      } catch (err) {
-        setError("Server is down. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+        // 1. Check Server Status using relative or absolute API URL
+        const apiBaseUrl = process.env.REACT_APP_API_URL || "http://localhost:4000";
+        await axios.get(`${apiBaseUrl}/server-status`);
 
-    checkServerStatus();
-  }, []);
-
-  // Asynchronously initialize the Redux store, including data fetching and authentication,
-  // while displaying a loading indicator. Making sure that the store is initialized with credentials and data before rendering the app.
-
-  useEffect(() => {
-    const initializeStore = async () => {
-      try {
+        // 2. Initialize Redux Store
         const appStore = await createAppStore();
         setStore(appStore);
       } catch (err) {
-        setError(`Error initializing the app: ${err.message}`);
+        console.error("Initialization error:", err);
+        setError(err.message || "Failed to connect to server.");
       } finally {
         setLoading(false);
       }
     };
 
-    initializeStore();
+    initializeApp();
   }, []);
 
-  if (loading || error) {
+  if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        {loading ? <CommonLoading /> : <ErrorComponent errorMessage={error} />}
+      <div className="flex items-center justify-center h-screen bg-[#0a0a0a]">
+        <CommonLoading />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#0a0a0a]">
+        <ErrorComponent errorMessage={error} />
       </div>
     );
   }

@@ -8,7 +8,7 @@ const Notification = require("../models/notification.model");
  * @param {string} type - The type of notification ('like', 'comment', 'follow', etc.).
  * @param {Object} data - Optional IDs for post or community.
  */
-const createNotification = async (recipientId, senderId, type, data = {}) => {
+const createNotification = async (recipientId, senderId, type, data = {}, io = null) => {
     try {
         // Don't notify if the user is acting on their own content
         if (recipientId.toString() === senderId.toString()) return;
@@ -23,7 +23,17 @@ const createNotification = async (recipientId, senderId, type, data = {}) => {
 
         await notification.save();
         
-        // Note: Later we can add Socket.io here for real-time delivery
+        // Real-time delivery via Socket.io
+        if (io) {
+            const populatedNotification = await Notification.findById(notification._id)
+                .populate("sender", "name avatar")
+                .populate("post", "content")
+                .populate("community", "name")
+                .lean();
+            
+            io.to(`user_${recipientId}`).emit("new_notification", populatedNotification);
+        }
+        
         return notification;
     } catch (error) {
         console.error("Error creating notification:", error);

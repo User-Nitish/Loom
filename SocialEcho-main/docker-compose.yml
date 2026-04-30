@@ -1,0 +1,38 @@
+services:
+  server:
+    build: ./server
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PERSPECTIVE_API_DISCOVERY_URL=https://commentanalyzer.googleapis.com/$$discovery/rest?version=v1alpha1
+      - CLASSIFIER_API_URL=http://classifier:5000/classify
+    env_file:
+      - ./server/.env
+    networks:
+      - socialecho-network
+
+  client:
+    build: ./client
+    ports:
+      - "3000:80"
+    depends_on:
+      - server
+    networks:
+      - socialecho-network
+
+  classifier:
+    build: ./classifier_server
+    ports:
+      - "5000:5000"
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    networks:
+      - socialecho-network
+
+networks:
+  socialecho-network:
+    driver: bridge
+
+volumes:
+  hf_cache:

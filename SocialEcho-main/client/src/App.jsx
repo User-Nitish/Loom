@@ -34,8 +34,8 @@ const App = () => {
       <CinematicBackground />
       <CreatePostModal />
       <Suspense fallback={<FallbackLoading />}>
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
+        <AnimatePresence>
+          <Routes>
             <Route element={<PrivateRoute userData={userData} />}>
               {privateRoutes.map((route) => (
                 <Route key={route.path} path={route.path} element={route.element} />

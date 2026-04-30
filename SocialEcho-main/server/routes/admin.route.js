@@ -30,7 +30,9 @@ router.get("/community/:communityId", getCommunity);
 router.get("/communities", getCommunities);
 router.get("/moderators", getModerators);
 router.get("/reports", getAllReports);
-router.post("/reports/:reportId", actOnReport);
+router.route("/reports/:reportId")
+  .post(actOnReport)
+  .patch(actOnReport);
 
 router.patch("/add-moderators", addModerator);
 router.patch("/remove-moderators", removeModerator);

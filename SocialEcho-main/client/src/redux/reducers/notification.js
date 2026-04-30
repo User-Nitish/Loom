@@ -16,6 +16,12 @@ const notificationReducer = (state = initialState, action) => {
         unreadCount: action.payload.filter((n) => !n.isRead).length,
         loading: false,
       };
+    case actionTypes.NEW_NOTIFICATION:
+      return {
+        ...state,
+        notifications: [action.payload, ...state.notifications],
+        unreadCount: action.payload.isRead ? state.unreadCount : state.unreadCount + 1,
+      };
     case actionTypes.MARK_NOTIFICATION_READ:
       return {
         ...state,

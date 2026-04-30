@@ -419,7 +419,24 @@ const reportPost = async (req, res) => {
       reportDate: new Date(),
     };
 
-    await Report.create(report);
+    const reportData = await Report.create(report);
+    
+    // Notify all admins in real-time
+    const io = req.app.get("io");
+    if (io) {
+      const populatedReport = await Report.findById(reportData._id)
+        .populate({
+          path: "post",
+          populate: [
+            { path: "user", select: "name avatar" },
+            { path: "community", select: "name" }
+          ]
+        })
+        .populate("reportedBy", "name")
+        .lean();
+      
+      io.to("admins").emit("moderation_alert", populatedReport);
+    }
 
     res.status(200).json({ message: "Post reported successfully." });
   } catch (error) {
