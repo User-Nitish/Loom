@@ -93,6 +93,10 @@ app.use(passport.initialize());
 require("./config/passport.js");
 initCleanupCron();
 
+app.get("/", (req, res) => {
+  res.send("Loom API is running. Please access the frontend at port 3000.");
+});
+
 app.get("/server-status", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });
 });
