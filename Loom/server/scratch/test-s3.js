@@ -8,7 +8,7 @@ async function testS3() {
 
   const mockFile = {
     originalname: "test-file.txt",
-    buffer: Buffer.from("Hello from SocialEcho! If you see this, S3 is working."),
+    buffer: Buffer.from("Hello from Loom! If you see this, S3 is working."),
     mimetype: "text/plain",
   };
 

@@ -16,8 +16,8 @@ async function testEmail() {
   const mailOptions = {
     from: process.env.EMAIL,
     to: process.env.EMAIL, // Sending to yourself
-    subject: "SocialEcho Email Test",
-    text: "If you are reading this, your SocialEcho email configuration is 100% correct!",
+    subject: "Loom Email Test",
+    text: "If you are reading this, your Loom email configuration is 100% correct!",
   };
 
   try {

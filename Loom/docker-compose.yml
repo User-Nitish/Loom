@@ -9,7 +9,7 @@ services:
     env_file:
       - ./server/.env
     networks:
-      - socialecho-network
+      - loom-network
 
   client:
     build: ./client
@@ -18,7 +18,7 @@ services:
     depends_on:
       - server
     networks:
-      - socialecho-network
+      - loom-network
 
   classifier:
     build: ./classifier_server
@@ -27,10 +27,10 @@ services:
     volumes:
       - hf_cache:/root/.cache/huggingface
     networks:
-      - socialecho-network
+      - loom-network
 
 networks:
-  socialecho-network:
+  loom-network:
     driver: bridge
 
 volumes:
