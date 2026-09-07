@@ -79,6 +79,7 @@ db.connect().catch((err) =>
   console.error("Error connecting to database:", err)
 );
 
+app.set("trust proxy", 1); // Trust first hop from reverse proxy / Docker networking
 app.use(cors());
 app.use(morgan("dev"));
 app.use("/assets/userFiles", express.static(__dirname + "/assets/userFiles"));

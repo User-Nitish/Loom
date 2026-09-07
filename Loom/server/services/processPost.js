@@ -9,6 +9,12 @@ const processPost = async (req, res, next) => {
   const { content, communityName } = req.body;
   const { serviceProvider, timeout } = await getSystemPreferences();
 
+  // Skip category filtering for image/video-only posts with no text
+  if (!content || content.trim() === "") {
+    req.failedDetection = true;
+    return next();
+  }
+
   try {
     if (serviceProvider === "disabled") {
       req.failedDetection = false;
@@ -42,9 +48,11 @@ const processPost = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    const errorMessage = `Error processing post: ${error.message}`;
+    // Log the error but don't crash — allow the post to go through
+    const errorMessage = `Error processing post (non-fatal): ${error.message}`;
     await saveLogInfo(null, errorMessage, serviceProvider, "error");
-    return res.status(500).json({ message: "Error processing post" });
+    req.failedDetection = true;
+    next();
   }
 };
 

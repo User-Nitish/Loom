@@ -16,15 +16,14 @@ const getCategoriesFromTextRazor = async (content, timeout) => {
   }, timeout);
 
   try {
+    const params = new URLSearchParams();
+    params.append("text", content);
+    params.append("classifiers", "community");
+    params.append("cleanup.mode", "stripTags");
+
     const response = await axios.post(
       API_URL,
-      {
-        text: content,
-        classifiers: "community",
-        cleanup: {
-          mode: "stripTags",
-        },
-      },
+      params.toString(),
       {
         headers: {
           "X-TextRazor-Key": API_KEY,
